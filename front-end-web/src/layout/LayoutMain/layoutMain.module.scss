@@ -1,0 +1,29 @@
+.LayoutMain {
+  width: 100%;
+  height: 100%;
+  .tab {
+    height: 4%;
+    background: rgba(132, 167, 211, 0.8);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .wrap {
+    width: 100%;
+    height: 96%;
+    display: flex;
+    .menuContainer {
+      width: 17%;
+      height: 100%;
+      color: white !important;
+    }
+    .screenContainer {
+      width: 83%;
+      height: 100%;
+      background: white;
+      color: black;
+    }
+  }
+}

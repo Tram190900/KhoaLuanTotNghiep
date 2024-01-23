@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./view/Login";
+import LayoutLogin from "./layout/LayoutLogin";
+import LayoutMain from "./layout/LayoutMain";
+import { createContext, useState } from "react";
+
+export const MenuContext = createContext(null);
 
 function App() {
+  const [menuActive, setMenuActive] = useState("phong-may");
+  const valueContext={
+    menuActive,
+    setMenuActive
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MenuContext.Provider value={valueContext}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LayoutLogin />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/quan-ly-phong-may" element={<LayoutMain />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </MenuContext.Provider>
   );
 }
 
