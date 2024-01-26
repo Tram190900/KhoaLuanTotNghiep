@@ -9,7 +9,7 @@ import { createContext, useState } from "react";
 export const MenuContext = createContext(null);
 
 function App() {
-  const [menuActive, setMenuActive] = useState("phong-may");
+  const [menuActive, setMenuActive] = useState("may-tinh");
   const valueContext={
     menuActive,
     setMenuActive

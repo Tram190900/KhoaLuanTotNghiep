@@ -3,11 +3,11 @@ import React, { useContext } from "react";
 import style from "./layoutMain.module.scss";
 import Menu from "../../components/Menu";
 import { MenuContext } from "../../App";
-import PhongMay from "../../view/PhongMay";
 import ThietBi from "../../view/ThietBi";
 import PhanMem from "../../view/PhanMem";
 import LichSu from "../../view/LichSu";
 import NhanVien from "../../view/NhanVien";
+import MayTinh from "../../view/MayTinh";
 
 export default function LayoutMain() {
   const menu = useContext(MenuContext);
@@ -18,8 +18,8 @@ export default function LayoutMain() {
           <Menu />
         </div>
         <div className={clsx(style.screenContainer)}>
-          {menu.menuActive === "phong-may" ? (
-            <PhongMay />
+          {menu.menuActive === "may-tinh" ? (
+            <MayTinh />
           ) : menu.menuActive === "thiet-bi" ? (
             <ThietBi />
           ) : menu.menuActive === "phan-mem" ? (

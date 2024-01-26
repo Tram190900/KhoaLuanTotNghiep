@@ -17,15 +17,15 @@ export default function Menu() {
     <div className={clsx(style.menu)}>
       <div
         onClick={() => {
-          menu.setMenuActive("phong-may");
+          menu.setMenuActive("may-tinh");
         }}
         className={clsx(
           style.menuItem,
-          menu.menuActive === "phong-may" ? style.active : ""
+          menu.menuActive === "may-tinh" ? style.active : ""
         )}
       >
         <ComputerIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-        Quản lý phòng máy
+        Quản lý máy tính
       </div>
       <div
         onClick={() => {
