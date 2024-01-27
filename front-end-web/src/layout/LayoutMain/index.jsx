@@ -8,6 +8,8 @@ import PhanMem from "../../view/PhanMem";
 import LichSu from "../../view/LichSu";
 import NhanVien from "../../view/NhanVien";
 import MayTinh from "../../view/MayTinh";
+import PhongMay from "../../view/PhongMay";
+import MonHoc from "../../view/MonHoc";
 
 export default function LayoutMain() {
   const menu = useContext(MenuContext);
@@ -28,6 +30,10 @@ export default function LayoutMain() {
             <LichSu />
           ) : menu.menuActive === "nhan-vien" ? (
             <NhanVien />
+          ) : menu.menuActive === 'phong-may' ? (
+            <PhongMay/>
+          ) : menu.menuActive === 'mon-hoc' ? (
+            <MonHoc/>
           ) : null}
         </div>
       </div>

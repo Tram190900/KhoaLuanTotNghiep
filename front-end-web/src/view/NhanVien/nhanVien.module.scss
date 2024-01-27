@@ -1,0 +1,31 @@
+.nhanVien {
+  padding: 0% 1%;
+  height: 100%;
+  .infoWrap {
+    display: flex;
+    height: 40%;
+    .left {
+      width: 50%;
+      margin: 0% 1%;
+    }
+    .right {
+      width: 50%;
+      margin: 0% 1%;
+      border: 1px solid black;
+      .rightTable {
+        overflow: auto;
+        height: 100%;
+      }
+    }
+  }
+  .buttonWrap {
+    * {
+      margin-left: 1%;
+      margin-right: 2%;
+    }
+  }
+  .tableWrap {
+    overflow: auto;
+    height: 45% !important;
+  }
+}

@@ -1,51 +1,42 @@
 .maytinh {
   height: 100%;
-  margin: 1%;
+  margin: 0% 1%;
   display: flex;
   flex-direction: column;
   .infoWrap {
-    height: 40%;
+    height: 35%;
     .content {
       display: flex;
       justify-content: center;
+      height: 100%;
       .leftWrap {
-        width: 40%;
-        margin: 0% 2%;
-        .searchWrap {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-        }
+        width: 35%;
+        margin: 0% 1%;
       }
       .rightWrap {
-        width: 60%;
+        width: 65%;
         display: flex;
-        flex-direction: column;
-        .tableWrap {
-          display: flex;
-          height: 85%;
-          .tablePhanMem {
-            border: 1px solid rgb(175, 175, 175);
-            height: 90%;
-            overflow: auto;
-          }
-          .tableThietBi {
-            border: 1px solid rgb(175, 175, 175);
-            height: 90%;
-            overflow: auto;
-          }
+        .tablePhanMem {
+          border: 1px solid rgb(175, 175, 175);
+          height: 100%;
+          overflow: auto;
         }
-        .buttonWrap {
-          display: flex;
-          width: 50%;
-          justify-content: space-around;
+        .tableThietBi {
+          border: 1px solid rgb(175, 175, 175);
+          height: 100%;
+          overflow: auto;
         }
       }
     }
   }
-
+  .searchWrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 70%;
+  }
   .tableMayTinh {
-    height: 48%;
+    height: 50%;
     overflow: auto;
   }
 }

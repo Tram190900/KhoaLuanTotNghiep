@@ -1,0 +1,28 @@
+.thietBi {
+  padding: 0 1%;
+  height: 100%;
+  .infoWrap {
+    display: flex;
+    height: 40%;
+    .left {
+      width: 50%;
+      margin: 0% 1%;
+    }
+    .right {
+      width: 50%;
+      margin: 0% 1%;
+      border: 1px solid black;
+      .rightTable {
+        overflow: auto;
+        height: 80%;
+      }
+      button {
+        margin: 3%;
+      }
+    }
+  }
+  .tableWrap {
+    overflow: auto;
+    height: 50% !important;
+  }
+}

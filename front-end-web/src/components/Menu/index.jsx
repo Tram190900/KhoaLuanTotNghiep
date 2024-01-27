@@ -4,17 +4,31 @@ import style from "./menu.module.scss";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import TerminalIcon from "@mui/icons-material/Terminal";
-import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
+// import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
 import { useNavigate } from "react-router-dom";
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 export default function Menu() {
   const menu = useContext(MenuContext);
   const navigate = useNavigate()
   return (
     <div className={clsx(style.menu)}>
+      <div
+        onClick={() => {
+          menu.setMenuActive("phong-may");
+        }}
+        className={clsx(
+          style.menuItem,
+          menu.menuActive === "phong-may" ? style.active : ""
+        )}
+      >
+        <RoomPreferencesIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+        Quản lý phòng máy
+      </div>
       <div
         onClick={() => {
           menu.setMenuActive("may-tinh");
@@ -51,7 +65,7 @@ export default function Menu() {
         <TerminalIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Quản lý phần mềm
       </div>
-      <div
+      {/* <div
         onClick={() => {
           menu.setMenuActive("lich-su");
         }}
@@ -62,6 +76,18 @@ export default function Menu() {
       >
         <ManageHistoryIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Lịch sử sửa đổi
+      </div> */}
+      <div
+        onClick={() => {
+          menu.setMenuActive("mon-hoc");
+        }}
+        className={clsx(
+          style.menuItem,
+          menu.menuActive === "mon-hoc" ? style.active : ""
+        )}
+      >
+        <AutoStoriesIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+        Quản lý môn học
       </div>
       <div
         onClick={() => {
