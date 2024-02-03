@@ -3,8 +3,9 @@
   margin: 0% 1%;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
   .infoWrap {
-    height: 35%;
+    height: 45%;
     .content {
       display: flex;
       justify-content: center;
@@ -33,7 +34,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    width: 70%;
+    width: 100%;
   }
   .tableMayTinh {
     height: 50%;

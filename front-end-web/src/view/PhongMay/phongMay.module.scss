@@ -1,9 +1,10 @@
 .phongMay {
-  padding: 0% 1%;
+  padding: 2% 1% 0 1%;
   height: 100%;
+  overflow-y: scroll;
   .infoWrap {
     display: flex;
-    height: 30%;
+    // height: 30%;
     .left {
       width: 50%;
       margin: 0% 1%;
@@ -26,12 +27,12 @@
             margin-right: 10%;
         }
     }
-    .searchWrap{
+/*     .searchWrap{
         width: 50%;
         display: flex;
         align-items: flex-end;
         justify-content: space-around;
-    }
+    } */
   }
   .tableWrap {
     overflow: auto;
