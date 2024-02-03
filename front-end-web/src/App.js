@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./view/Login";
@@ -9,7 +8,7 @@ import { createContext, useState } from "react";
 export const MenuContext = createContext(null);
 
 function App() {
-  const [menuActive, setMenuActive] = useState("may-tinh");
+  const [menuActive, setMenuActive] = useState("phong-may");
   const valueContext={
     menuActive,
     setMenuActive

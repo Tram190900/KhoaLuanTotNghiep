@@ -1,9 +1,10 @@
 .nhanVien {
   padding: 0% 1%;
   height: 100%;
+  overflow-y: scroll;
   .infoWrap {
     display: flex;
-    height: 40%;
+    // height: 40%;
     .left {
       width: 50%;
       margin: 0% 1%;
