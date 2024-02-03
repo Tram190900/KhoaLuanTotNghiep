@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import style from "./thietBi.module.scss";
-import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
+import { FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
 
 export default function ThietBi() {
   return (
