@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./mayTinh.module.scss";
 import {
   Button,
@@ -13,9 +13,93 @@ import {
   Table,
 } from "@mui/joy";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
+import { deleteAPI, getAPI, postAPI } from "../../api";
+import moment from "moment";
+import Swal from "sweetalert2";
 
 export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
+  const [allMayTinh, setAllMayTinh] = useState([]);
+  const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
+  const [phong, setPhong] = useState("");
+  const [soMay, setSoMay] = useState("");
+  const [trangThai, setTrangThai] = useState(true);
+  const [mayTinhId, setMayTinhId] = useState();
+
+  useEffect(() => {
+    handleGetAllMayTinh();
+  }, []);
+  const handleGetAllMayTinh = async () => {
+    const result = await getAPI("/getAllMayTinh");
+    if (result.status === 200) {
+      setAllMayTinh(result.data);
+    }
+  };
+  const handleGetPhanMemCaiDat = async (id) => {
+    const result = await getAPI(`/getChiTietCaiDat/${id}`);
+    if (result.status === 200 && result.data.length > 0) {
+      result.data.map((item) => {
+        setPhanMemCaiDat([
+          { phanMem: item.phanMem, ngayCaiDat: item.ngayCaiDat },
+        ]);
+      });
+    } else {
+      setPhanMemCaiDat([]);
+    }
+  };
+  const handleThemMoi = async () => {
+    const data = {
+      soMay: soMay,
+      trangThai: trangThai,
+      phongMay: {
+        soPhong: phong,
+      },
+    };
+    try {
+      const result = await postAPI("/saveMayTinh", data);
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm mới máy tính thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        handleGetAllMayTinh();
+      }
+    } catch (error) {
+      Swal.fire({
+        text: error.response.data,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  const handleXoaMayTinh = async () => {
+    Swal.fire({
+      text: "Bạn có chắc muốn xóa máy tính này khỏi phòng máy hay không?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteAPI(`/deleteMayTinh/${mayTinhId}`)
+          .then(() => {
+            Swal.fire({
+              text: "Xóa máy tính thành công",
+              icon: "success",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+  const handleChange = (event, newValue) => {
+    setTrangThai(newValue);
+  };
+
   return (
     <>
       <div className={clsx(style.maytinh)}>
@@ -25,16 +109,29 @@ export default function MayTinh() {
             <div className={clsx(style.leftWrap)}>
               <FormControl>
                 <FormLabel>Phòng</FormLabel>
-                <Input placeholder="Phòng" />
+                <Input
+                  placeholder="Phòng"
+                  value={phong}
+                  onChange={(e) => setPhong(e.target.value)}
+                />
               </FormControl>
               <FormControl>
                 <FormLabel>Số máy</FormLabel>
-                <Input placeholder="Số máy" />
+                <Input
+                  placeholder="Số máy"
+                  value={soMay}
+                  onChange={(e) => setSoMay(e.target.value)}
+                />
               </FormControl>
               <FormControl>
                 <FormLabel>Trạng thái</FormLabel>
-                <Select placeholder="Trạng thái ...">
-                  <Option value={'...'}>...</Option>
+                <Select
+                  placeholder="Trạng thái ..."
+                  value={trangThai}
+                  onChange={handleChange}
+                >
+                  <Option value={true}>Bình thường</Option>
+                  <Option value={false}>Bảo trì</Option>
                 </Select>
               </FormControl>
               <FormControl>
@@ -62,35 +159,17 @@ export default function MayTinh() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Microsoft Word</td>
-                      <td>2209</td>
-                      <td>01/10/2019</td>
-                    </tr>
-                    <tr>
-                      <td>Microsoft Excel</td>
-                      <td>2103 </td>
-                      <td>01/10/2013</td>
-                    </tr>
-                    <tr>
-                      <td>Microsoft Excel</td>
-                      <td>2103 </td>
-                      <td>01/10/2013</td>
-                    </tr>
-                    <tr>
-                      <td>Microsoft Excel</td>
-                      <td>2103 </td>
-                      <td>01/10/2013</td>
-                    </tr>
-                    <tr>
-                      <td>Microsoft Excel</td>
-                      <td>2103 </td>
-                      <td>01/10/2013</td>
-                    </tr>
+                    {phanMemCaiDat?.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.phanMem.tenPhamMem}</td>
+                        <td>{item.phanMem.phienBan}</td>
+                        <td>{moment(item.ngayCaiDat).format("l")}</td>
+                      </tr>
+                    ))}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan={3} style={{ textAlign: 'center' }}>
+                      <td colSpan={3} style={{ textAlign: "center" }}>
                         <Button>Cập nhật</Button>
                       </td>
                     </tr>
@@ -101,11 +180,13 @@ export default function MayTinh() {
                 id={"scroll-style-01"}
                 className={clsx(style.tableThietBi)}
               >
-                <Table aria-label="table with sticky header"
+                <Table
+                  aria-label="table with sticky header"
                   stickyHeader
                   stickyFooter
                   stripe="odd"
-                  hoverRow>
+                  hoverRow
+                >
                   <thead>
                     <tr>
                       <th>Tên thiết bị</th>
@@ -127,7 +208,7 @@ export default function MayTinh() {
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan={3} style={{ textAlign: 'center' }}>
+                      <td colSpan={3} style={{ textAlign: "center" }}>
                         <Button>Cập nhật</Button>
                       </td>
                     </tr>
@@ -148,9 +229,17 @@ export default function MayTinh() {
           <Button onClick={() => setOpenLichSuaChua(!openLichSuaChua)}>
             Lịch sử sửa chữa
           </Button>
-          <Button>Thêm mới</Button>
+          <Button
+            onClick={() => {
+              if (phong.trim().length > 0 && soMay.trim().length > 0) {
+                handleThemMoi();
+              }
+            }}
+          >
+            Thêm mới
+          </Button>
           <Button>Cập nhật</Button>
-          <Button>Xóa</Button>
+          <Button onClick={() => handleXoaMayTinh()}>Xóa</Button>
         </div>
         <Sheet id={"scroll-style-01"} className={clsx(style.tableMayTinh)}>
           <Table stickyHeader hoverRow aria-label="striped table">
@@ -160,24 +249,26 @@ export default function MayTinh() {
                 <th>Số Phòng</th>
                 <th>Số máy</th>
                 <th>Trạng thái</th>
-                <th>Chú thích</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>H4.2.2</td>
-                <td>H.01</td>
-                <td>Bình thường</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>H4.2.2</td>
-                <td>H.01</td>
-                <td>Bình thường</td>
-                <td></td>
-              </tr>
+              {allMayTinh?.map((item, index) => (
+                <tr
+                  key={index}
+                  onClick={(e) => {
+                    handleGetPhanMemCaiDat(item.id);
+                    setMayTinhId(item.id)
+                    setPhong(item.phongMay.soPhong);
+                    setSoMay(item.soMay);
+                    setTrangThai(item.trangThai);
+                  }}
+                >
+                  <td>{item.id}</td>
+                  <td>{item.phongMay.soPhong}</td>
+                  <td>{item.soMay}</td>
+                  <td>{item.trangThai ? "Bình thường" : "Bảo trì"}</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Sheet>

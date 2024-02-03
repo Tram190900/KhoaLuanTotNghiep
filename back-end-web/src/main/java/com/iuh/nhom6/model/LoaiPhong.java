@@ -9,11 +9,13 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Transactional
 @Data
 @NoArgsConstructor
-public class LoaiPhong {
+public class LoaiPhong implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "loaiPhong_id")

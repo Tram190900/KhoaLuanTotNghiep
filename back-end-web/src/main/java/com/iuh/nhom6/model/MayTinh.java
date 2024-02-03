@@ -1,15 +1,9 @@
 package com.iuh.nhom6.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Transactional
 @Data
 @NoArgsConstructor
-public class MayTinh {
+public class MayTinh implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "mayTinh_id")
@@ -26,11 +20,15 @@ public class MayTinh {
   private String soMay;
   private Boolean trangThai;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "mayTinh_id",referencedColumnName = "mayTinh_id")
-  private List<PhanMem> phanMems;
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "phongMay_id")
+  private PhongMay phongMay;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "mayTinh_id",referencedColumnName = "mayTinh_id")
-  private List<ThietBi> thietBis;
+//  @OneToMany(cascade = CascadeType.ALL)
+//  @JoinColumn(name = "mayTinh_id",referencedColumnName = "mayTinh_id")
+//  private List<PhanMem> phanMems;
+//
+//  @OneToMany(cascade = CascadeType.ALL)
+//  @JoinColumn(name = "mayTinh_id",referencedColumnName = "mayTinh_id")
+//  private List<ThietBi> thietBis;
 }

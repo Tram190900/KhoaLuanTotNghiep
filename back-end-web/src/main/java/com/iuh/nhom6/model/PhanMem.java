@@ -1,11 +1,9 @@
 package com.iuh.nhom6.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Transactional
 @Data
 @NoArgsConstructor
-public class PhanMem {
+public class PhanMem implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "phanMem_id")
   private Long id;
   private String tenPhamMem;
   private String phienBan;
   private String theLoai;
   private String phatTrienBoi;
-  private Date ngayCaiDat;
 }

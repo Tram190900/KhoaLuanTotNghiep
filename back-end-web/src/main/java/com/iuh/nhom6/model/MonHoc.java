@@ -1,5 +1,6 @@
 package com.iuh.nhom6.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Transactional
 @Data
 @NoArgsConstructor
-public class MonHoc {
+public class MonHoc implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "monHoc_id")

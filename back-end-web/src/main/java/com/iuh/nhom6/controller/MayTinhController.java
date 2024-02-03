@@ -2,7 +2,11 @@ package com.iuh.nhom6.controller;
 
 import java.util.List;
 
+import com.iuh.nhom6.model.PhongMay;
+import com.iuh.nhom6.repository.PhongMayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +24,24 @@ import com.iuh.nhom6.repository.MayTinhRepository;
 public class MayTinhController {
   @Autowired
   private MayTinhRepository mayTinhRepository;
+  @Autowired
+  private PhongMayRepository phongMayRepository;
 
   @PostMapping("/saveMayTinh")
-  public MayTinh saveMayTinh(@RequestBody MayTinh mayTinh) {
-    return mayTinhRepository.save(mayTinh);
+  public ResponseEntity<?> saveMayTinh(@RequestBody MayTinh mayTinh) {
+    PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(mayTinh.getPhongMay().getSoPhong());
+    if(phongMay==null){
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Phòng này không tồn tại !");
+    }
+    MayTinh checkExitSoMay = mayTinhRepository.findMayTinhBySoMay(mayTinh.getSoMay());
+    if(checkExitSoMay!=null){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số máy này đã tồn tại");
+    }
+
+    mayTinh.setPhongMay(phongMay);
+    MayTinh savedMayTinh = mayTinhRepository.save(mayTinh);
+
+    return ResponseEntity.ok(savedMayTinh);
   }
 
   @GetMapping("/getAllMayTinh")
@@ -42,15 +60,13 @@ public class MayTinhController {
     .map(mayTinh -> {
       mayTinh.setSoMay(newMayTinh.getSoMay());
       mayTinh.setTrangThai(newMayTinh.getTrangThai());
-      mayTinh.setPhanMems(newMayTinh.getPhanMems());
-      mayTinh.setThietBis(newMayTinh.getThietBis());
       return mayTinhRepository.save(mayTinh);
     }).orElseThrow();
   }
 
   @DeleteMapping("/deleteMayTinh/{id}")
   String deleteMayTinh(@PathVariable Long id) {
-    mayTinhRepository.deleteById(id);
+    mayTinhRepository.deleteMayTinhById(id);
     return "May tinh with id " + id + " has been deleted success.";
   }
 }
