@@ -11,6 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export default function Menu() {
   const menu = useContext(MenuContext);
@@ -100,6 +101,18 @@ export default function Menu() {
       >
         <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Quản lý nhân viên - Chấm công
+      </div>
+      <div
+        onClick={() => {
+          menu.setMenuActive("lich-truc");
+        }}
+        className={clsx(
+          style.menuItem,
+          menu.menuActive === "lich-truc" ? style.active : ""
+        )}
+      >
+        <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+        Lịch trực phòng máy
       </div>
       <div
         onClick={() => {

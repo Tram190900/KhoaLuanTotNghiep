@@ -34,7 +34,7 @@ export default function MayTinh() {
               <FormControl>
                 <FormLabel>Trạng thái</FormLabel>
                 <Select placeholder="Trạng thái ...">
-                  <Option>...</Option>
+                  <Option value={'...'}>...</Option>
                 </Select>
               </FormControl>
               <FormControl>
