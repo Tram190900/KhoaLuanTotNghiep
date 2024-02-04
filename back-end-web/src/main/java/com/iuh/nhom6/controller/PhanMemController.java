@@ -26,7 +26,7 @@ public class PhanMemController {
     return phanMemRepository.save(phanMem);
   }
 
-  @GetMapping("/getAllPhanMem")
+    @GetMapping("/getAllPhanMem")
   public List<PhanMem> getAllPhanMem() {
     return phanMemRepository.findAll();
   }

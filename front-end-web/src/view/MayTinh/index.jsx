@@ -13,7 +13,7 @@ import {
   Table,
 } from "@mui/joy";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
-import { deleteAPI, getAPI, postAPI, updateAPI } from "../../api";
+import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import moment from "moment";
 import Swal from "sweetalert2";
 import CapNhatPhanMemMayTinh from "../../components/Modal/CapNhatPhanMemMayTinh";
@@ -165,7 +165,7 @@ export default function MayTinh() {
           soPhong: phong,
         },
       };
-      const result = await updateAPI(`/updateMayTinh/${mayTinhId}`,data)
+      const result = await putAPI(`/updateMayTinh/${mayTinhId}`,data)
       if(result.status===200){
         Swal.fire({
           text: "Cập nhật máy tính thành công",
