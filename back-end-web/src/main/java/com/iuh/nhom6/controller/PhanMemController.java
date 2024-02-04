@@ -44,7 +44,6 @@ public class PhanMemController {
       phanMem.setPhienBan(newPhanMem.getPhienBan());
       phanMem.setTheLoai(newPhanMem.getTheLoai());
       phanMem.setPhatTrienBoi(newPhanMem.getPhatTrienBoi());
-//      phanMem.setNgayCaiDat(newPhanMem.getNgayCaiDat());
       return phanMemRepository.save(phanMem);
     }).orElseThrow();
   }
