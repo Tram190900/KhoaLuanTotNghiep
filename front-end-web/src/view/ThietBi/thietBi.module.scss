@@ -3,7 +3,7 @@
   height: 95%;
   .infoWrap {
     display: flex;
-    height: 40%;
+    height: 20%;
     .left {
       width: 50%;
       margin: 0% 1%;
@@ -22,8 +22,14 @@
       }
     }
   }
+  .buttonWrap {
+    * {
+      margin-left: 1%;
+      margin-right: 2%;
+    }
+  }
   .tableWrap {
     overflow: auto;
-    height: 50% !important;
+    height: 60% !important;
   }
 }
