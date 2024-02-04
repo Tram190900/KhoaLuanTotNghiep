@@ -9,7 +9,6 @@ import com.iuh.nhom6.repository.PhanMemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,7 +26,7 @@ public class ChiTietCaiDatController {
         return chiTietCaiDatRepository.getAllChiTietCaiDatByMayTinh(id);
     }
 
-    @PostMapping("/saveChiTietCaiDat}")
+    @PostMapping("/saveChiTietCaiDat")
     public ChiTietCaiDat saveChiTietCaiDat(@RequestBody ChiTietCaiDat chiTietCaiDat){
         PhanMem phanMem = phanMemRepository.findById(chiTietCaiDat.getPhanMem().getId()).get();
         MayTinh mayTinh = mayTinhRepository.findById(chiTietCaiDat.getMayTinh().getId()).get();
