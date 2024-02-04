@@ -6,9 +6,11 @@ import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.ChiTietCaiDatRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
 import com.iuh.nhom6.repository.PhanMemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,9 +29,9 @@ public class ChiTietCaiDatController {
     }
 
     @PostMapping("/saveChiTietCaiDat")
-    public ChiTietCaiDat saveChiTietCaiDat(@RequestBody ChiTietCaiDat chiTietCaiDat){
-        PhanMem phanMem = phanMemRepository.findById(chiTietCaiDat.getPhanMem().getId()).get();
+    public ChiTietCaiDat saveChiTietCaiDat(@RequestBody ChiTietCaiDat chiTietCaiDat) {
         MayTinh mayTinh = mayTinhRepository.findById(chiTietCaiDat.getMayTinh().getId()).get();
+        PhanMem phanMem = phanMemRepository.findById(chiTietCaiDat.getPhanMem().getId()).get();
         chiTietCaiDat.setMayTinh(mayTinh);
         chiTietCaiDat.setPhanMem(phanMem);
         return chiTietCaiDatRepository.save(chiTietCaiDat);

@@ -13,18 +13,27 @@ import {
   Table,
 } from "@mui/joy";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
-import { deleteAPI, getAPI, postAPI } from "../../api";
+import { deleteAPI, getAPI, postAPI, updateAPI } from "../../api";
 import moment from "moment";
 import Swal from "sweetalert2";
+import CapNhatPhanMemMayTinh from "../../components/Modal/CapNhatPhanMemMayTinh";
+import CapNhatThietBiMayTinh from "../../components/Modal/CapNhatThietBiMayTinh";
 
 export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
+  const [openCpaNhatPhanMem, setOpenCapNhatPhanMem] = useState(false);
+  const [openCapNhatThietBi, setOpenCapNhatThietBi] = useState(false);
+  const [timTheo, setTimTheo] = useState("SoPhong");
+
   const [allMayTinh, setAllMayTinh] = useState([]);
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
+  const [thietBiLapDat, setThietBiLapDat] = useState([]);
+
   const [phong, setPhong] = useState("");
   const [soMay, setSoMay] = useState("");
   const [trangThai, setTrangThai] = useState(true);
   const [mayTinhId, setMayTinhId] = useState();
+  const [tuKhoa, setTuKhoa]= useState('')
 
   useEffect(() => {
     handleGetAllMayTinh();
@@ -35,18 +44,39 @@ export default function MayTinh() {
       setAllMayTinh(result.data);
     }
   };
+
   const handleGetPhanMemCaiDat = async (id) => {
     const result = await getAPI(`/getChiTietCaiDat/${id}`);
     if (result.status === 200 && result.data.length > 0) {
+      const listPhanMem = [];
       result.data.map((item) => {
-        setPhanMemCaiDat([
-          { phanMem: item.phanMem, ngayCaiDat: item.ngayCaiDat },
-        ]);
+        listPhanMem.push({
+          phanMem: item.phanMem,
+          ngayCaiDat: item.ngayCaiDat,
+        });
       });
+      setPhanMemCaiDat(listPhanMem);
     } else {
       setPhanMemCaiDat([]);
     }
   };
+
+  const handleGetThietBiLapDat = async (id) => {
+    const result = await getAPI(`/getAllChiTietLapDat/${id}`);
+    if (result.status === 200 && result.data.length > 0) {
+      const listThietBi = [];
+      result.data.map((item) => {
+        listThietBi.push({
+          thietBi: item.thietBi,
+          ngayLapDat: item.ngayLapDat,
+        });
+      });
+      setThietBiLapDat(listThietBi);
+    } else {
+      setThietBiLapDat([]);
+    }
+  };
+
   const handleThemMoi = async () => {
     const data = {
       soMay: soMay,
@@ -73,6 +103,7 @@ export default function MayTinh() {
       });
     }
   };
+
   const handleXoaMayTinh = async () => {
     Swal.fire({
       text: "Bạn có chắc muốn xóa máy tính này khỏi phòng máy hay không?",
@@ -96,9 +127,57 @@ export default function MayTinh() {
       }
     });
   };
+
   const handleChange = (event, newValue) => {
     setTrangThai(newValue);
   };
+
+  const handleTimKiem = async () => {
+    const list =[]
+    if (timTheo === "SoPhong") {
+      try {
+        const result = await getAPI(`/getMayTinhByPhong/${tuKhoa}`);
+        if (result.status === 200) {
+          setAllMayTinh(result.data)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (timTheo === "SoMay") {
+      try {
+        const result = await getAPI(`/getMayTinhBySoMay/${tuKhoa}`);
+        if (result.status === 200) {
+          list.push(result.data)
+        }
+        setAllMayTinh(list)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleCapNhatMayTinh=async()=>{
+    try {
+      const data = {
+        soMay: soMay,
+        trangThai: trangThai,
+        phongMay: {
+          soPhong: phong,
+        },
+      };
+      const result = await updateAPI(`/updateMayTinh/${mayTinhId}`,data)
+      if(result.status===200){
+        Swal.fire({
+          text: "Cập nhật máy tính thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        handleGetAllMayTinh();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -170,7 +249,9 @@ export default function MayTinh() {
                   <tfoot>
                     <tr>
                       <td colSpan={3} style={{ textAlign: "center" }}>
-                        <Button>Cập nhật</Button>
+                        <Button onClick={() => setOpenCapNhatPhanMem(true)}>
+                          Cập nhật
+                        </Button>
                       </td>
                     </tr>
                   </tfoot>
@@ -191,25 +272,22 @@ export default function MayTinh() {
                     <tr>
                       <th>Tên thiết bị</th>
                       <th>Ngày cài đặt</th>
-                      <th>Số lượng</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Chuột</td>
-                      <td>01/03/2018</td>
-                      <td>01</td>
-                    </tr>
-                    <tr>
-                      <td>Bàn phím</td>
-                      <td>01/03/2018</td>
-                      <td>01</td>
-                    </tr>
+                    {thietBiLapDat?.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.thietBi.tenThietBi}</td>
+                        <td>{moment(item.ngayLapDat).format("1l")}</td>
+                      </tr>
+                    ))}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan={3} style={{ textAlign: "center" }}>
-                        <Button>Cập nhật</Button>
+                      <td colSpan={2} style={{ textAlign: "center" }}>
+                        <Button onClick={() => setOpenCapNhatThietBi(true)}>
+                          Cập nhật
+                        </Button>
                       </td>
                     </tr>
                   </tfoot>
@@ -221,11 +299,15 @@ export default function MayTinh() {
         <div className={clsx(style.searchWrap)}>
           <FormControl>
             <FormLabel>Tìm kiếm</FormLabel>
-            <Input placeholder="Từ khóa" />
+            <Input placeholder="Từ khóa" onChange={(e)=>setTuKhoa(e.target.value)}/>
           </FormControl>
-          <Checkbox label="Số phòng" defaultChecked />
-          <Checkbox label="Tòa nhà" />
-          <Button>Tìm kiếm</Button>
+          <Checkbox
+            label="Số phòng"
+            defaultChecked
+            onClick={() => setTimTheo("SoPhong")}
+          />
+          <Checkbox label="Số máy" onClick={() => setTimTheo("SoMay")} />
+          <Button onClick={()=>handleTimKiem()}>Tìm kiếm</Button>
           <Button onClick={() => setOpenLichSuaChua(!openLichSuaChua)}>
             Lịch sử sửa chữa
           </Button>
@@ -238,7 +320,7 @@ export default function MayTinh() {
           >
             Thêm mới
           </Button>
-          <Button>Cập nhật</Button>
+          <Button onClick={()=>handleCapNhatMayTinh()}>Cập nhật</Button>
           <Button onClick={() => handleXoaMayTinh()}>Xóa</Button>
         </div>
         <Sheet id={"scroll-style-01"} className={clsx(style.tableMayTinh)}>
@@ -257,7 +339,8 @@ export default function MayTinh() {
                   key={index}
                   onClick={(e) => {
                     handleGetPhanMemCaiDat(item.id);
-                    setMayTinhId(item.id)
+                    handleGetThietBiLapDat(item.id);
+                    setMayTinhId(item.id);
                     setPhong(item.phongMay.soPhong);
                     setSoMay(item.soMay);
                     setTrangThai(item.trangThai);
@@ -274,6 +357,20 @@ export default function MayTinh() {
         </Sheet>
       </div>
       <LichSuaChua open={openLichSuaChua} setOpen={setOpenLichSuaChua} />
+      <CapNhatPhanMemMayTinh
+        open={openCpaNhatPhanMem}
+        setOpen={setOpenCapNhatPhanMem}
+        phanMemCaiDat={phanMemCaiDat}
+        mayTinhId={mayTinhId}
+        handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
+      />
+      <CapNhatThietBiMayTinh
+        open={openCapNhatThietBi}
+        setOpen={setOpenCapNhatThietBi}
+        thietBiLapDat={thietBiLapDat}
+        mayTinhId={mayTinhId}
+        handleGetThietBiLapDat={handleGetThietBiLapDat}
+      />
     </>
   );
 }

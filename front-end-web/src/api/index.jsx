@@ -13,3 +13,6 @@ export const postAPI = (url, data)=>{
 export const deleteAPI = (url)=>{
     return api.delete(url)
 }
+export const updateAPI = (url, data)=>{
+    return api.put(url, data)
+}

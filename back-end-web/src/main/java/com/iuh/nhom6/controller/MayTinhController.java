@@ -54,6 +54,17 @@ public class MayTinhController {
     return mayTinhRepository.findById(id).get();
   }
 
+  @GetMapping("/getMayTinhBySoMay/{soMay}")
+  public MayTinh getMayTinhBySoMay(@PathVariable String soMay){
+    return mayTinhRepository.findMayTinhBySoMay((soMay));
+  }
+
+  @GetMapping("/getMayTinhByPhong/{phong}")
+  public List<MayTinh> getMayTinhByPhong(@PathVariable String phong){
+    PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(phong);
+    return mayTinhRepository.findMayTinhsByPhongMay(phongMay);
+  }
+
   @PutMapping("/updateMayTinh/{id}")
   public MayTinh updatePhongMay(@RequestBody MayTinh newMayTinh, @PathVariable Long id) {
     return mayTinhRepository.findById(id)

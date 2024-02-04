@@ -1,9 +1,6 @@
 package com.iuh.nhom6.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,7 @@ import java.util.Date;
 @Transactional
 @Data
 @NoArgsConstructor
+@IdClass(ChiTietLapDat.class)
 public class ChiTietLapDat implements Serializable {
     @Id
     @ManyToOne
