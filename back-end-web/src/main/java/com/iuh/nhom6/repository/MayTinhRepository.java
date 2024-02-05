@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MayTinhRepository extends JpaRepository<MayTinh,Long> {
-  MayTinh findMayTinhBySoMay(String soMay);
+  MayTinh findMayTinhBySoMayContainingIgnoreCase(String soMay);
 
-  List<MayTinh> findMayTinhsByPhongMay(PhongMay phong);
+    List<MayTinh> findMayTinhsByPhongMay(PhongMay phong);
 
   @Modifying
   @Query(value = "delete from may_tinh mt where mt.may_tinh_id =?1", nativeQuery = true)

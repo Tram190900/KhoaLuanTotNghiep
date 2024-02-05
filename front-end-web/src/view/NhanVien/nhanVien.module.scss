@@ -4,6 +4,7 @@
   overflow-y: scroll;
   .infoWrap {
     display: flex;
+    overflow: auto;
     // height: 40%;
     .left {
       width: 50%;
@@ -21,13 +22,16 @@
     }
   }
   .buttonWrap {
+    display: flex;
+    align-items: flex-end;
     * {
       margin-left: 1%;
       margin-right: 2%;
     }
+    margin: 1% 0%;
   }
   .tableWrap {
     overflow: auto;
-    height: 45% !important;
+    height: 40%;
   }
 }

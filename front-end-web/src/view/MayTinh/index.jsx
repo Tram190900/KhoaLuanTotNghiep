@@ -242,7 +242,7 @@ export default function MayTinh() {
                       <tr key={index}>
                         <td>{item.phanMem.tenPhamMem}</td>
                         <td>{item.phanMem.phienBan}</td>
-                        <td>{moment(item.ngayCaiDat).format("l")}</td>
+                        <td>{moment(item.ngayCaiDat).format("DD-MM-YYYY")}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -278,7 +278,7 @@ export default function MayTinh() {
                     {thietBiLapDat?.map((item, index) => (
                       <tr key={index}>
                         <td>{item.thietBi.tenThietBi}</td>
-                        <td>{moment(item.ngayLapDat).format("1l")}</td>
+                        <td>{moment(item.ngayLapDat).format("DD-MM-YYYY")}</td>
                       </tr>
                     ))}
                   </tbody>

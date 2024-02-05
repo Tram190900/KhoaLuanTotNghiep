@@ -33,7 +33,7 @@ public class MayTinhController {
     if(phongMay==null){
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Phòng này không tồn tại !");
     }
-    MayTinh checkExitSoMay = mayTinhRepository.findMayTinhBySoMay(mayTinh.getSoMay());
+    MayTinh checkExitSoMay = mayTinhRepository.findMayTinhBySoMayContainingIgnoreCase(mayTinh.getSoMay());
     if(checkExitSoMay!=null){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số máy này đã tồn tại");
     }
@@ -56,7 +56,7 @@ public class MayTinhController {
 
   @GetMapping("/getMayTinhBySoMay/{soMay}")
   public MayTinh getMayTinhBySoMay(@PathVariable String soMay){
-    return mayTinhRepository.findMayTinhBySoMay((soMay));
+    return mayTinhRepository.findMayTinhBySoMayContainingIgnoreCase((soMay));
   }
 
   @GetMapping("/getMayTinhByPhong/{phong}")
