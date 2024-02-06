@@ -1,6 +1,5 @@
 package com.iuh.nhom6.repository;
 
-import com.iuh.nhom6.model.ChiTietCaiDatPK;
 import com.iuh.nhom6.model.ChiTietLapDat;
 import com.iuh.nhom6.model.ChiTietLapDatPK;
 import org.springframework.data.jpa.repository.JpaRepository;

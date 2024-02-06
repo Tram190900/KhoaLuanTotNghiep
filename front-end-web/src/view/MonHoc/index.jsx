@@ -1,11 +1,116 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./monHoc.module.scss";
 import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
 import PhanMemSuDung from "../../components/Modal/PhanMemSuDung";
+import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
+import Swal from "sweetalert2";
 
 export default function MonHoc() {
   const [openCapNhatMonHoc, setOpenCapNhatMonHoc] = useState(false);
+
+  const [monHocs, setMonHocs] = useState([]);
+
+  const [monHoc, setMonHoc] = useState({
+    tenMonHoc: "",
+    khoa: "",
+  });
+
+  useEffect(() => {
+    loadMonHocs();
+  }, []);
+
+  const loadMonHocs = async () => {
+    const result = await getAPI("/monHocs");
+    if (result.status === 200) {
+      setMonHocs(result.data);
+    }
+  };
+
+  const onInputChange = (e) => {
+    setMonHoc({ ...monHoc, [e.target.name]: e.target.value });
+  };
+
+  const addMonHoc = async () => {
+    try {
+      const result = await postAPI("/monHocs", monHoc);
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm mới môn học thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        clearInputData();
+        loadMonHocs();
+      }
+    } catch (error) {
+      Swal.fire({
+        text: error.response.data,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const updateMonHoc = async () => {
+    Swal.fire({
+      text: "Bạn có chắc muốn cập nhập?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        putAPI(`/monHocs/${monHoc.id}`, monHoc)
+          .then(() => {
+            Swal.fire({
+              text: "Cập nhập thành công",
+              icon: "success",
+            });
+            clearInputData();
+            loadMonHocs();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+
+  const deleteMonHoc = async () => {
+    Swal.fire({
+      text: "Bạn có chắc muốn xóa",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteAPI(`/monHocs/${monHoc.id}`)
+          .then(() => {
+            Swal.fire({
+              text: "Xóa môn học thành công",
+              icon: "success",
+            });
+            loadMonHocs();
+            clearInputData();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+  };
+
+  const clearInputData = () => {
+    setMonHoc({
+      tenMonHoc: "",
+      khoa: "",
+    });
+  };
+
   return (
     <>
       <div className={clsx(style.monHoc)}>
@@ -14,16 +119,26 @@ export default function MonHoc() {
           <div className={clsx(style.left)}>
             <FormControl>
               <FormLabel>Tên môn học</FormLabel>
-              <Input placeholder="Tên môn học" />
+              <Input
+                name="tenMonHoc"
+                value={monHoc.tenMonHoc}
+                onChange={(e) => onInputChange(e)}
+                placeholder="Tên môn học"
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Khoa</FormLabel>
-              <Input placeholder="Email" />
+              <Input
+                name="khoa"
+                value={monHoc.khoa}
+                onChange={(e) => onInputChange(e)}
+                placeholder="Khoa"
+              />
             </FormControl>
             <div className={clsx(style.buttonWrap)}>
-              <Button>Thêm mới</Button>
-              <Button>Cập nhật</Button>
-              <Button>Xóa</Button>
+              <Button onClick={() => addMonHoc()}>Thêm mới</Button>
+              <Button onClick={() => updateMonHoc()}>Cập nhật</Button>
+              <Button onClick={() => deleteMonHoc()}>Xóa</Button>
             </div>
           </div>
           <div className={clsx(style.right)}>
@@ -42,12 +157,7 @@ export default function MonHoc() {
                     <th>Phiên bản</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>H</td>
-                    <td>H1.2</td>
-                  </tr>
-                </tbody>
+                <tbody></tbody>
                 <tfoot>
                   <tr>
                     <td colSpan={2} style={{ textAlign: "center" }}>
@@ -74,11 +184,13 @@ export default function MonHoc() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Công nghệ mới</td>
-                <td>Công nghệ thông tin</td>
-              </tr>
+              {monHocs?.map((item, index) => (
+                <tr onClick={() => setMonHoc(item)} key={index}>
+                  <td>{item.id}</td>
+                  <td>{item.tenMonHoc}</td>
+                  <td>{item.khoa}</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Sheet>

@@ -42,28 +42,20 @@ export default function PhanMem() {
   };
 
   const addPhanMem = async () => {
-    if (phanMem) {
-      try {
-        const result = await postAPI("/savePhanMem", phanMem);
-        if (result.status === 200) {
-          Swal.fire({
-            text: "Thêm mới phần mềm thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
-          clearInputData();
-          loadPhanMems();
-        }
-      } catch (error) {
+    try {
+      const result = await postAPI("/savePhanMem", phanMem);
+      if (result.status === 200) {
         Swal.fire({
-          text: error.response.data,
-          icon: "error",
+          text: "Thêm mới phần mềm thành công",
+          icon: "success",
           confirmButtonText: "OK",
         });
+        clearInputData();
+        loadPhanMems();
       }
-    } else {
+    } catch (error) {
       Swal.fire({
-        text: "phanMem",
+        text: error.response.data,
         icon: "error",
         confirmButtonText: "OK",
       });

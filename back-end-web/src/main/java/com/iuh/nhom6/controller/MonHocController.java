@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.MonHoc;
@@ -17,39 +18,35 @@ import com.iuh.nhom6.repository.MonHocRepository;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/monHocs")
 public class MonHocController {
   @Autowired
   private MonHocRepository monHocRepository;
 
-  @PostMapping("/saveMonHoc")
+  @PostMapping
   public MonHoc saveMonHoc(@RequestBody MonHoc monHoc) {
     return monHocRepository.save(monHoc);
   }
 
-  @GetMapping("/getAllMonHoc")
-  public List<MonHoc> getAllMonHoc() {
+  @GetMapping
+  public List<MonHoc> getMonHocs() {
     return monHocRepository.findAll();
   }
 
-  @GetMapping("/getMonHocById/{id}")
-  public MonHoc getMonHocById(@PathVariable Long id) {
-    return monHocRepository.findById(id).get();
-  }
-
-  @PutMapping("/updateMonHoc/{id}")
-  public MonHoc updatePhongMay(@RequestBody MonHoc newMonHoc, @PathVariable Long id) {
+  @PutMapping("/{id}")
+  public MonHoc updateMonHoc(@RequestBody MonHoc newMonHoc, @PathVariable Long id) {
     return monHocRepository.findById(id)
-    .map(monHoc -> {
-      monHoc.setTenMonHoc(newMonHoc.getTenMonHoc());
-      monHoc.setKhoa(newMonHoc.getKhoa());
-      monHoc.setPhanMems(newMonHoc.getPhanMems());
-      return monHocRepository.save(monHoc);
-    }).orElseThrow();
+      .map(monHoc -> {
+        monHoc.setKhoa(newMonHoc.getKhoa());
+        monHoc.setTenMonHoc(newMonHoc.getTenMonHoc());
+        monHoc.setPhanMems(newMonHoc.getPhanMems());
+        return monHocRepository.save(monHoc);
+      }).orElseThrow();
   }
 
-  @DeleteMapping("/deleteMonHoc/{id}")
-  String deleteMonHoc(@PathVariable Long id) {
+  @DeleteMapping("/{id}")
+  public String deleteMonHoc(@PathVariable Long id) {
     monHocRepository.deleteById(id);
-    return "Mon hoc with id " + id + " has been deleted success.";
+    return "Môn học có id " + id + " đã được xóa";
   }
 }

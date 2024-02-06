@@ -6,11 +6,9 @@ import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.ChiTietCaiDatRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
 import com.iuh.nhom6.repository.PhanMemRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
