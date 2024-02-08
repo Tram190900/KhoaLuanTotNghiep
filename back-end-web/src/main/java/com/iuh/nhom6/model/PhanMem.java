@@ -26,5 +26,5 @@ public class PhanMem implements Serializable {
 
   @JsonIgnore
   @ManyToMany(mappedBy = "phanMems")
-  private List<MonHoc> monHocs;
+  private List<MonHoc> subjects;
 }

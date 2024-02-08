@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.MonHoc;
+import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.MonHocRepository;
 
 @RestController
@@ -48,5 +49,14 @@ public class MonHocController {
   public String deleteMonHoc(@PathVariable Long id) {
     monHocRepository.deleteById(id);
     return "Môn học có id " + id + " đã được xóa";
+  }
+
+    @PutMapping("/softwares/{subjectId}")
+  public MonHoc UsedSoftwareInSubject(
+    @PathVariable Long subjectId, 
+    @RequestBody List<PhanMem> softwares) {
+      MonHoc subject = monHocRepository.findById(subjectId).get();
+      subject.setPhanMems(softwares);
+      return monHocRepository.save(subject);
   }
 }

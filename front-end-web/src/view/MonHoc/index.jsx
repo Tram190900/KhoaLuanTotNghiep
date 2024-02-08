@@ -11,6 +11,8 @@ export default function MonHoc() {
 
   const [monHocs, setMonHocs] = useState([]);
 
+  const [softwares, setSoftwares] = useState([]);
+
   const [monHoc, setMonHoc] = useState({
     tenMonHoc: "",
     khoa: "",
@@ -157,7 +159,14 @@ export default function MonHoc() {
                     <th>Phiên bản</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  {softwares.map((phanMem) => (
+                    <tr>
+                      <td>{phanMem.tenPhamMem}</td>
+                      <td>{phanMem.phienBan}</td>
+                    </tr>
+                  ))}
+                </tbody>
                 <tfoot>
                   <tr>
                     <td colSpan={2} style={{ textAlign: "center" }}>
@@ -185,7 +194,13 @@ export default function MonHoc() {
             </thead>
             <tbody>
               {monHocs?.map((item, index) => (
-                <tr onClick={() => setMonHoc(item)} key={index}>
+                <tr
+                  onClick={() => {
+                    setMonHoc(item);
+                    setSoftwares(item.phanMems);
+                  }}
+                  key={index}
+                >
                   <td>{item.id}</td>
                   <td>{item.tenMonHoc}</td>
                   <td>{item.khoa}</td>
@@ -195,7 +210,12 @@ export default function MonHoc() {
           </Table>
         </Sheet>
       </div>
-      <PhanMemSuDung open={openCapNhatMonHoc} setOpen={setOpenCapNhatMonHoc} />
+      <PhanMemSuDung
+        subjectId={monHoc.id}
+        open={openCapNhatMonHoc}
+        setOpen={setOpenCapNhatMonHoc}
+        softwares={setSoftwares}
+      />
     </>
   );
 }

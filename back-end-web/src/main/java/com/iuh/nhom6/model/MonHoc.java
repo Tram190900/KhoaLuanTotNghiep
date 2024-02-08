@@ -30,8 +30,8 @@ public class MonHoc implements Serializable {
   @ManyToMany
   @JoinTable(
     name = "subject_software",
-    joinColumns = @JoinColumn(name = "monHoc_id"),
-    inverseJoinColumns = @JoinColumn(name = "phanMem_id")
+    joinColumns = @JoinColumn(name = "subject_id"),
+    inverseJoinColumns = @JoinColumn(name = "software_id")
   )
-  private List<PhanMem> phanMems;
+  List<PhanMem> phanMems;
 }
