@@ -20,7 +20,7 @@ public class PhongMay implements Serializable {
   private String soPhong;
   private String toaNha;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   @JoinColumn(name = "loaiPhong_id")
   private LoaiPhong loaiPhong;
 }

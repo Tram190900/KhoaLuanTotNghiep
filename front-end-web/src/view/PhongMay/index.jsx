@@ -1,68 +1,134 @@
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import style from "./phongMay.module.scss";
-import { Button, Checkbox, Sheet, Table } from "@mui/joy";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  Input,
+  Option,
+  Select,
+  Sheet,
+  Table,
+} from "@mui/joy";
+import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
+import Swal from "sweetalert2";
+import moment from "moment";
 
 export default function PhongMay() {
-  const [phongMays, setPhongMays] = useState([]);
-
-  const [rowData, setRowData] = useState({
-    id:"",
+  const [dsPhongMay, setdsPhongMay] = useState([]);
+  const [dsCaTruc, setDsCaTruc] = useState([]);
+  const [phongMay, setPhongMay] = useState({});
+  const [duLieuVao, setDuLieuVao] = useState({
     soPhong: "",
     toaNha: "",
     tenLoaiPhong: "",
     soLuongMay: "",
   });
 
-  const onInputChange = (e) => {
-    setRowData({ ...rowData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const data = {
-      soPhong: rowData.soPhong,
-      toaNha: rowData.toaNha,
-      loaiPhong: {
-        tenLoaiPhong: rowData.tenLoaiPhong,
-        soLuongMay: rowData.soLuongMay,
-      }
-    };
-    await axios.post("http://localhost:8080/savePhongMay", data);
-    window.location.reload();
-  };
-
   useEffect(() => {
-    loadPhongMays();
+    xemDanhSachPhongMay();
   }, []);
 
-  const loadPhongMays = async () => {
-    const result = await axios.get("http://localhost:8080/getAllPhongMay");
-    setPhongMays(result.data);
+  const xemDanhSachPhongMay = async () => {
+    const result = await getAPI("/getAllPhongMay");
+    if (result.status === 200) {
+      setdsPhongMay(result.data);
+    }
   };
 
-  const handlerAction = (phongMay_id) => {
-    setRowData({id: phongMay_id});
-  }
-
-  const deletePhongMay = async (id) => {
-    await axios.delete(`http://localhost:8080/deletePhongMay/${id}`);
-    loadPhongMays();
-  }
-
-  const updatePhongMay = async () => {
-    const data = {
-      soPhong: rowData.soPhong,
-      toaNha: rowData.toaNha,
-      loaiPhong: {
-        tenLoaiPhong: rowData.tenLoaiPhong,
-        soLuongMay: rowData.soLuongMay,
-      }
+  const xemDanhSachCaTruc = async (id) => {
+    const result = await getAPI(`/getChamCongByPhongMay/${id}`);
+    if (result.status === 200) {
+      setDsCaTruc(result.data);
     }
-    await axios.put(`http://localhost:8080/updatePhongMay/${rowData.id}`,data);
-    loadPhongMays();
+  }
+
+  const onInputChange = (e) => {
+    setDuLieuVao({ ...duLieuVao, [e.target.name]: e.target.value });
+  };
+
+  const luuPhongMay = async () => {
+    const phongMay = {
+      soPhong: duLieuVao.soPhong,
+      toaNha: duLieuVao.toaNha,
+      loaiPhong: {
+        tenLoaiPhong: duLieuVao.tenLoaiPhong,
+        soLuongMay: duLieuVao.soLuongMay,
+      },
+    };
+    try {
+      const result = await postAPI("/savePhongMay", phongMay);
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm phòng máy thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        xemDanhSachPhongMay();
+      }
+    } catch (error) {
+      Swal.fire({
+        text: error.response.data,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const xoaPhongMay = () => {
+    Swal.fire({
+      text: "Bạn có chắc muốn xóa?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteAPI(`/deletePhongMay/${phongMay.id}`)
+          .then(() => {
+            Swal.fire({
+              text: "Xóa phòng máy thành công",
+              icon: "success",
+            });
+            xemDanhSachPhongMay();
+          })
+          .catch((error) => {
+            console.log(error.response.data);
+          });
+      }
+    });
+  };
+
+  const capNhapPhongMay = () => {
+    phongMay.soPhong = duLieuVao.soPhong;
+    phongMay.toaNha = duLieuVao.toaNha;
+    phongMay.loaiPhong.tenLoaiPhong = duLieuVao.tenLoaiPhong;
+    phongMay.loaiPhong.soLuongMay = duLieuVao.soLuongMay;
+
+    Swal.fire({
+      text: "Bạn có chắc muốn cập nhập?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await putAPI(`/updatePhongMay/${[phongMay.id]}`, phongMay)
+          .then(() => {
+            Swal.fire({
+              text: "Cập nhập thành công",
+              icon: "success",
+            });
+            xemDanhSachPhongMay();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
   };
 
   return (
@@ -70,55 +136,48 @@ export default function PhongMay() {
       <h1>QUẢN LÝ PHÒNG MÁY</h1>
       <div className={clsx(style.infoWrap)}>
         <div className={clsx(style.left)}>
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Số phòng</label>
-            <input
+          <FormControl>
+            <FormLabel>Số phòng</FormLabel>
+            <Input
               name="soPhong"
+              value={duLieuVao.soPhong}
               onChange={(e) => onInputChange(e)}
-              type="text"
-              class="form-control"
-              id="exampleFormControlInput1"
               placeholder="Số phòng"
             />
-          </div>
-          <div class="form-group">
-            <label for="exampleFormControlInput2">Tòa Nhà</label>
-            <input
+          </FormControl>
+          <FormControl>
+            <FormLabel>Tòa nhà</FormLabel>
+            <Input
               name="toaNha"
+              value={duLieuVao.toaNha}
               onChange={(e) => onInputChange(e)}
-              type="text"
-              class="form-control"
-              id="exampleFormControlInput2"
               placeholder="Tòa nhà"
             />
-          </div>
-          <div class="form-group">
-            <label for="exampleFormControlSelect1">Loại phòng</label>
-            <select
+          </FormControl>
+          <FormControl>
+            <FormLabel>Loại phòng</FormLabel>
+            <Select
               name="tenLoaiPhong"
-              onChange={(e) => onInputChange(e)}
-              class="form-control custom-select"
-              id="exampleFormControlSelect1"
+              onChange={(e, v) =>
+                setDuLieuVao({ ...duLieuVao, tenLoaiPhong: v })
+              }
+              value={duLieuVao.tenLoaiPhong}
+              placeholder="Loại phòng ..."
             >
-              <option disabled selected>
-                Chọn...
-              </option>
-              <option>Nhỏ</option>
-              <option>Vừa</option>
-              <option>Lớn</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="exampleFormControlInput3">Số máy</label>
-            <input
+              <Option value={"Nhỏ"}>Nhỏ</Option>
+              <Option value={"Vừa"}>Vừa</Option>
+              <Option value={"Lớn"}>Lớn</Option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Số máy</FormLabel>
+            <Input
               name="soLuongMay"
+              value={duLieuVao.soLuongMay}
               onChange={(e) => onInputChange(e)}
-              type="text"
-              class="form-control"
-              id="exampleFormControlInput3"
               placeholder="Số máy"
             />
-          </div>
+          </FormControl>
         </div>
         <Sheet id={"scroll-style-01"} className={clsx(style.right)}>
           <strong>Danh sách ca trực</strong>
@@ -131,41 +190,31 @@ export default function PhongMay() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Nguyễn Văn A</td>
-                <td>01/01/2024</td>
-                <td>Sáng</td>
-              </tr>
-              <tr>
-                <td>Nguyễn Văn B</td>
-                <td>01/01/2024</td>
-                <td>Trưa</td>
-              </tr>
+              {dsCaTruc.map((item, index) => (<tr key={index}>
+                <td>{item.nhanVien.hoTenNhanVien}</td>
+                <td>{moment(item.ngayTruc).format("DD-MM-YYYY")}</td>
+                <td>{item.caLam}</td>
+              </tr>))}
             </tbody>
           </Table>
         </Sheet>
       </div>
-      <form class="form-inline my-3">
-        <div class="form-group">
-          <label className="mr-2" for="exampleFormControlInput4">
-            Tìm kiếm
-          </label>
-          <input
-            type="text"
-            class="form-control mr-2"
-            id="exampleFormControlInput4"
-            placeholder="Từ Khóa"
-          />
+      <div className={clsx(style.centerWrap)}>
+        <div className={clsx(style.searchWrap)}>
+          <FormControl>
+            <FormLabel>Tìm kiếm</FormLabel>
+            <Input placeholder="Từ khóa" />
+          </FormControl>
+          <Checkbox label="Số phòng" defaultChecked />
+          <Checkbox label="Tòa nhà" />
+          <Button>Tìm kiếm</Button>
         </div>
-        <Checkbox className="mr-2" label="Số phòng" defaultChecked />
-        <Checkbox className="mr-2" label="Tòa nhà" />
-        <Button className="mr-2">Tìm kiếm</Button>
-        <Button className="mr-2" onClick={(e) => onSubmit(e)}>
-          Thêm mới
-        </Button>
-        <Button onClick={() => updatePhongMay()} className="mr-2">Cập nhật</Button>
-        <Button onClick={() => deletePhongMay(rowData.id)} id="demo" className="delete-btn mr-2">Xóa</Button>
-      </form>
+        <div className={clsx(style.buttonWrap)}>
+          <Button onClick={() => luuPhongMay()}>Thêm mới</Button>
+          <Button onClick={() => capNhapPhongMay()}>Cập nhật</Button>
+          <Button onClick={() => xoaPhongMay()}>Xóa</Button>
+        </div>
+      </div>
       <Sheet id={"scroll-style-01"} className={clsx(style.tableWrap)}>
         <Table stickyHeader hoverRow aria-label="striped table">
           <thead>
@@ -178,13 +227,25 @@ export default function PhongMay() {
             </tr>
           </thead>
           <tbody>
-            {phongMays.map((phongMay) => (
-              <tr onClick={() => handlerAction(phongMay.id)}>
-                <td>{phongMay.id}</td>
-                <td>{phongMay.toaNha}</td>
-                <td>{phongMay.soPhong}</td>
-                <td>{phongMay.loaiPhong.tenLoaiPhong}</td>
-                <td>{phongMay.loaiPhong.soLuongMay}</td>
+            {dsPhongMay.map((item, index) => (
+              <tr
+                key={index}
+                onClick={() => {
+                  setPhongMay(item);
+                  setDuLieuVao({
+                    soPhong: item.soPhong,
+                    toaNha: item.toaNha,
+                    tenLoaiPhong: item.loaiPhong.tenLoaiPhong,
+                    soLuongMay: item.loaiPhong.soLuongMay,
+                  });
+                  xemDanhSachCaTruc(item.id);
+                }}
+              >
+                <td>{item.id}</td>
+                <td>{item.toaNha}</td>
+                <td>{item.soPhong}</td>
+                <td>{item.loaiPhong.tenLoaiPhong}</td>
+                <td>{item.loaiPhong.soLuongMay}</td>
               </tr>
             ))}
           </tbody>
