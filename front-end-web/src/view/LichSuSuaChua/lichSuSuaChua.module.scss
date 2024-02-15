@@ -1,0 +1,31 @@
+.lichSuSuaChua {
+  padding: 0% 1%;
+  height: 100%;
+  overflow-y: scroll;
+  .infoWrap {
+    display: flex;
+    overflow: auto;
+    .left {
+      width: 50%;
+      margin: 0% 1%;
+      overflow: auto;
+    }
+    .right {
+      width: 50%;
+      margin: 0% 1%;
+      border: 1px solid black;
+      .rightTable {
+        overflow: auto;
+        height: 100%;
+      }
+    }
+  }
+  .searchWrap{
+    margin-top: 10px;
+    margin: 0% 1%;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    align-items: flex-end;
+}
+}

@@ -30,4 +30,7 @@ public class MayTinh implements Serializable {
 //  @OneToMany(cascade = CascadeType.ALL)
 //  @JoinColumn(name = "mayTinh_id",referencedColumnName = "mayTinh_id")
 //  private List<ThietBi> thietBis;
+
+/*   @OneToMany(cascade = CascadeType.ALL, mappedBy = "mayTinh")
+  private List<LichSuSuaChua> lichSuSuaChuas; */
 }

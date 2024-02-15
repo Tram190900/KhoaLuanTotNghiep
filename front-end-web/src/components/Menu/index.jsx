@@ -4,18 +4,18 @@ import style from "./menu.module.scss";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import TerminalIcon from "@mui/icons-material/Terminal";
-// import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
+import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
-import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
+import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
 import { useNavigate } from "react-router-dom";
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+// import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export default function Menu() {
   const menu = useContext(MenuContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className={clsx(style.menu)}>
       <div
@@ -66,18 +66,6 @@ export default function Menu() {
         <TerminalIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Quản lý phần mềm
       </div>
-      {/* <div
-        onClick={() => {
-          menu.setMenuActive("lich-su");
-        }}
-        className={clsx(
-          style.menuItem,
-          menu.menuActive === "lich-su" ? style.active : ""
-        )}
-      >
-        <ManageHistoryIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-        Lịch sử sửa đổi
-      </div> */}
       <div
         onClick={() => {
           menu.setMenuActive("mon-hoc");
@@ -104,6 +92,18 @@ export default function Menu() {
       </div>
       <div
         onClick={() => {
+          menu.setMenuActive("lich-su-sua-chua");
+        }}
+        className={clsx(
+          style.menuItem,
+          menu.menuActive === "lich-su-sua-chua" ? style.active : ""
+        )}
+      >
+        <ManageHistoryIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+        Lịch sử sửa đổi
+      </div>
+      {/* <div
+        onClick={() => {
           menu.setMenuActive("lich-truc");
         }}
         className={clsx(
@@ -113,16 +113,14 @@ export default function Menu() {
       >
         <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Lịch trực phòng máy
-      </div>
+      </div> */}
       <div
         onClick={() => {
-          navigate('/login')
+          navigate("/login");
         }}
-        className={clsx(
-          style.logout
-        )}
+        className={clsx(style.logout)}
       >
-        <LogoutIcon sx={{ fontSize: 40 }}/>
+        <LogoutIcon sx={{ fontSize: 40 }} />
       </div>
     </div>
   );

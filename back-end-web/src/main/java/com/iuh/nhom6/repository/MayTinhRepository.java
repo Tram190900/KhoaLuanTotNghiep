@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface MayTinhRepository extends JpaRepository<MayTinh,Long> {
   MayTinh findMayTinhBySoMayContainingIgnoreCase(String soMay);
+  MayTinh findBySoMayLikeIgnoreCase(String soMay);
 
     List<MayTinh> findMayTinhsByPhongMay(PhongMay phong);
 
