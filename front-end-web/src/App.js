@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LayoutLogin />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/quan-ly-phong-may" element={<LayoutMain />}></Route>
+            <Route path="/quan-ly-phong-may" element={<LayoutMain />}></Route> 
           </Route>
         </Routes>
       </BrowserRouter>
