@@ -12,7 +12,7 @@ import java.util.Date;
 @Transactional
 @Data
 @NoArgsConstructor
-@IdClass(ChiTietLapDat.class)
+@IdClass(ChiTietLapDatPK.class)
 public class ChiTietLapDat implements Serializable {
     @Id
     @ManyToOne
