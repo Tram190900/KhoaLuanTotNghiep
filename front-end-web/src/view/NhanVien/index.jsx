@@ -109,60 +109,69 @@ export default function NhanVien() {
         <h1>QUẢN LÝ NHÂN VIÊN</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
-            <FormControl>
-              <FormLabel>Họ tên</FormLabel>
-              <Input
-                value={hoTen}
-                onChange={(e) => setHoTen(e.target.value)}
-                placeholder="Họ tên"
+            <div className={clsx(style.left_image_wrap)}>
+              <img
+                src="https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
+                alt="avatar"
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Email</FormLabel>
-              <Input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Số điện thoại</FormLabel>
-              <Input
-                value={sdt}
-                onChange={(e) => setSDT(e.target.value)}
-                placeholder="Số điện thoại"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Giới tính</FormLabel>
-              <Select
-                value={gioiTinh}
-                placeholder="Giới tính ..."
-                onChange={handleGioiTinh}
-              >
-                <Option value={true}>Nam</Option>
-                <Option value={false}>Nữ</Option>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Địa chỉ</FormLabel>
-              <Input
-                value={diaChi}
-                onChange={(e) => setDiaChi(e.target.value)}
-                placeholder="Địa chỉ"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Trạng thái</FormLabel>
-              <Select
-                value={trangThai}
-                placeholder="Trạng thái ..."
-                onChange={handleTrangThai}
-              >
-                <Option value={true}>Đi làm</Option>
-                <Option value={false}>Nghỉ làm</Option>
-              </Select>
-            </FormControl>
+              <Button>Cập nhật ảnh nhân viên</Button>
+            </div>
+            <div className={clsx(style.left_infor)}>
+              <FormControl>
+                <FormLabel>Họ tên</FormLabel>
+                <Input
+                  value={hoTen}
+                  onChange={(e) => setHoTen(e.target.value)}
+                  placeholder="Họ tên"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Số điện thoại</FormLabel>
+                <Input
+                  value={sdt}
+                  onChange={(e) => setSDT(e.target.value)}
+                  placeholder="Số điện thoại"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Giới tính</FormLabel>
+                <Select
+                  value={gioiTinh}
+                  placeholder="Giới tính ..."
+                  onChange={handleGioiTinh}
+                >
+                  <Option value={true}>Nam</Option>
+                  <Option value={false}>Nữ</Option>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Địa chỉ</FormLabel>
+                <Input
+                  value={diaChi}
+                  onChange={(e) => setDiaChi(e.target.value)}
+                  placeholder="Địa chỉ"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Trạng thái</FormLabel>
+                <Select
+                  value={trangThai}
+                  placeholder="Trạng thái ..."
+                  onChange={handleTrangThai}
+                >
+                  <Option value={true}>Đi làm</Option>
+                  <Option value={false}>Nghỉ làm</Option>
+                </Select>
+              </FormControl>
+            </div>
           </div>
           <div className={clsx(style.right)}>
             <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
@@ -185,7 +194,7 @@ export default function NhanVien() {
                   {caTruc?.map((item, index) => (
                     <tr>
                       <td>{item.phongMay.soPhong}</td>
-                      <td>{moment(item.ngayTruc).format('DD-MM-YYYY')}</td>
+                      <td>{moment(item.ngayTruc).format("DD-MM-YYYY")}</td>
                       <td>{item.caLam}</td>
                     </tr>
                   ))}

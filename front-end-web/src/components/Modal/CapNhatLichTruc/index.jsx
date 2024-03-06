@@ -76,12 +76,15 @@ export default function CapNhatLichTruc(props) {
   };
 
     const handleCapNhatLichTruc=async()=>{
-      const data={
-      nhanVien:{id:props.nhanVienId},
-      phongMay:{id:phongTruc},
-      ngayTruc:ngayTruc,
-      caLam: caTruc
-    }
+      const data = new FormData()
+      const phongMays = []
+      phongTruc?.map((item)=>{
+        phongMays.push(item.id)
+      })
+      data.append("phongMays", phongMays)
+      data.append("nhanVien", props.nhanVienId)
+      data.append("caLam", caTruc)
+      data.append("ngayTruc", ngayTruc.format("YYYY-MM-DD"))
     const result = await postAPI('saveChamCong', data)
       if(result.status===200){
         Swal.fire({

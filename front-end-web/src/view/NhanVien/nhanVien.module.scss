@@ -5,14 +5,26 @@
   .infoWrap {
     display: flex;
     overflow: auto;
-    // height: 40%;
     .left {
-      width: 50%;
+      width: 60%;
       margin: 0% 1%;
       overflow: auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      .left_image_wrap{
+        text-align: center;
+        img{
+          height: 70%;
+          width: 70%;
+        }
+      }
+      .left_infor{
+        width: 70%;
+      }
     }
     .right {
-      width: 50%;
+      width: 40%;
       margin: 0% 1%;
       border: 1px solid black;
       .rightTable {

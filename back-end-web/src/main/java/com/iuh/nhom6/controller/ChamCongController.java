@@ -34,12 +34,42 @@ public class ChamCongController {
         return chamCongRepository.findChamCongsByPhongMay(phongMay);
     }
 
+    // @PostMapping("/saveChamCong")
+    // public ChamCong saveChamCong(@RequestBody ChamCong chamCong){
+    // PhongMay phongMay =
+    // phongMayRepository.findById(chamCong.getPhongMay().getId()).get();
+    // NhanVien nhanVien =
+    // nhanVienRepository.findById(chamCong.getNhanVien().getId()).get();
+    // chamCong.setNhanVien(nhanVien);
+    // chamCong.setPhongMay(phongMay);
+    // return chamCongRepository.save(chamCong);
+    // }
     @PostMapping("/saveChamCong")
-    public ChamCong saveChamCong(@RequestBody ChamCong chamCong){
-        PhongMay phongMay = phongMayRepository.findById(chamCong.getPhongMay().getId()).get();
-        NhanVien nhanVien = nhanVienRepository.findById(chamCong.getNhanVien().getId()).get();
-        chamCong.setNhanVien(nhanVien);
-        chamCong.setPhongMay(phongMay);
-        return chamCongRepository.save(chamCong);
-            }
+    public String postMethodName(@RequestParam("phongMays") List<Long> phongMays,
+            @RequestParam("nhanVien") Long nhanVien,
+            @RequestParam("caLam") String caLam,
+            @RequestParam("ngayTruc") Date ngayTruc) {
+        try {
+
+            phongMays.forEach(phongMayId -> {
+                ChamCong chamCong = new ChamCong();
+                PhongMay phongMay = phongMayRepository.findById(phongMayId)
+                        .orElseThrow(() -> new RuntimeException("PhongMay not found with id: " + phongMayId));
+
+                NhanVien nhanVien1 = nhanVienRepository.findById(nhanVien)
+                        .orElseThrow(() -> new RuntimeException("NhanVien not found with id: " + nhanVien));
+                chamCong.setCaLam(caLam);
+                chamCong.setNgayTruc(ngayTruc);
+                chamCong.setNhanVien(nhanVien1);
+                chamCong.setPhongMay(phongMay);
+                chamCongRepository.save(chamCong);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error processing the request";
+        }
+
+        return "Successfully saved ChamCong";
+    }
+
 }
