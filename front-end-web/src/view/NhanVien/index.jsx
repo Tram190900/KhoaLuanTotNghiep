@@ -25,7 +25,7 @@ export default function NhanVien() {
   const [hoTen, setHoTen] = useState("");
   const [email, setEmail] = useState("");
   const [sdt, setSDT] = useState("");
-  const [gioiTinh, setGioiTinh] = useState();
+  const [gioiTinh, setGioiTinh] = useState(true);
   const [diaChi, setDiaChi] = useState("");
   const [trangThai, setTrangThai] = useState();
   const [timKiem, setTimKiem] = useState("");
@@ -114,7 +114,7 @@ export default function NhanVien() {
                 src="https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
                 alt="avatar"
               />
-              <Button>Cập nhật ảnh nhân viên</Button>
+              <Button>Thay ảnh đại diện</Button>
             </div>
             <div className={clsx(style.left_infor)}>
               <FormControl>
@@ -192,7 +192,7 @@ export default function NhanVien() {
                 </thead>
                 <tbody>
                   {caTruc?.map((item, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td>{item.phongMay.soPhong}</td>
                       <td>{moment(item.ngayTruc).format("DD-MM-YYYY")}</td>
                       <td>{item.caLam}</td>
