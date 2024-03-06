@@ -16,14 +16,15 @@ import com.iuh.nhom6.model.LoaiPhong;
 import com.iuh.nhom6.model.PhongMay;
 import com.iuh.nhom6.repository.LoaiPhongRepository;
 import com.iuh.nhom6.repository.PhongMayRepository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
 public class PhongMayController {
-  @Autowired 
+  @Autowired
   private PhongMayRepository phongMayRepository;
 
-  @Autowired 
+  @Autowired
   private LoaiPhongRepository loaiPhongRepository;
 
   @PostMapping("/savePhongMay")
@@ -34,8 +35,8 @@ public class PhongMayController {
       return phongMayRepository.save(phongMay);
     } catch (Exception e) {
       loaiPhong = loaiPhongRepository
-      .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
-      loaiPhong.getSoLuongMay());
+          .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
+              loaiPhong.getSoLuongMay());
       phongMay.setLoaiPhong(loaiPhong);
       return phongMayRepository.save(phongMay);
     }
@@ -54,22 +55,22 @@ public class PhongMayController {
   @PutMapping("/updatePhongMay/{id}")
   public PhongMay updatePhongMay(@RequestBody PhongMay newPhongMay, @PathVariable Long id) {
     return phongMayRepository.findById(id)
-    .map(phongMay -> {
-      phongMay.setSoPhong(newPhongMay.getSoPhong());
-      phongMay.setToaNha(newPhongMay.getToaNha());
-      phongMay.setLoaiPhong(newPhongMay.getLoaiPhong());
-      LoaiPhong loaiPhong = newPhongMay.getLoaiPhong();
-      try {
-        loaiPhongRepository.save(loaiPhong);
-        return phongMayRepository.save(phongMay);
-      } catch (Exception e) {
-        loaiPhong = loaiPhongRepository
-        .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
-        loaiPhong.getSoLuongMay());
-        phongMay.setLoaiPhong(loaiPhong);
-        return phongMayRepository.save(phongMay);
-      }
-    }).orElseThrow();
+        .map(phongMay -> {
+          phongMay.setSoPhong(newPhongMay.getSoPhong());
+          phongMay.setToaNha(newPhongMay.getToaNha());
+          phongMay.setLoaiPhong(newPhongMay.getLoaiPhong());
+          LoaiPhong loaiPhong = newPhongMay.getLoaiPhong();
+          try {
+            loaiPhongRepository.save(loaiPhong);
+            return phongMayRepository.save(phongMay);
+          } catch (Exception e) {
+            loaiPhong = loaiPhongRepository
+                .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
+                    loaiPhong.getSoLuongMay());
+            phongMay.setLoaiPhong(loaiPhong);
+            return phongMayRepository.save(phongMay);
+          }
+        }).orElseThrow();
   }
 
   @DeleteMapping("/deletePhongMay/{id}")
@@ -77,4 +78,17 @@ public class PhongMayController {
     phongMayRepository.deleteById(id);
     return "Phong may with id " + id + " has been deleted success.";
   }
+
+  @GetMapping("/getAllToaNha")
+  public List<String> getAllToaNha() {
+    List<String> toaNhaList = phongMayRepository.findToaNha();
+    return toaNhaList;
+  }
+
+  @GetMapping("/getPhongMay/{toaNha}")
+  public List<PhongMay> getMethodName(@PathVariable String toaNha) {
+    List<PhongMay> phongMays = phongMayRepository.findPhongMaysByToaNha(toaNha);
+      return phongMays;
+  }
+  
 }
