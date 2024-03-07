@@ -218,44 +218,26 @@ export default function LichSuSuaChua() {
                     </td>
                   )}
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={3} style={{ textAlign: "center" }}>
-                      <Button
-                        onClick={() =>
-                          setOpenCapNhapNhanVien(!openCapNhapNhanVien)
-                        }
-                      >
-                        Cập nhật nhân viên
-                      </Button>
-                    </td>
-                  </tr>
-                </tfoot>
               </Table>
             </Sheet>
           </div>
         </div>
         <div className={clsx(style.searchWrap)}>
-          <FormControl>
-            <FormLabel>Tìm kiếm</FormLabel>
-            <Input placeholder="Từ khóa" />
-          </FormControl>
-          <Button>Tìm kiếm</Button>
-          <Button onClick={() => luuChiTietLichSuSuaChua()}>Thêm mới</Button>
           <Button onClick={() => capNhapChiTietLichSuSuaChua()}>
             Cập nhật
           </Button>
-          <Button onClick={() => xoaChiTietLichSuSuaChua()}>Xóa</Button>
         </div>
         <Sheet id={"scroll-style-01"}>
           <Table stickyHeader hoverRow aria-label="striped table">
             <thead>
               <tr>
-                <th>Id</th>
                 <th>Máy tính</th>
                 <th>Lỗi gặp phải</th>
                 <th>Ngày gặp lỗi</th>
+                <th>Ngày sửa</th>
+                <th>Trang thái</th>
                 <th>Ghi chú</th>
+                <th>Thời gian chờ</th>
               </tr>
             </thead>
             <tbody>

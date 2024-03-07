@@ -8,37 +8,35 @@
     height: 45%;
     .content {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       height: 100%;
       .leftWrap {
         width: 35%;
         margin: 0% 1%;
         overflow: auto;
-      }
-      .rightWrap {
-        width: 65%;
-        display: flex;
-        .tablePhanMem {
-          border: 1px solid rgb(175, 175, 175);
-          height: 100%;
-          overflow: auto;
-        }
-        .tableThietBi {
-          border: 1px solid rgb(175, 175, 175);
-          height: 100%;
-          overflow: auto;
+        .leftWrap_button {
+          margin-top: 3%;
+          margin-right: 5%;
         }
       }
     }
   }
-  .searchWrap {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+  .rightWrap {
     width: 100%;
-  }
-  .tableMayTinh {
-    height: 50%;
-    overflow: auto;
+    display: flex;
+    justify-content: space-around;
+    height: 80%;
+    .tablePhanMem {
+      border: 1px solid rgb(175, 175, 175);
+      height: 100%;
+      overflow: auto;
+      width: 45%;
+    }
+    .tableThietBi {
+      border: 1px solid rgb(175, 175, 175);
+      height: 100%;
+      overflow: auto;
+      width: 45%;
+    }
   }
 }

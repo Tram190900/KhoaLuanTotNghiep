@@ -23,25 +23,73 @@ export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
   const [openCpaNhatPhanMem, setOpenCapNhatPhanMem] = useState(false);
   const [openCapNhatThietBi, setOpenCapNhatThietBi] = useState(false);
-  const [timTheo, setTimTheo] = useState("SoPhong");
 
-  const [allMayTinh, setAllMayTinh] = useState([]);
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
   const [thietBiLapDat, setThietBiLapDat] = useState([]);
 
-  const [phong, setPhong] = useState("");
-  const [soMay, setSoMay] = useState("");
+  const [allToaNha, setAllToaNha] = useState([]);
+  const [selectToaNha, setSelectToaNha] = useState(null);
+
+  const [phongMay, setPhongMay] = useState([]);
+  const [selectPhongMay, setSelectPhongMay] = useState(null);
+
+  const [mayTinh, setMayTinh] = useState([]);
+  const [selectMayTinh, setSelectMayTinh] = useState(null);
+
   const [trangThai, setTrangThai] = useState(true);
-  const [mayTinhId, setMayTinhId] = useState();
-  const [tuKhoa, setTuKhoa]= useState('')
 
   useEffect(() => {
-    handleGetAllMayTinh();
+    handleGetAllToaNha();
   }, []);
-  const handleGetAllMayTinh = async () => {
-    const result = await getAPI("/getAllMayTinh");
-    if (result.status === 200) {
-      setAllMayTinh(result.data);
+
+  const handleGetAllToaNha = async () => {
+    try {
+      const result = await getAPI("getAllToaNha");
+      if (result.status === 200) {
+        setAllToaNha(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleGetPhongMayTheoToaNha = async (value) => {
+    try {
+      const result = await getAPI(`getPhongMay/${value}`);
+      if (result.status === 200) {
+        setPhongMay(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetMayTinhTheoPhong = async (value) => {
+    try {
+      const result = await getAPI(`getMayTinhByPhong/${value}`);
+      if (result.status === 200) {
+        setMayTinh(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleToaNha = (event, newValue) => {
+    setSelectToaNha(newValue);
+    handleGetPhongMayTheoToaNha(newValue);
+  };
+
+  const handlePhongMay = async (event, newValue) => {
+    setSelectPhongMay(newValue);
+    if (newValue) {
+      handleGetMayTinhTheoPhong(newValue.soPhong);
+    }
+  };
+
+  const handleMayTinh = (event, newValue) => {
+    setSelectMayTinh(newValue);
+    if (newValue) {
+      setTrangThai(newValue.trangThai);
     }
   };
 
@@ -77,107 +125,32 @@ export default function MayTinh() {
     }
   };
 
-  const handleThemMoi = async () => {
-    const data = {
-      soMay: soMay,
-      trangThai: trangThai,
-      phongMay: {
-        soPhong: phong,
-      },
-    };
-    try {
-      const result = await postAPI("/saveMayTinh", data);
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Thêm mới máy tính thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        handleGetAllMayTinh();
-      }
-    } catch (error) {
-      Swal.fire({
-        text: error.response.data,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
-  };
-
-  const handleXoaMayTinh = async () => {
-    Swal.fire({
-      text: "Bạn có chắc muốn xóa máy tính này khỏi phòng máy hay không?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Có",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteAPI(`/deleteMayTinh/${mayTinhId}`)
-          .then(() => {
-            Swal.fire({
-              text: "Xóa máy tính thành công",
-              icon: "success",
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    });
-  };
-
   const handleChange = (event, newValue) => {
     setTrangThai(newValue);
   };
 
-  const handleTimKiem = async () => {
-    const list =[]
-    if (timTheo === "SoPhong") {
-      try {
-        const result = await getAPI(`/getMayTinhByPhong/${tuKhoa}`);
-        if (result.status === 200) {
-          setAllMayTinh(result.data)
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (timTheo === "SoMay") {
-      try {
-        const result = await getAPI(`/getMayTinhBySoMay/${tuKhoa}`);
-        if (result.status === 200) {
-          list.push(result.data)
-        }
-        setAllMayTinh(list)
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  const handleCapNhatMayTinh = async () => {
+    // try {
+    //   const data = {
+    //     soMay: soMay,
+    //     trangThai: trangThai,
+    //     phongMay: {
+    //       soPhong: phong,
+    //     },
+    //   };
+    //   const result = await putAPI(`/updateMayTinh/${mayTinhId}`, data);
+    //   if (result.status === 200) {
+    //     Swal.fire({
+    //       text: "Cập nhật máy tính thành công",
+    //       icon: "success",
+    //       confirmButtonText: "OK",
+    //     });
+    //     handleGetAllMayTinh();
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
-
-  const handleCapNhatMayTinh=async()=>{
-    try {
-      const data = {
-        soMay: soMay,
-        trangThai: trangThai,
-        phongMay: {
-          soPhong: phong,
-        },
-      };
-      const result = await putAPI(`/updateMayTinh/${mayTinhId}`,data)
-      if(result.status===200){
-        Swal.fire({
-          text: "Cập nhật máy tính thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        handleGetAllMayTinh();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <>
@@ -186,21 +159,49 @@ export default function MayTinh() {
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.content)}>
             <div className={clsx(style.leftWrap)}>
-              <FormControl>
-                <FormLabel>Phòng</FormLabel>
-                <Input
-                  placeholder="Phòng"
-                  value={phong}
-                  onChange={(e) => setPhong(e.target.value)}
-                />
-              </FormControl>
+              <span className="d-flex justify-content-between">
+                <FormControl className="w-50">
+                  <FormLabel>Tòa nhà</FormLabel>
+                  <Select
+                    placeholder="Tòa nhà..."
+                    value={selectToaNha}
+                    onChange={handleToaNha}
+                  >
+                    {allToaNha?.map((item, index) => (
+                      <Option value={item} key={index}>
+                        {item}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl className="w-50">
+                  <FormLabel>Số phòng</FormLabel>
+                  <Select
+                    value={selectPhongMay}
+                    onChange={handlePhongMay}
+                    placeholder="Số phòng..."
+                  >
+                    {phongMay?.map((item, index) => (
+                      <Option value={item} key={index}>
+                        {item.soPhong}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </span>
               <FormControl>
                 <FormLabel>Số máy</FormLabel>
-                <Input
-                  placeholder="Số máy"
-                  value={soMay}
-                  onChange={(e) => setSoMay(e.target.value)}
-                />
+                <Select
+                  placeholder="Số máy..."
+                  value={selectMayTinh}
+                  onChange={handleMayTinh}
+                >
+                  {mayTinh?.map((item, index) => (
+                    <Option key={index} value={item}>
+                      {item.soMay}
+                    </Option>
+                  ))}
+                </Select>
               </FormControl>
               <FormControl>
                 <FormLabel>Trạng thái</FormLabel>
@@ -213,162 +214,94 @@ export default function MayTinh() {
                   <Option value={false}>Bảo trì</Option>
                 </Select>
               </FormControl>
-              <FormControl>
-                <FormLabel>Ghi chú (Nếu có)</FormLabel>
-                <Input placeholder="Ghí chú" />
-              </FormControl>
-            </div>
-            <div className={clsx(style.rightWrap)}>
-              <Sheet
-                id={"scroll-style-01"}
-                className={clsx(style.tablePhanMem)}
+              <Button
+                className={clsx(style.leftWrap_button)}
+                onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+                disabled={selectMayTinh ? "" : "disabled"}
               >
-                <Table
-                  aria-label="table with sticky header"
-                  stickyHeader
-                  stickyFooter
-                  stripe="odd"
-                  hoverRow
-                >
-                  <thead>
-                    <tr>
-                      <th>Tên phần mềm</th>
-                      <th>Phiên bản</th>
-                      <th>Ngày cài đặt</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {phanMemCaiDat?.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.phanMem.tenPhamMem}</td>
-                        <td>{item.phanMem.phienBan}</td>
-                        <td>{moment(item.ngayCaiDat).format("DD-MM-YYYY")}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={3} style={{ textAlign: "center" }}>
-                        <Button onClick={() => setOpenCapNhatPhanMem(true)}>
-                          Cập nhật
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </Table>
-              </Sheet>
-              <Sheet
-                id={"scroll-style-01"}
-                className={clsx(style.tableThietBi)}
+                Báo lỗi
+              </Button>
+              <Button
+                className={clsx(style.leftWrap_button)}
+                onClick={() => handleCapNhatMayTinh()}
+                disabled={selectPhongMay ? "" : "disabled"}
               >
-                <Table
-                  aria-label="table with sticky header"
-                  stickyHeader
-                  stickyFooter
-                  stripe="odd"
-                  hoverRow
-                >
-                  <thead>
-                    <tr>
-                      <th>Tên thiết bị</th>
-                      <th>Ngày cài đặt</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {thietBiLapDat?.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.thietBi.tenThietBi}</td>
-                        <td>{moment(item.ngayLapDat).format("DD-MM-YYYY")}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={2} style={{ textAlign: "center" }}>
-                        <Button onClick={() => setOpenCapNhatThietBi(true)}>
-                          Cập nhật
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </Table>
-              </Sheet>
+                Cập nhật
+              </Button>
             </div>
           </div>
         </div>
-        <div className={clsx(style.searchWrap)}>
-          <FormControl>
-            <FormLabel>Tìm kiếm</FormLabel>
-            <Input placeholder="Từ khóa" onChange={(e)=>setTuKhoa(e.target.value)}/>
-          </FormControl>
-          <Checkbox
-            label="Số phòng"
-            defaultChecked
-            onClick={() => setTimTheo("SoPhong")}
-          />
-          <Checkbox label="Số máy" onClick={() => setTimTheo("SoMay")} />
-          <Button onClick={()=>handleTimKiem()}>Tìm kiếm</Button>
-          <Button onClick={() => setOpenLichSuaChua(!openLichSuaChua)}>
-            Lịch sử sửa chữa
-          </Button>
-          <Button
-            onClick={() => {
-              if (phong.trim().length > 0 && soMay.trim().length > 0) {
-                handleThemMoi();
-              }
-            }}
-          >
-            Thêm mới
-          </Button>
-          <Button onClick={()=>handleCapNhatMayTinh()}>Cập nhật</Button>
-          <Button onClick={() => handleXoaMayTinh()}>Xóa</Button>
-        </div>
-        <Sheet id={"scroll-style-01"} className={clsx(style.tableMayTinh)}>
-          <Table stickyHeader hoverRow aria-label="striped table">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Số Phòng</th>
-                <th>Số máy</th>
-                <th>Trạng thái</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allMayTinh?.map((item, index) => (
-                <tr
-                  key={index}
-                  onClick={(e) => {
-                    handleGetPhanMemCaiDat(item.id);
-                    handleGetThietBiLapDat(item.id);
-                    setMayTinhId(item.id);
-                    setPhong(item.phongMay.soPhong);
-                    setSoMay(item.soMay);
-                    setTrangThai(item.trangThai);
-                  }}
-                >
-                  <td>{item.id}</td>
-                  <td>{item.phongMay.soPhong}</td>
-                  <td>{item.soMay}</td>
-                  <td>{item.trangThai ? "Bình thường" : "Bảo trì"}</td>
+        <div className={clsx(style.rightWrap)}>
+          <Sheet id={"scroll-style-01"} className={clsx(style.tablePhanMem)}>
+            <Table
+              aria-label="table with sticky header"
+              stickyHeader
+              stickyFooter
+              stripe="odd"
+              hoverRow
+            >
+              <thead>
+                <tr>
+                  <th>Tên phần mềm</th>
+                  <th>Phiên bản</th>
+                  <th>Ngày cài đặt</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Sheet>
+              </thead>
+              <tbody>
+                {phanMemCaiDat?.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.phanMem.tenPhamMem}</td>
+                    <td>{item.phanMem.phienBan}</td>
+                    <td>{moment(item.ngayCaiDat).format("DD-MM-YYYY")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Sheet>
+          <Sheet id={"scroll-style-01"} className={clsx(style.tableThietBi)}>
+            <Table
+              aria-label="table with sticky header"
+              stickyHeader
+              stickyFooter
+              stripe="odd"
+              hoverRow
+            >
+              <thead>
+                <tr>
+                  <th>Tên thiết bị</th>
+                  <th>Ngày cài đặt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {thietBiLapDat?.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.thietBi.tenThietBi}</td>
+                    <td>{moment(item.ngayLapDat).format("DD-MM-YYYY")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Sheet>
+        </div>
       </div>
-      <LichSuaChua open={openLichSuaChua} setOpen={setOpenLichSuaChua} />
+      <LichSuaChua
+        open={openLichSuaChua}
+        phongMay={selectPhongMay}
+        mayTinh={selectMayTinh}
+        setOpen={setOpenLichSuaChua}
+      />
       <CapNhatPhanMemMayTinh
         open={openCpaNhatPhanMem}
         setOpen={setOpenCapNhatPhanMem}
         phanMemCaiDat={phanMemCaiDat}
-        mayTinhId={mayTinhId}
+        // mayTinhId={mayTinhId}
         handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
       />
       <CapNhatThietBiMayTinh
         open={openCapNhatThietBi}
         setOpen={setOpenCapNhatThietBi}
         thietBiLapDat={thietBiLapDat}
-        mayTinhId={mayTinhId}
+        // mayTinhId={mayTinhId}
         handleGetThietBiLapDat={handleGetThietBiLapDat}
       />
     </>
