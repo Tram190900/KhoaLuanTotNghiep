@@ -31,6 +31,16 @@
       .rightTable {
         overflow: auto;
         height: 100%;
+        .search_ngay_truc{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 2%;
+          border-bottom: 1px solid gray;
+          span{
+            width: 30%;
+          }
+        }
       }
     }
   }

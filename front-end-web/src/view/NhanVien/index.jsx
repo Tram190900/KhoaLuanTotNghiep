@@ -15,6 +15,10 @@ import {
 import CapNhatLichTruc from "../../components/Modal/CapNhatLichTruc";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 
 export default function NhanVien() {
   const [openLichTruc, setOpenLichTruc] = useState(false);
@@ -25,11 +29,13 @@ export default function NhanVien() {
   const [hoTen, setHoTen] = useState("");
   const [email, setEmail] = useState("");
   const [sdt, setSDT] = useState("");
-  const [gioiTinh, setGioiTinh] = useState(true);
+  const [gioiTinh, setGioiTinh] = useState(null);
   const [diaChi, setDiaChi] = useState("");
   const [trangThai, setTrangThai] = useState();
   const [timKiem, setTimKiem] = useState("");
   const [nhanVienId, setNhanVienId] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     handleGetAllNhanvien();
@@ -98,11 +104,38 @@ export default function NhanVien() {
   };
 
   const handleGetCaTrucByNhanVien = async (id) => {
-    const result = await getAPI(`/getChamCongByNhanVien/${id}`);
-    if (result.status === 200) {
-      setCaTruc(result.data);
+    try {
+      const result = await getAPI(`/getChamCongByNhanVienOnWeek/${id}`);
+      if (result.status === 200) {
+        setCaTruc(result.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
+  const handleGetChamCongByNgayTruc = async () => {
+    try {
+      const data = new FormData();
+      data.append("startDate", startDate.format("YYYY-MM-DD"));
+      data.append("endDate", endDate.format("YYYY-MM-DD"));
+      const result = await postAPI(
+        `/getChamCongByNgayTruc/${nhanVienId}`,
+        data
+      );
+      if (result.status === 200) {
+        setCaTruc(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      handleGetChamCongByNgayTruc();
+    }
+  }, [startDate, endDate]);
   return (
     <>
       <div className={clsx(style.nhanVien)}>
@@ -175,7 +208,25 @@ export default function NhanVien() {
           </div>
           <div className={clsx(style.right)}>
             <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
-              <strong>Danh sách ca trực</strong>
+              <span className={clsx(style.search_ngay_truc)}>
+                <strong>Danh sách ca trực trong tuần</strong>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoItem components={["DatePicker"]}>
+                    <DatePicker
+                      value={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      label="Từ ngày...."
+                    />
+                  </DemoItem>
+                  <DemoItem components={["DatePicker"]}>
+                    <DatePicker
+                      value={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      label="Đến ngày"
+                    />
+                  </DemoItem>
+                </LocalizationProvider>
+              </span>
               <Table
                 aria-label="table with sticky header"
                 stickyHeader

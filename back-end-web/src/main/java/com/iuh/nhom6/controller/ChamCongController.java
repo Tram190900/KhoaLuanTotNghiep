@@ -34,6 +34,28 @@ public class ChamCongController {
         return chamCongRepository.findChamCongsByPhongMay(phongMay);
     }
 
+    @GetMapping("/getChamCongByNhanVienOnWeek/{id}")
+    public List<ChamCong> getChamCongsByNhanVienOnWeek(@PathVariable Long id) {
+        try {
+            List<ChamCong> chamCongs = chamCongRepository.findChamCongsByNhanVienOnWeek(id);
+            return chamCongs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @PostMapping("/getChamCongByNgayTruc/{id}")
+    public List<ChamCong> getMethodName(@PathVariable Long id, @RequestParam("startDate") Date startDate,
+            @RequestParam("endDate") Date endDate) {
+        try {
+            return chamCongRepository.findChamCongsByNgayTruc(startDate, endDate, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // @PostMapping("/saveChamCong")
     // public ChamCong saveChamCong(@RequestBody ChamCong chamCong){
     // PhongMay phongMay =
