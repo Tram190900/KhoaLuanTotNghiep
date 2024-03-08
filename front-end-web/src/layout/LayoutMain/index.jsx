@@ -37,10 +37,10 @@ export default function LayoutMain() {
           ) : null}
         </div>
       </div>
-      <div className={clsx(style.tab)}>
+      {/* <div className={clsx(style.tab)}>
         Phần mềm quản lý thiết bị, phần mềm phòng máy trường DHCN (Nhóm 6 - Mã
         Vũ Tố Trâm / Đoàn Công Tuấn Tú)
-      </div>
+      </div> */}
     </div>
   );
 }

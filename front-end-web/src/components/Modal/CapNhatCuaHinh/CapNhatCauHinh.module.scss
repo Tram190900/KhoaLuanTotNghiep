@@ -1,0 +1,37 @@
+.left_menu{
+    width: 20%;
+    background-color:#2e5b92;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+.table_wrap{
+    width: 80%;
+    padding-left: 2%;
+    .table_phanMem{
+        height: 500px;
+        display: none;
+    }
+    .table_phanMem.action{
+        display: block;
+    }
+    .table_thietBi{
+        height: 500px;
+        display: none;
+    }
+    .table_thietBi.action{
+        display: block;
+    }
+    .button_thietBi{
+        :nth-child(2){
+            background-color: rgb(144, 144, 144);
+            color: black;
+            margin-right: 2%;
+        }
+        :nth-child(2):hover{
+            opacity: 0.7;
+            background-color: rgb(144, 144, 144);
+        }
+    }
+}

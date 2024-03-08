@@ -3,25 +3,21 @@ import React, { useEffect, useState } from "react";
 import style from "./mayTinh.module.scss";
 import {
   Button,
-  Checkbox,
   FormControl,
   FormLabel,
-  Input,
   Option,
   Select,
   Sheet,
   Table,
 } from "@mui/joy";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
-import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
+import { getAPI,  } from "../../api";
 import moment from "moment";
-import Swal from "sweetalert2";
-import CapNhatPhanMemMayTinh from "../../components/Modal/CapNhatPhanMemMayTinh";
-import CapNhatThietBiMayTinh from "../../components/Modal/CapNhatThietBiMayTinh";
+import CapNhatCauHinh from "../../components/Modal/CapNhatCuaHinh";
 
 export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
-  const [openCpaNhatPhanMem, setOpenCapNhatPhanMem] = useState(false);
+  const [openCapNhatCauHinh, setOpenCapNhatCauHinh] = useState(false);
   const [openCapNhatThietBi, setOpenCapNhatThietBi] = useState(false);
 
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
@@ -90,6 +86,8 @@ export default function MayTinh() {
     setSelectMayTinh(newValue);
     if (newValue) {
       setTrangThai(newValue.trangThai);
+      handleGetPhanMemCaiDat(newValue.id);
+      handleGetThietBiLapDat(newValue.id);
     }
   };
 
@@ -127,29 +125,6 @@ export default function MayTinh() {
 
   const handleChange = (event, newValue) => {
     setTrangThai(newValue);
-  };
-
-  const handleCapNhatMayTinh = async () => {
-    // try {
-    //   const data = {
-    //     soMay: soMay,
-    //     trangThai: trangThai,
-    //     phongMay: {
-    //       soPhong: phong,
-    //     },
-    //   };
-    //   const result = await putAPI(`/updateMayTinh/${mayTinhId}`, data);
-    //   if (result.status === 200) {
-    //     Swal.fire({
-    //       text: "Cập nhật máy tính thành công",
-    //       icon: "success",
-    //       confirmButtonText: "OK",
-    //     });
-    //     handleGetAllMayTinh();
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (
@@ -223,10 +198,17 @@ export default function MayTinh() {
               </Button>
               <Button
                 className={clsx(style.leftWrap_button)}
-                onClick={() => handleCapNhatMayTinh()}
+                // onClick={() => handleCapNhatMayTinh()}
+                disabled={selectMayTinh ? "" : "disabled"}
+              >
+                Cập nhật trạng thái
+              </Button>
+              <Button
+                className={clsx(style.leftWrap_button)}
+                onClick={() => setOpenCapNhatCauHinh(true)}
                 disabled={selectPhongMay ? "" : "disabled"}
               >
-                Cập nhật
+                Cập nhật cấu hình
               </Button>
             </div>
           </div>
@@ -290,19 +272,13 @@ export default function MayTinh() {
         mayTinh={selectMayTinh}
         setOpen={setOpenLichSuaChua}
       />
-      <CapNhatPhanMemMayTinh
-        open={openCpaNhatPhanMem}
-        setOpen={setOpenCapNhatPhanMem}
+      <CapNhatCauHinh
+        open={openCapNhatCauHinh}
+        setOpen={setOpenCapNhatCauHinh}
         phanMemCaiDat={phanMemCaiDat}
-        // mayTinhId={mayTinhId}
-        handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
-      />
-      <CapNhatThietBiMayTinh
-        open={openCapNhatThietBi}
-        setOpen={setOpenCapNhatThietBi}
         thietBiLapDat={thietBiLapDat}
-        // mayTinhId={mayTinhId}
-        handleGetThietBiLapDat={handleGetThietBiLapDat}
+        mayTinhId={selectMayTinh?.id}
+        handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
       />
     </>
   );

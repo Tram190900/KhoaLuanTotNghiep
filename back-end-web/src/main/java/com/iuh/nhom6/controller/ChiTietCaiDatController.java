@@ -22,7 +22,7 @@ public class ChiTietCaiDatController {
     private MayTinhRepository mayTinhRepository;
 
     @GetMapping("/getChiTietCaiDat/{id}")
-    public List<ChiTietCaiDat> getPhanMemTheoMay(@PathVariable Long id){
+    public List<ChiTietCaiDat> getPhanMemTheoMay(@PathVariable Long id) {
         return chiTietCaiDatRepository.getAllChiTietCaiDatByMayTinh(id);
     }
 

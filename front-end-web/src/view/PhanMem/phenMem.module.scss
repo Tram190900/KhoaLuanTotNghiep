@@ -1,5 +1,6 @@
 .phanMem{
     padding:0 1%; 
+    height: 100%;
     .info{
         width: 50%;
     }
@@ -8,5 +9,9 @@
         justify-content: space-between;
         width: 80%;
         align-items: flex-end;
+    }
+    .tablePhanMem{
+        overflow: auto;
+        height: 55%;
     }
 }
