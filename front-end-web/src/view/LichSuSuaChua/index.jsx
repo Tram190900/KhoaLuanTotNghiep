@@ -6,6 +6,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Option,
+  Select,
   Sheet,
   Table,
   Textarea,
@@ -19,26 +21,123 @@ export default function LichSuSuaChua() {
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
+
+  const [allToaNha, setAllToaNha] = useState([]);
+  const [selectToaNha, setSelectToaNha] = useState(null);
+
+  const [phongMay, setPhongMay] = useState([]);
+  const [selectPhongMay, setSelectPhongMay] = useState(null);
+
+  const [allMayTinh, setAllMayTinh] = useState([]);
+  const [selectMayTinh, setSelectMayTinh] = useState(null);
+
+  const [nhanVien, setNhanVien] = useState({});
+  const [mayTinh, setMayTinh] = useState({});
+
   const [duLieuVao, setDuLieuVao] = useState({
     soMay: "",
     loiGapPhai: "",
     ngayGapLoi: "",
     ghiChu: "",
+    trangThai: null,
   });
 
-  const xemDanhSachChiTietLichSuSuaChua = async () => {
-    const result = await getAPI("/chiTietLichSuSuaChua");
+  useEffect(() => {
+    handleGetAllToaNha();
+  }, []);
+
+  const xemDanhSachChiTietLichSuSuaChua = async (soMay) => {
+    const result = await getAPI(`/chiTietLichSuSuaChua/${soMay}`);
     if (result.status === 200) {
       setChiTietLichSuSuaChuas(result.data);
     }
   };
 
-  useEffect(() => {
-    xemDanhSachChiTietLichSuSuaChua();
-  }, []);
+  const xemDanhSachChiTietLichSuSuaChuTheoPhong = async (phongId) => {
+    const result = await getAPI(
+      `/chiTietLichSuSuaChua/getByPhongMay/${phongId}`
+    );
+    if (result.status === 200) {
+      setChiTietLichSuSuaChuas(result.data);
+    }
+  };
+
+  const handleGetAllToaNha = async () => {
+    try {
+      const result = await getAPI("getAllToaNha");
+      if (result.status === 200) {
+        setAllToaNha(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetPhongMayTheoToaNha = async (value) => {
+    try {
+      const result = await getAPI(`getPhongMay/${value}`);
+      if (result.status === 200) {
+        setPhongMay(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetMayTinhTheoPhong = async (value) => {
+    try {
+      const result = await getAPI(`getMayTinhByPhong/${value}`);
+      if (result.status === 200) {
+        setAllMayTinh(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleToaNha = (event, newValue) => {
+    setSelectToaNha(newValue);
+    handleGetPhongMayTheoToaNha(newValue);
+  };
+
+  const handlePhongMay = async (event, newValue) => {
+    setSelectPhongMay(newValue);
+    if (newValue) {
+      handleGetMayTinhTheoPhong(newValue.soPhong);
+      xemDanhSachChiTietLichSuSuaChuTheoPhong(newValue.id);
+    }
+  };
+
+  const handleMayTinh = (event, newValue) => {
+    setSelectMayTinh(newValue);
+    if (newValue) {
+      xemDanhSachChiTietLichSuSuaChua(newValue.id);
+    }
+  };
 
   const onInputChange = (e) => {
     setDuLieuVao({ ...duLieuVao, [e.target.name]: e.target.value });
+  };
+
+  const getNhanVienById = async (id) => {
+    try {
+      const result = await getAPI(`/getNhanVienById/${id}`);
+      if (result.status === 200) {
+        setNhanVien(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMayTinhById = async (id) => {
+    try {
+      const result = await getAPI(`/getMayTinhById/${id}`);
+      return result.data; // Assuming your API response contains the needed data
+    } catch (error) {
+      console.error(error);
+      return null; // Handle the error if needed
+    }
   };
 
   const luuChiTietLichSuSuaChua = async () => {
@@ -111,11 +210,11 @@ export default function LichSuSuaChua() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         chiTietLichSuSuaChua.ghiChu = duLieuVao.ghiChu;
-        chiTietLichSuSuaChua.lichSuSuaChua.mayTinh.soMay = duLieuVao.soMay;
-        chiTietLichSuSuaChua.lichSuSuaChua.loiGapPhai = duLieuVao.loiGapPhai;
-        chiTietLichSuSuaChua.lichSuSuaChua.ngayGapLoi = duLieuVao.ngayGapLoi;
+        chiTietLichSuSuaChua.mayTinhId = Number(selectMayTinh.id);
+        chiTietLichSuSuaChua.loiGapPhai = duLieuVao.loiGapPhai;
+        chiTietLichSuSuaChua.ngayGapLoi = duLieuVao.ngayGapLoi;
         await putAPI(
-          `/chiTietLichSuSuaChua/${chiTietLichSuSuaChua.id}`,
+          `/chiTietLichSuSuaChua/${chiTietLichSuSuaChua.chiTietLichSuSuaLoiId}`,
           chiTietLichSuSuaChua
         )
           .then(() => {
@@ -140,16 +239,59 @@ export default function LichSuSuaChua() {
         <h1>LỊCH SỬ SỬA CHỮA</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
-            <FormControl>
-              <FormLabel>Máy tính</FormLabel>
-              <Input
+            <div className="d-flex">
+              <FormControl className="w-50">
+                <FormLabel>Tòa nhà</FormLabel>
+                <Select
+                  value={selectToaNha}
+                  onChange={handleToaNha}
+                  placeholder="Tòa nhà..."
+                >
+                  {allToaNha?.map((item, index) => (
+                    <Option value={item} key={index}>
+                      {item}
+                    </Option>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl className="w-50">
+                <FormLabel>Số phòng</FormLabel>
+                <Select
+                  value={selectPhongMay}
+                  onChange={handlePhongMay}
+                  placeholder="Số phòng..."
+                >
+                  {phongMay?.map((item, index) => (
+                    <Option key={index} value={item}>
+                      {item.soPhong}
+                    </Option>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl className="w-50">
+                <FormLabel>Số máy</FormLabel>
+                <Select
+                  onChange={handleMayTinh}
+                  value={selectMayTinh}
+                  name="soMay"
+                  placeholder="Số máy..."
+                >
+                  {allMayTinh?.map((item, index) => (
+                    <Option value={item} key={index}>
+                      {item.soMay}
+                    </Option>
+                  ))}
+                </Select>
+                {/* <Input
                 id="soMay"
                 value={duLieuVao.soMay}
                 onChange={(e) => onInputChange(e)}
                 name="soMay"
                 placeholder="Máy tính"
-              />
-            </FormControl>
+              /> */}
+              </FormControl>
+            </div>
+
             <FormControl>
               <FormLabel>Lỗi gặp phải</FormLabel>
               <Input
@@ -158,6 +300,7 @@ export default function LichSuSuaChua() {
                 name="loiGapPhai"
                 placeholder="Lỗi gặp phải"
                 value={duLieuVao.loiGapPhai}
+                disabled
               />
             </FormControl>
             <FormControl>
@@ -169,7 +312,19 @@ export default function LichSuSuaChua() {
                 type="date"
                 placeholder="Ngày gặp lỗi"
                 value={duLieuVao.ngayGapLoi}
+                disabled
               />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Trạng thái</FormLabel>
+              <Select
+                value={duLieuVao.trangThai}
+                onChange={(e) => onInputChange(e)}
+                disabled
+              >
+                <Option value={true}>Đã sửa</Option>
+                <Option value={false}>Chưa sửa</Option>
+              </Select>
             </FormControl>
             <FormControl>
               <FormLabel>Ghi chú</FormLabel>
@@ -179,6 +334,7 @@ export default function LichSuSuaChua() {
                 minRows={3}
                 placeholder="Ghi chú…"
                 value={duLieuVao.ghiChu}
+                disabled
               />
             </FormControl>
           </div>
@@ -194,19 +350,13 @@ export default function LichSuSuaChua() {
               >
                 <thead>
                   <tr>
-                    <th>Id</th>
                     <th>Tên nhân viên</th>
                     <th>Ngày sửa lỗi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {chiTietLichSuSuaChua.nhanVien != null ? (
-                    <td>{chiTietLichSuSuaChua.nhanVien.id}</td>
-                  ) : (
-                    <td></td>
-                  )}
-                  {chiTietLichSuSuaChua.nhanVien != null ? (
-                    <td>{chiTietLichSuSuaChua.nhanVien.hoTenNhanVien}</td>
+                  {chiTietLichSuSuaChua.nhanVienId != null ? (
+                    <td>{nhanVien.hoTenNhanVien}</td>
                   ) : (
                     <td></td>
                   )}
@@ -234,39 +384,45 @@ export default function LichSuSuaChua() {
                 <th>Máy tính</th>
                 <th>Lỗi gặp phải</th>
                 <th>Ngày gặp lỗi</th>
-                <th>Ngày sửa</th>
-                <th>Trang thái</th>
+                <th>Mức độ</th>
+                <th>Trạng thái</th>
                 <th>Ghi chú</th>
-                <th>Thời gian chờ</th>
               </tr>
             </thead>
             <tbody>
-              {chiTietLichSuSuaChuas.map((chiTietLichSuSuaChua, index) => (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    setChiTietLichSuSuaChua(chiTietLichSuSuaChua);
-                    setDuLieuVao({
-                      soMay: chiTietLichSuSuaChua.lichSuSuaChua.mayTinh.soMay,
-                      loiGapPhai: chiTietLichSuSuaChua.lichSuSuaChua.loiGapPhai,
-                      ngayGapLoi: moment(
-                        chiTietLichSuSuaChua.lichSuSuaChua.ngayGapLoi
-                      ).format("YYYY-MM-DD"),
-                      ghiChu: chiTietLichSuSuaChua.ghiChu,
-                    });
-                  }}
-                >
-                  <td>{chiTietLichSuSuaChua.id}</td>
-                  <td>{chiTietLichSuSuaChua.lichSuSuaChua.mayTinh.soMay}</td>
-                  <td>{chiTietLichSuSuaChua.lichSuSuaChua.loiGapPhai}</td>
-                  <td>
-                    {moment(
-                      chiTietLichSuSuaChua.lichSuSuaChua.ngayGapLoi
-                    ).format("DD-MM-YYYY")}
-                  </td>
-                  <td>{chiTietLichSuSuaChua.ghiChu}</td>
-                </tr>
-              ))}
+              {chiTietLichSuSuaChuas.map((chiTietLichSuSuaChua, index) => {
+                return (
+                  <tr
+                    key={index}
+                    onClick={() => {
+                      setChiTietLichSuSuaChua(chiTietLichSuSuaChua);
+                      setDuLieuVao({
+                        soMay: chiTietLichSuSuaChua.mayTinhId,
+                        loiGapPhai: chiTietLichSuSuaChua.loiGapPhai,
+                        ngayGapLoi: moment(
+                          chiTietLichSuSuaChua.ngayGapLoi
+                        ).format("YYYY-MM-DD"),
+                        ghiChu: chiTietLichSuSuaChua.ghiChu,
+                        trangThai: chiTietLichSuSuaChua.trangThai,
+                      });
+                      getNhanVienById(chiTietLichSuSuaChua.nhanVienId);
+                    }}
+                  >
+                    <td>{chiTietLichSuSuaChua.soMay}</td>
+                    <td>{chiTietLichSuSuaChua.loiGapPhai}</td>
+                    <td>
+                      {moment(chiTietLichSuSuaChua.ngayGapLoi).format(
+                        "DD-MM-YYYY"
+                      )}
+                    </td>
+                    <td>{chiTietLichSuSuaChua?.mucDoLoi ? "Cao" : "Thấp"}</td>
+                    <td>
+                      {chiTietLichSuSuaChua?.trangThai ? "Đã sửa" : "Chưa sửa"}
+                    </td>
+                    <td>{chiTietLichSuSuaChua?.ghiChu}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Sheet>

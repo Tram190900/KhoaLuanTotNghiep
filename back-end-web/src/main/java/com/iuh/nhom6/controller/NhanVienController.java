@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @CrossOrigin
@@ -41,5 +44,11 @@ public class NhanVienController {
                 }
         ).orElseThrow();
     }
+
+    @GetMapping("/getNhanVienById/{id}")
+    public NhanVien getMethodName(@PathVariable Long id) {
+        return nhanVienRepository.findById(id).get();
+    }
+    
 
 }

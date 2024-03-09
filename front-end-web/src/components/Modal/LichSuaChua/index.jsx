@@ -50,10 +50,10 @@ export default function LichSuaChua(props) {
                 <FormLabel>Ngày gặp lỗi</FormLabel>
                 <Input type="date" placeholder="Ngày sửa" />
               </FormControl>
-              <FormControl>
+              {/* <FormControl>
                 <FormLabel>Ghi chú</FormLabel>
                 <Input placeholder="Ghi chú" />
-              </FormControl>
+              </FormControl> */}
               <div className={clsx(style.buttonGroup)}>
                 <Button>Cập nhật lỗi mới</Button>
               </div>

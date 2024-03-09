@@ -22,6 +22,8 @@ public class LichSuSuaChua {
   private Long id;
   private String loiGapPhai;
   private Date ngayGapLoi;
+  private Boolean mucDoLoi;
+  private Boolean trangThai;
 /*   @OneToOne(mappedBy = "lichSuSuaChua")
   private ChiTietLichSuSuaChua chiTietLichSuSuaChua; */
   @ManyToOne
