@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.dto.ChiTietLichSuChuaSuaDTO;
 import com.iuh.nhom6.model.ChiTietLichSuSuaChua;
+import com.iuh.nhom6.model.LichSuSuaChua;
 import com.iuh.nhom6.model.MayTinh;
 import com.iuh.nhom6.repository.ChiTietLichSuSuaChuaRepository;
+import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
 import com.iuh.nhom6.repository.NhanVienRepository;
 
@@ -29,6 +31,9 @@ public class ChiTietLichSuSuaChuaController {
   ChiTietLichSuSuaChuaRepository chiTietLichSuSuaChuaRepository;
 
   @Autowired
+  LichSuSuaChuaRepository lichSuSuaChuaRepository;
+
+  @Autowired
   MayTinhRepository mayTinhRepository;
 
   @Autowired
@@ -37,9 +42,10 @@ public class ChiTietLichSuSuaChuaController {
   @PostMapping()
   public ChiTietLichSuSuaChua luuLichSuSuaChua(
       @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChua) {
-    MayTinh mayTinh = mayTinhRepository
-        .findBySoMayLikeIgnoreCase(chiTietLichSuSuaChua.getLichSuSuaChua().getMayTinh().getSoMay());
-    chiTietLichSuSuaChua.getLichSuSuaChua().setMayTinh(mayTinh);
+    LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId()).get();
+    lichSuSuaChua.setTrangThai(true);
+    lichSuSuaChuaRepository.save(lichSuSuaChua);
+    chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
     return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
   }
 

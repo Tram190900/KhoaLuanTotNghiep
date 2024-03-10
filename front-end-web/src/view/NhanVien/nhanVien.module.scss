@@ -12,14 +12,17 @@
       display: flex;
       flex-direction: row;
       justify-content: space-around;
-      .left_image_wrap{
+      .left_image_wrap {
         text-align: center;
-        img{
-          height: 70%;
+        height: 70%;
+        width: 70%;
+        margin-top: 3%;
+        img {
+          height: 100%;
           width: 70%;
         }
       }
-      .left_infor{
+      .left_infor {
         width: 70%;
       }
     }
@@ -31,13 +34,13 @@
       .rightTable {
         overflow: auto;
         height: 100%;
-        .search_ngay_truc{
+        .search_ngay_truc {
           display: flex;
           justify-content: center;
           align-items: center;
           padding: 2%;
           border-bottom: 1px solid gray;
-          span{
+          span {
             width: 30%;
           }
         }

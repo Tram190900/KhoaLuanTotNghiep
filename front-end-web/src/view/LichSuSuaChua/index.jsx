@@ -32,14 +32,16 @@ export default function LichSuSuaChua() {
   const [selectMayTinh, setSelectMayTinh] = useState(null);
 
   const [nhanVien, setNhanVien] = useState({});
-  const [mayTinh, setMayTinh] = useState({});
+  const [trangThai, setTrangthai] = useState(null);
 
   const [duLieuVao, setDuLieuVao] = useState({
-    soMay: "",
+    mayTinhId: "",
     loiGapPhai: "",
     ngayGapLoi: "",
     ghiChu: "",
     trangThai: null,
+    chiTietLichSuSuaLoiId: "",
+    lichSuSuaChuaId: "",
   });
 
   useEffect(() => {
@@ -54,11 +56,15 @@ export default function LichSuSuaChua() {
   };
 
   const xemDanhSachChiTietLichSuSuaChuTheoPhong = async (phongId) => {
-    const result = await getAPI(
-      `/chiTietLichSuSuaChua/getByPhongMay/${phongId}`
-    );
-    if (result.status === 200) {
-      setChiTietLichSuSuaChuas(result.data);
+    try {
+      const result = await getAPI(
+        `/chiTietLichSuSuaChua/getByPhongMay/${phongId}`
+      );
+      if (result.status === 200) {
+        setChiTietLichSuSuaChuas(result.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -115,6 +121,10 @@ export default function LichSuSuaChua() {
     }
   };
 
+  const handleTrangThai = (event, newValue) => {
+    setTrangthai(newValue);
+  };
+
   const onInputChange = (e) => {
     setDuLieuVao({ ...duLieuVao, [e.target.name]: e.target.value });
   };
@@ -142,14 +152,18 @@ export default function LichSuSuaChua() {
 
   const luuChiTietLichSuSuaChua = async () => {
     const lichSuSuaChua = {
+      id: Number(duLieuVao.lichSuSuaChuaId),
       loiGapPhai: duLieuVao.loiGapPhai,
       ngayGapLoi: duLieuVao.ngayGapLoi,
       mayTinh: {
-        soMay: duLieuVao.soMay,
+        id: duLieuVao.mayTinhId,
       },
+      trangThai: duLieuVao.trangThai,
+      mucDoLoi: duLieuVao.mucDoLoi,
     };
     const chiTietLichSuSuaChua = {
       ghiChu: duLieuVao.ghiChu,
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
       lichSuSuaChua: lichSuSuaChua,
     };
     try {
@@ -163,11 +177,16 @@ export default function LichSuSuaChua() {
           icon: "success",
           confirmButtonText: "OK",
         });
-        xemDanhSachChiTietLichSuSuaChua();
+        if (selectMayTinh) {
+          xemDanhSachChiTietLichSuSuaChua(selectMayTinh.soMay);
+        } else if (selectPhongMay) {
+          xemDanhSachChiTietLichSuSuaChuTheoPhong(selectPhongMay.id);
+        }
       }
     } catch (error) {
+      console.log(error);
       Swal.fire({
-        text: error.response.data,
+        text: error,
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -213,8 +232,10 @@ export default function LichSuSuaChua() {
         chiTietLichSuSuaChua.mayTinhId = Number(selectMayTinh.id);
         chiTietLichSuSuaChua.loiGapPhai = duLieuVao.loiGapPhai;
         chiTietLichSuSuaChua.ngayGapLoi = duLieuVao.ngayGapLoi;
+        chiTietLichSuSuaChua.chiTietLichSuSuaLoiId =
+          duLieuVao.chiTietLichSuSuaLoiId;
         await putAPI(
-          `/chiTietLichSuSuaChua/${chiTietLichSuSuaChua.chiTietLichSuSuaLoiId}`,
+          `/chiTietLichSuSuaChua/${duLieuVao.chiTietLichSuSuaLoiId}`,
           chiTietLichSuSuaChua
         )
           .then(() => {
@@ -319,7 +340,10 @@ export default function LichSuSuaChua() {
               <FormLabel>Trạng thái</FormLabel>
               <Select
                 value={duLieuVao.trangThai}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) => {
+                  onInputChange(e)
+                }}
+                name="trangThai"
                 disabled
               >
                 <Option value={true}>Đã sửa</Option>
@@ -334,7 +358,6 @@ export default function LichSuSuaChua() {
                 minRows={3}
                 placeholder="Ghi chú…"
                 value={duLieuVao.ghiChu}
-                disabled
               />
             </FormControl>
           </div>
@@ -370,12 +393,18 @@ export default function LichSuSuaChua() {
                 </tbody>
               </Table>
             </Sheet>
+            <div className={clsx(style.notes)}>
+              <span className={clsx(style.notes_thap)}>
+                Lỗi mực độ <strong>&nbsp;Thấp&nbsp;</strong> để quá 7 ngày
+              </span>
+              <span className={clsx(style.notes_cao)}>
+                Lỗi mực độ <strong>&nbsp;Cao&nbsp;</strong> để quá 30 ngày
+              </span>
+            </div>
           </div>
         </div>
         <div className={clsx(style.searchWrap)}>
-          <Button onClick={() => capNhapChiTietLichSuSuaChua()}>
-            Cập nhật
-          </Button>
+          <Button onClick={() => luuChiTietLichSuSuaChua()} disabled={duLieuVao.trangThai?'disabled':''}>Cập nhật sửa lỗi</Button>
         </div>
         <Sheet id={"scroll-style-01"}>
           <Table stickyHeader hoverRow aria-label="striped table">
@@ -393,17 +422,37 @@ export default function LichSuSuaChua() {
               {chiTietLichSuSuaChuas.map((chiTietLichSuSuaChua, index) => {
                 return (
                   <tr
+                    className={clsx(
+                      style.checkDate,
+                      moment().diff(
+                        moment(chiTietLichSuSuaChua.ngayGapLoi),
+                        "days"
+                      ) >= 7 &&
+                        !chiTietLichSuSuaChua.trangThai &&
+                        !chiTietLichSuSuaChua.mucDoLoi &&
+                        style.action,
+                      moment().diff(
+                        moment(chiTietLichSuSuaChua.ngayGapLoi),
+                        "days"
+                      ) >= 30 &&
+                        !chiTietLichSuSuaChua.trangThai &&
+                        chiTietLichSuSuaChua.mucDoLoi &&
+                        style.action1
+                    )}
                     key={index}
                     onClick={() => {
                       setChiTietLichSuSuaChua(chiTietLichSuSuaChua);
                       setDuLieuVao({
-                        soMay: chiTietLichSuSuaChua.mayTinhId,
+                        mayTinhId: chiTietLichSuSuaChua.mayTinhId,
                         loiGapPhai: chiTietLichSuSuaChua.loiGapPhai,
                         ngayGapLoi: moment(
                           chiTietLichSuSuaChua.ngayGapLoi
                         ).format("YYYY-MM-DD"),
                         ghiChu: chiTietLichSuSuaChua.ghiChu,
                         trangThai: chiTietLichSuSuaChua.trangThai,
+                        chiTietLichSuSuaLoiId:
+                          chiTietLichSuSuaChua.chiTietLichSuSuaLoiId,
+                        lichSuSuaChuaId: chiTietLichSuSuaChua.lichSuSuaChuaId,
                       });
                       getNhanVienById(chiTietLichSuSuaChua.nhanVienId);
                     }}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./nhanVien.module.scss";
 import { getAPI, postAPI, putAPI } from "./../../api/index";
@@ -36,6 +36,9 @@ export default function NhanVien() {
   const [nhanVienId, setNhanVienId] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const inputFileReference = useRef(null);
+  const [imageURL, setImageURL] = useState("");
 
   useEffect(() => {
     handleGetAllNhanvien();
@@ -131,6 +134,12 @@ export default function NhanVien() {
     }
   };
 
+  const uploadImage = async () => {
+    const selectedFile = inputFileReference.current.files[0];
+    const url = URL.createObjectURL(selectedFile);
+    await setImageURL(url);
+  };
+
   useEffect(() => {
     if (startDate && endDate) {
       handleGetChamCongByNgayTruc();
@@ -144,10 +153,27 @@ export default function NhanVien() {
           <div className={clsx(style.left)}>
             <div className={clsx(style.left_image_wrap)}>
               <img
-                src="https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
+                src={
+                  imageURL
+                    ? imageURL
+                    : "https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
+                }
                 alt="avatar"
               />
-              <Button>Thay ảnh đại diện</Button>
+              <Button
+                onClick={() => {
+                  inputFileReference.current.click();
+                }}
+                onChange={()=>uploadImage()}
+              >
+                Thay ảnh đại diện
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  ref={inputFileReference}
+                />
+              </Button>
             </div>
             <div className={clsx(style.left_infor)}>
               <FormControl>
