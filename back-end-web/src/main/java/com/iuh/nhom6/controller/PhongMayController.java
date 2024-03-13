@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.LoaiPhong;
 import com.iuh.nhom6.model.PhongMay;
+import com.iuh.nhom6.model.ToaNha;
 import com.iuh.nhom6.repository.LoaiPhongRepository;
 import com.iuh.nhom6.repository.PhongMayRepository;
+import com.iuh.nhom6.repository.ToaNhaRepository;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -27,7 +30,10 @@ public class PhongMayController {
   @Autowired
   private LoaiPhongRepository loaiPhongRepository;
 
-  @PostMapping("/savePhongMay")
+  @Autowired
+  private ToaNhaRepository toaNhaRepository;
+
+  /*@PostMapping("/savePhongMay")
   public PhongMay savePhongMay(@RequestBody PhongMay phongMay) {
     LoaiPhong loaiPhong = phongMay.getLoaiPhong();
     try {
@@ -89,6 +95,11 @@ public class PhongMayController {
   public List<PhongMay> getMethodName(@PathVariable String toaNha) {
     List<PhongMay> phongMays = phongMayRepository.findPhongMaysByToaNha(toaNha);
       return phongMays;
+  } */
+
+  @GetMapping("/xemDanhSachPhongMayTheoToaNha/{id}") 
+  public List<PhongMay> xemDanhSachPhongMayTheoToaNha(@PathVariable Long id) {
+    ToaNha toaNha = toaNhaRepository.findById(id).get();
+    return phongMayRepository.findPhongMayByToaNha(toaNha);
   }
-  
 }

@@ -1,0 +1,19 @@
+.wrap {
+  margin: 20px;
+}
+.header {
+  display: flex;
+  padding-bottom: 20px;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  .h4 {
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+  }
+}
+.search {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

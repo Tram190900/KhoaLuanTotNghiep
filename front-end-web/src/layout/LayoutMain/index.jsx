@@ -21,7 +21,7 @@ export default function LayoutMain() {
         </div>
         <div className={clsx(style.screenContainer)}>
           {menu.menuActive === "may-tinh" ? (
-            <MayTinh />
+            <MayTinh/>
           ) : menu.menuActive === "thiet-bi" ? (
             <ThietBi />
           ) : menu.menuActive === "phan-mem" ? (
@@ -31,7 +31,7 @@ export default function LayoutMain() {
           ) : menu.menuActive === "nhan-vien" ? (
             <NhanVien />
           ) : menu.menuActive === 'phong-may' ? (
-            <PhongMay/>
+            <PhongMay menu={menu}/>
           ) : menu.menuActive === 'mon-hoc' ? (
             <MonHoc/>
           ) : null}

@@ -5,6 +5,7 @@
   "dependencies": {
     "@mui/icons-material": "^5.15.5",
     "@mui/joy": "^5.0.0-beta.23",
+    "@mui/lab": "^5.0.0-alpha.167",
     "@mui/x-date-pickers": "^6.19.6",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

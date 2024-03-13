@@ -17,8 +17,11 @@ public class PhongMay implements Serializable {
   @Column(name = "phongMay_id")
   private Long id;
 
-  private String soPhong;
-  private String toaNha;
+  @OneToOne
+  private ToaNha toaNha;
+
+  @OneToOne
+  private PhongHoc phongHoc;
 
   @ManyToOne
   @JoinColumn(name = "loaiPhong_id")

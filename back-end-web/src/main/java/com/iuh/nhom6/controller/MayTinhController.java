@@ -22,7 +22,7 @@ import com.iuh.nhom6.repository.MayTinhRepository;
 @RestController
 @CrossOrigin
 public class MayTinhController {
-  @Autowired
+  /* @Autowired
   private MayTinhRepository mayTinhRepository;
   @Autowired
   private PhongMayRepository phongMayRepository;
@@ -76,8 +76,8 @@ public class MayTinhController {
   }
 
   @DeleteMapping("/deleteMayTinh/{id}")
-  String deleteMayTinh(@PathVariable Long id) {
+  String deleteMayTinh(@PathVariable Long id) { 
     mayTinhRepository.deleteMayTinhById(id);
     return "May tinh with id " + id + " has been deleted success.";
-  }
+  } */
 }
