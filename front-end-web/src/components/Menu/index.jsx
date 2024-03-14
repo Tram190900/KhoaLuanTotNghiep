@@ -9,8 +9,9 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import { Link } from "@mui/joy";
 // import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export default function Menu() {
@@ -121,14 +122,12 @@ export default function Menu() {
         <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Lịch trực phòng máy
       </div> */}
-      <div
-        onClick={() => {
-          navigate("/login");
-        }}
+      <Link
         className={clsx(style.logout)}
+        href={'/login'}
       >
         <LogoutIcon sx={{ fontSize: 40 }} />
-      </div>
+      </Link>
     </div>
   );
 }

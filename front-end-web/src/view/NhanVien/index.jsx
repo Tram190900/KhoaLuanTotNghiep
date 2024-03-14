@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./nhanVien.module.scss";
 import { getAPI, postAPI, putAPI } from "./../../api/index";
@@ -19,8 +19,10 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
+import { MenuContext } from "../../App";
 
 export default function NhanVien() {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [openLichTruc, setOpenLichTruc] = useState(false);
 
   const [allNhanVien, setAllNhanVien] = useState([]);
@@ -79,10 +81,24 @@ export default function NhanVien() {
     };
     const result = await postAPI("/saveNhanVien", data);
     if (result.status === 200) {
-      Swal.fire({
-        text: "Thêm nhân viên mới thành công",
-        icon: "success",
-      });
+      const tk = {
+        tenTaiKhoan: result.data.hoTenNhanVien
+          .toLowerCase()
+          .trim()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\W/g, ""),
+        role: "nhanvien",
+        matKhau: "123456",
+        nhanVien: result.data,
+      };
+      const result2 = await postAPI("/taikhoan/dangKy", tk);
+      if (result2.status === 200) {
+        Swal.fire({
+          text: "Thêm nhân viên mới thành công",
+          icon: "success",
+        });
+      }
       handleGetAllNhanvien();
     }
   };
@@ -164,7 +180,7 @@ export default function NhanVien() {
                 onClick={() => {
                   inputFileReference.current.click();
                 }}
-                onChange={()=>uploadImage()}
+                onChange={() => uploadImage()}
               >
                 Thay ảnh đại diện
                 <input
@@ -276,15 +292,17 @@ export default function NhanVien() {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={3} style={{ textAlign: "center" }}>
-                      <Button onClick={() => setOpenLichTruc(!openLichTruc)}>
-                        Cập nhật lịch trực
-                      </Button>
-                    </td>
-                  </tr>
-                </tfoot>
+                {user?.role === "admin" ? (
+                  <tfoot>
+                    <tr>
+                      <td colSpan={3} style={{ textAlign: "center" }}>
+                        <Button onClick={() => setOpenLichTruc(!openLichTruc)}>
+                          Cập nhật lịch trực
+                        </Button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                ) : null}
               </Table>
             </Sheet>
           </div>
@@ -299,7 +317,9 @@ export default function NhanVien() {
             />
           </FormControl>
           <Button onClick={() => handleTimKiem()}>Tìm kiếm</Button>
-          <Button onClick={() => handleSaveNhanVien()}>Thêm mới</Button>
+          {user?.role === 'admin' ? (
+            <Button onClick={() => handleSaveNhanVien()}>Thêm mới</Button>
+          ) : null}
           <Button onClick={() => handleCapNhatNhanVien()}>Cập nhật</Button>
         </div>
         <Sheet id={"scroll-style-01"} className={clsx(style.tableWrap)}>
