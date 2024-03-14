@@ -17,11 +17,11 @@ public class PhongMay implements Serializable {
   @Column(name = "phongMay_id")
   private Long id;
 
-  @OneToOne
-  private ToaNha toaNha;
+  private String soPhong;
 
-  @OneToOne
-  private PhongHoc phongHoc;
+  @ManyToOne
+  @JoinColumn(name = "toaNha_id")
+  private ToaNha toaNha;
 
   @ManyToOne
   @JoinColumn(name = "loaiPhong_id")

@@ -17,7 +17,7 @@ import lombok.ToString;
 public class ChiTietLichSuChuaSuaDTO {
     private Long lichSuSuaChuaId;
     private String loiGapPhai;
-    private boolean mucDoLoi;
+    private int mucDoLoi;
     private LocalDateTime ngayGapLoi;
     private boolean trangThai;
     private Long mayTinhId;
@@ -30,7 +30,7 @@ public class ChiTietLichSuChuaSuaDTO {
     public ChiTietLichSuChuaSuaDTO(Object[] row) {
         this.lichSuSuaChuaId = (Long) row[0];
         this.loiGapPhai = (String) row[1];
-        this.mucDoLoi = (boolean) row[2];
+        this.mucDoLoi = (Integer) row[2];
         this.ngayGapLoi = ((Timestamp) row[3]).toLocalDateTime();
         this.trangThai = (boolean) row[4];
         this.mayTinhId = (Long) row[5];

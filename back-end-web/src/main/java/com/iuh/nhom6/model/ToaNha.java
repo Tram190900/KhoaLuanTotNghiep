@@ -20,6 +20,4 @@ public class ToaNha {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String tenToaNha;
-  @OneToMany
-  private List<PhongHoc> phongHocs;
 }

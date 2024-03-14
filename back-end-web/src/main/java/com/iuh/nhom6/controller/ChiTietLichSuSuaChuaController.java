@@ -18,6 +18,7 @@ import com.iuh.nhom6.dto.ChiTietLichSuChuaSuaDTO;
 import com.iuh.nhom6.model.ChiTietLichSuSuaChua;
 import com.iuh.nhom6.model.LichSuSuaChua;
 import com.iuh.nhom6.model.MayTinh;
+import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.repository.ChiTietLichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
@@ -43,9 +44,11 @@ public class ChiTietLichSuSuaChuaController {
   public ChiTietLichSuSuaChua luuLichSuSuaChua(
       @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChua) {
     LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId()).get();
+    NhanVien nhanVien = nhanVienRepository.findById(chiTietLichSuSuaChua.getNhanVien().getId()).get();
     lichSuSuaChua.setTrangThai(true);
     lichSuSuaChuaRepository.save(lichSuSuaChua);
     chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
+    chiTietLichSuSuaChua.setNhanVien(nhanVien);
     return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
   }
 

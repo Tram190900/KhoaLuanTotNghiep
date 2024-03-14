@@ -62,11 +62,14 @@
     width: 80%;
     align-items: flex-end;
   }
-  .checkDate.action{
+  .checkDate.actionCao{
     background-color: red;
     color: white;
   }
-  .checkDate.action1{
+  .checkDate.actionVua{
     background-color: rgba(255, 255, 0, 0.644);
+  }
+  .checkDate.actionThap{
+    background-color: #1da1f2;
   }
 }

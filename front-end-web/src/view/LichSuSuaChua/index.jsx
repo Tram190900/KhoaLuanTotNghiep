@@ -18,6 +18,7 @@ import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC"
 import Swal from "sweetalert2";
 
 export default function LichSuSuaChua() {
+  const user = JSON.parse(localStorage.getItem('user'))
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
@@ -165,6 +166,7 @@ export default function LichSuSuaChua() {
       ghiChu: duLieuVao.ghiChu,
       ngaySuaLoi: moment().format("YYYY-MM-DD"),
       lichSuSuaChua: lichSuSuaChua,
+      nhanVien: {id: user.nhanVien.id}
     };
     try {
       const result = await postAPI(
@@ -284,7 +286,7 @@ export default function LichSuSuaChua() {
                 >
                   {phongMay?.map((item, index) => (
                     <Option key={index.id} value={item}>
-                      {item.phongHoc.tenPhongHoc}
+                      {item.soPhong}
                     </Option>
                   ))}
                 </Select>
@@ -427,20 +429,15 @@ export default function LichSuSuaChua() {
                   <tr
                     className={clsx(
                       style.checkDate,
-                      moment().diff(
-                        moment(chiTietLichSuSuaChua.ngayGapLoi),
-                        "days"
-                      ) >= 7 &&
                         !chiTietLichSuSuaChua.trangThai &&
-                        !chiTietLichSuSuaChua.mucDoLoi &&
-                        style.action,
-                      moment().diff(
-                        moment(chiTietLichSuSuaChua.ngayGapLoi),
-                        "days"
-                      ) >= 30 &&
+                        chiTietLichSuSuaChua.mucDoLoi===3 &&
+                        style.actionCao,
                         !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi &&
-                        style.action1
+                        chiTietLichSuSuaChua.mucDoLoi===2 &&
+                        style.actionVua,
+                        !chiTietLichSuSuaChua.trangThai &&
+                        chiTietLichSuSuaChua.mucDoLoi===1 &&
+                        style.actionThay
                     )}
                     key={index}
                     onClick={() => {
@@ -467,7 +464,7 @@ export default function LichSuSuaChua() {
                         "DD-MM-YYYY"
                       )}
                     </td>
-                    <td>{chiTietLichSuSuaChua?.mucDoLoi ? "Cao" : "Thấp"}</td>
+                    <td>{chiTietLichSuSuaChua?.mucDoLoi}</td>
                     <td>
                       {chiTietLichSuSuaChua?.trangThai ? "Đã sửa" : "Chưa sửa"}
                     </td>

@@ -40,7 +40,7 @@ export default function CapNhatLichTruc(props) {
 
   const handleGetAllToaNha = async () => {
     try {
-      const result = await getAPI("getAllToaNha");
+      const result = await getAPI("/toanha");
       if (result.status === 200) {
         setAllToaNha(result.data);
       }
@@ -50,7 +50,7 @@ export default function CapNhatLichTruc(props) {
   };
   const handleGetPhongMayTheoToaNha = async (value) => {
     try {
-      const result = await getAPI(`getPhongMay/${value}`);
+      const result = await getAPI(`xemDanhSachPhongMayTheoToaNha/${value}`);
       if (result.status === 200) {
         setPhongMay(result.data);
       }
@@ -130,8 +130,8 @@ export default function CapNhatLichTruc(props) {
                   placeholder="Tòa nhà ..."
                 >
                   {allToaNha?.map((item, index) => (
-                    <Option value={item} key={index}>
-                      {item}
+                    <Option value={item.id} key={index}>
+                      {item.tenToaNha}
                     </Option>
                   ))}
                 </Select>
