@@ -21,6 +21,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("phong-may");
+          navigate('/quan-ly-phong-may')
         }}
         className={clsx(
           style.menuItem,
@@ -33,6 +34,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("may-tinh");
+          navigate('may-tinh')
         }}
         className={clsx(
           style.menuItem,
@@ -45,6 +47,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("thiet-bi");
+          navigate('thiet-bi')
         }}
         className={clsx(
           style.menuItem,
@@ -57,6 +60,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("phan-mem");
+          navigate('phan-mem')
         }}
         className={clsx(
           style.menuItem,
@@ -69,6 +73,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("mon-hoc");
+          navigate('mon-hoc')
         }}
         className={clsx(
           style.menuItem,
@@ -81,6 +86,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("nhan-vien");
+          navigate('nhan-vien')
         }}
         className={clsx(
           style.menuItem,
@@ -93,6 +99,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("lich-su-sua-chua");
+          navigate('lich-su-sua-chua')
         }}
         className={clsx(
           style.menuItem,

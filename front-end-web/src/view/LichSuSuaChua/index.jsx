@@ -70,7 +70,7 @@ export default function LichSuSuaChua() {
 
   const handleGetAllToaNha = async () => {
     try {
-      const result = await getAPI("getAllToaNha");
+      const result = await getAPI("/toanha");
       if (result.status === 200) {
         setAllToaNha(result.data);
       }
@@ -81,7 +81,7 @@ export default function LichSuSuaChua() {
 
   const handleGetPhongMayTheoToaNha = async (value) => {
     try {
-      const result = await getAPI(`getPhongMay/${value}`);
+      const result = await getAPI(`/xemDanhSachPhongMayTheoToaNha/${value}`);
       if (result.status === 200) {
         setPhongMay(result.data);
       }
@@ -269,8 +269,8 @@ export default function LichSuSuaChua() {
                   placeholder="Tòa nhà..."
                 >
                   {allToaNha?.map((item, index) => (
-                    <Option value={item} key={index}>
-                      {item}
+                    <Option value={item.id} key={index}>
+                      {item.tenToaNha}
                     </Option>
                   ))}
                 </Select>
@@ -283,8 +283,8 @@ export default function LichSuSuaChua() {
                   placeholder="Số phòng..."
                 >
                   {phongMay?.map((item, index) => (
-                    <Option key={index} value={item}>
-                      {item.soPhong}
+                    <Option key={index.id} value={item}>
+                      {item.phongHoc.tenPhongHoc}
                     </Option>
                   ))}
                 </Select>
@@ -395,10 +395,13 @@ export default function LichSuSuaChua() {
             </Sheet>
             <div className={clsx(style.notes)}>
               <span className={clsx(style.notes_thap)}>
-                Lỗi mực độ <strong>&nbsp;Thấp&nbsp;</strong> để quá 7 ngày
+                Lỗi phải sửa trong ngày
               </span>
               <span className={clsx(style.notes_cao)}>
-                Lỗi mực độ <strong>&nbsp;Cao&nbsp;</strong> để quá 30 ngày
+                Lỗi không để quá <strong>&nbsp;7 ngày&nbsp;</strong>
+              </span>
+              <span className={clsx(style.notes_khac)}>
+                Lỗi không để quá <strong>&nbsp;30 ngày&nbsp;</strong>
               </span>
             </div>
           </div>

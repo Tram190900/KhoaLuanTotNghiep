@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getAPI } from "../../api";
 import style from "./phongMay.module.scss";
 import Card from "@mui/material/Card";
@@ -17,9 +17,11 @@ import MonHoc from "../MonHoc";
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import { MenuContext } from "../../App";
 
 export default function PhongMay(props) {
   const [dsToaNha, setDsToaNha] = useState([]);
+  const menu = useContext(MenuContext)
 
   const xemDanhSachToaNha = async () => {
     const result = await getAPI("toanha");
@@ -35,7 +37,7 @@ export default function PhongMay(props) {
   return (
     <div className="p-3">
       <h1>Quản lý phòng máy</h1>
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs aria-label="breadcrumb" onClick={()=>menu.setMenuActive('phong-may')}>
         <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
           Quản lý phòng máy
         </Link>
@@ -51,8 +53,8 @@ export default function PhongMay(props) {
           <Grid xs={6} height={"25"}>
             <Card variant="outlined">
               <CardContent>{toaNha.tenToaNha}</CardContent>
-              <CardActions>
-                <Link href={"/danhsachphongmay"} size="small">
+              <CardActions onClick={()=>menu.setMenuActive('')}>
+                <Link href={"/quan-ly-phong-may/danhsachphongmay"} size="small">
                   Xem chi tiết
                 </Link>
               </CardActions>
