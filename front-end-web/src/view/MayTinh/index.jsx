@@ -40,7 +40,7 @@ export default function MayTinh() {
 
   const handleGetAllToaNha = async () => {
     try {
-      const result = await getAPI("getAllToaNha");
+      const result = await getAPI("/toanha");
       if (result.status === 200) {
         setAllToaNha(result.data);
       }
@@ -70,9 +70,11 @@ export default function MayTinh() {
     }
   };
 
-  const handleToaNha = (event, newValue) => {
+  const handleToaNha =  (event, newValue) => {
     setSelectToaNha(newValue);
     handleGetPhongMayTheoToaNha(newValue);
+    
+    
   };
 
   const handlePhongMay = async (event, newValue) => {
@@ -144,7 +146,7 @@ export default function MayTinh() {
                   >
                     {allToaNha?.map((item, index) => (
                       <Option value={item} key={index}>
-                        {item}
+                        {item.tenToaNha}
                       </Option>
                     ))}
                   </Select>

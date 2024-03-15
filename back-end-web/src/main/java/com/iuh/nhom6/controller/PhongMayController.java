@@ -3,6 +3,8 @@ package com.iuh.nhom6.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.LoaiPhong;
+import com.iuh.nhom6.model.MayTinh;
 import com.iuh.nhom6.model.PhongMay;
 import com.iuh.nhom6.model.ToaNha;
 import com.iuh.nhom6.repository.LoaiPhongRepository;
@@ -33,7 +36,7 @@ public class PhongMayController {
   @Autowired
   private ToaNhaRepository toaNhaRepository;
 
-  /*@PostMapping("/savePhongMay")
+  @PostMapping("/savePhongMay")
   public PhongMay savePhongMay(@RequestBody PhongMay phongMay) {
     LoaiPhong loaiPhong = phongMay.getLoaiPhong();
     try {
@@ -91,8 +94,8 @@ public class PhongMayController {
     return toaNhaList;
   }
 
-  @GetMapping("/getPhongMay/{toaNha}")
-  public List<PhongMay> getMethodName(@PathVariable String toaNha) {
+/*   @GetMapping("/getPhongMay/{toaNha}")
+  public List<PhongMay> getMethodName(@PathVariable ToaNha toaNha) {
     List<PhongMay> phongMays = phongMayRepository.findPhongMaysByToaNha(toaNha);
       return phongMays;
   } */
@@ -100,10 +103,13 @@ public class PhongMayController {
   @GetMapping("/xemDanhSachPhongMayTheoToaNha/{id}") 
   public List<PhongMay> xemDanhSachPhongMayTheoToaNha(@PathVariable Long id) {
     ToaNha toaNha = toaNhaRepository.findById(id).get();
-    return phongMayRepository.findPhongMayByToaNha(toaNha);
+    return phongMayRepository.findPhongMaysByToaNha(toaNha);
   }
-  @GetMapping("/getAllPhongMay")
-  public List<PhongMay> getAllPhongMay() {
-    return phongMayRepository.findAll();
+
+  @GetMapping("/phongmay/{id}/phantrang/{offset}/{pageSize}")
+  public Page<PhongMay> xemDanhSachPhongMayPhanTrang(@PathVariable Long id,@PathVariable int offset, @PathVariable int pageSize) {
+    ToaNha toaNha = toaNhaRepository.findById(id).get();
+    return phongMayRepository.findPhongMayByToaNha(toaNha, PageRequest.of(offset, pageSize));
   }
+
 }

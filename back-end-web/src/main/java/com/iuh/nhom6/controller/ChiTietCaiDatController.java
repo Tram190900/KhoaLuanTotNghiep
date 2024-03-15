@@ -28,10 +28,10 @@ public class ChiTietCaiDatController {
 
     @PostMapping("/saveChiTietCaiDat")
     public ChiTietCaiDat saveChiTietCaiDat(@RequestBody ChiTietCaiDat chiTietCaiDat) {
-        MayTinh mayTinh = mayTinhRepository.findById(chiTietCaiDat.getMayTinh().getId()).get();
-        PhanMem phanMem = phanMemRepository.findById(chiTietCaiDat.getPhanMem().getId()).get();
+        MayTinh mayTinh = mayTinhRepository.findMayTinhBySoMay(chiTietCaiDat.getMayTinh().getSoMay());
+        // PhanMem phanMem = phanMemRepository.findById(chiTietCaiDat.getPhanMem().getId()).get();
         chiTietCaiDat.setMayTinh(mayTinh);
-        chiTietCaiDat.setPhanMem(phanMem);
+        // chiTietCaiDat.setPhanMem(phanMem);
         return chiTietCaiDatRepository.save(chiTietCaiDat);
     }
 }

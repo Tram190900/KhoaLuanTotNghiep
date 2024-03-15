@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
@@ -19,9 +19,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button, IconButton, MenuItem, Paper, Select } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getAPI } from "../../../api";
 
 const DanhSachMayTinh = () => {
+  const navigate = useNavigate(); 
+  const location = useLocation();
+  const phongMay_id = location.state.phongMay_id;
   const [value, setValue] = React.useState("1");
+  const [page, setPage] = useState(1);
+
+  const [totalPage, setTotalPage] = useState();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -35,6 +43,22 @@ const DanhSachMayTinh = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [dsMayTinh, setDsMayTinh] = useState([]);
+
+  const xemDanhSachMayTinh = async () => {
+    const result = await getAPI(
+      `/maytinh/${phongMay_id}/phantrang/${page - 1}/8`
+    );
+    if (result.status === 200) {
+      setDsMayTinh(result.data.content);
+      setTotalPage(result.data.totalPages);
+    }
+  };
+
+  useEffect(() => {
+    xemDanhSachMayTinh();
+  }, [page]);
   return (
     <div>
       <h4>Quản lý phòng máy</h4>
@@ -67,7 +91,7 @@ const DanhSachMayTinh = () => {
               rowSpacing={1}
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
-             
+              {dsMayTinh.map((mayTinh) => (
                 <Grid xs={3}>
                   <Card variant="outlined">
                     <CardContent>
@@ -86,7 +110,7 @@ const DanhSachMayTinh = () => {
                           variant="h5"
                           component="div"
                         >
-                          Máy:
+                          Máy: {mayTinh.soMay}
                         </Typography>
                         <Tooltip title="Cài đặt phòng">
                           <IconButton
@@ -141,15 +165,13 @@ const DanhSachMayTinh = () => {
                             vertical: "bottom",
                           }}
                         >
-                          <MenuItem
-                            
-                          >
+                          <MenuItem>
                             <ListItemIcon>
                               <EditIcon fontSize="small" />
                             </ListItemIcon>
                             Cập nhập
                           </MenuItem>
-                          <MenuItem >
+                          <MenuItem>
                             <ListItemIcon>
                               <DeleteIcon fontSize="small" />
                             </ListItemIcon>
@@ -158,14 +180,33 @@ const DanhSachMayTinh = () => {
                         </Menu>
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        Trạng thái:
+                        Trạng thái: {mayTinh.trangThai}
                       </Typography>
                       <Typography variant="body2">Ngày lắp đặt:</Typography>
+                      <Button onClick={() => {
+                        navigate("/quan-ly-phong-may/thongtinmaytinh", {
+                          state: {
+                            mayTinh: mayTinh
+                          },
+                        });
+                      }}>Xem chi tiết</Button>
                     </CardContent>
                   </Card>
                 </Grid>
-           
+              ))}
             </Grid>
+            <Pagination
+              sx={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+              count={totalPage}
+              defaultPage={page}
+              variant="outlined"
+              shape="rounded"
+              onChange={(event, value) => setPage(value)}
+            />
           </TabPanel>
           <TabPanel value="2">Đang hoạt động</TabPanel>
           <TabPanel value="3">Đang sửa</TabPanel>

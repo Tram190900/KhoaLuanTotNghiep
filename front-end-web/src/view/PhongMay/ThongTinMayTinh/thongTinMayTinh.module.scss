@@ -1,0 +1,27 @@
+.wrap {
+  margin: 20px;
+  .button {
+    margin-top: 10px;
+    display: flex;
+    gap:10px;
+  }
+  .rightWrap {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    height: 80%;
+    .tablePhanMem {
+      border: 1px solid rgb(175, 175, 175);
+      height: 100%;
+      overflow: auto;
+      width: 45%;
+    }
+    .tableThietBi {
+      border: 1px solid rgb(175, 175, 175);
+      height: 100%;
+      overflow: auto;
+      width: 45%;
+    }
+  }
+}

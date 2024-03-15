@@ -14,17 +14,18 @@ import PhanMem from "../PhanMem";
 import LichSuSuaChua from "../LichSuSuaChua";
 import NhanVien from "../NhanVien";
 import MonHoc from "../MonHoc";
-import Typography from '@mui/material/Typography';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { MenuContext } from "../../App";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PhongMay(props) {
+  const id = 2;
   const [dsToaNha, setDsToaNha] = useState([]);
-  const menu = useContext(MenuContext)
+  const menu = useContext(MenuContext);
 
   const xemDanhSachToaNha = async () => {
-    const result = await getAPI("toanha");
+    const result = await getAPI("/toanha");
     if (result.status === 200) {
       setDsToaNha(result.data);
     }
@@ -33,11 +34,15 @@ export default function PhongMay(props) {
   useEffect(() => {
     xemDanhSachToaNha();
   }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="p-3">
       <h1>Quản lý phòng máy</h1>
-      <Breadcrumbs aria-label="breadcrumb" onClick={()=>menu.setMenuActive('phong-may')}>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        onClick={() => menu.setMenuActive("phong-may")}
+      >
         <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
           Quản lý phòng máy
         </Link>
@@ -53,10 +58,28 @@ export default function PhongMay(props) {
           <Grid xs={6} height={"25"}>
             <Card variant="outlined">
               <CardContent>{toaNha.tenToaNha}</CardContent>
-              <CardActions onClick={()=>menu.setMenuActive('')}>
-                <Link href={"/quan-ly-phong-may/danhsachphongmay"} size="small">
+              <CardActions onClick={() => menu.setMenuActive("")}>
+                {/* <Link to={pathname: {`/quan-ly-phong-may/danhsachphongmay/${toaNha.id}`}
+                }>
                   Xem chi tiết
-                </Link>
+                </Link> */}
+                <Button
+                  /* to={{
+                    pathname: "/quan-ly-phong-may/danhsachphongmay",
+                    state: {id: toaNha.id, name: toaNha.tenToaNha}, // your data array of objects
+                  }} */
+                  // navigate('/componentB',{state:{id:1,name:'sabaoon'}})
+                  onClick={() => {
+                    navigate("/quan-ly-phong-may/danhsachphongmay", {
+                      state: {
+                        toaNha_id: toaNha.id,
+                        tenToaNha: toaNha.tenToaNha,
+                      },
+                    });
+                  }}
+                >
+                  Xem chi tiết
+                </Button>
               </CardActions>
             </Card>
           </Grid>

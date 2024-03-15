@@ -21,8 +21,11 @@ import Style from "./danhSachPhongMay.module.scss";
 import { deleteAPI, getAPI } from "../../../api";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import TaoPhongMay from "../../../components/Modal/TaoPhongMay";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-export default function DanhSachPhongMay() {
+export default function DanhSachPhongMay(props) {
+  const navigate = useNavigate();
   const [dsPhongMay, setdsPhongMay] = useState([]);
 
   const [phongMay_id, setPhongMay_id] = useState();
@@ -35,13 +38,32 @@ export default function DanhSachPhongMay() {
 
   const [openTaoPhongMay, setOpenTaoPhongMay] = useState(false);
 
+  const [toaNha, setToaNha] = useState();
+
+  const location = useLocation();
+
+  const toaNha_id = location.state.toaNha_id;
+  
+  console.log(location.state);
+
   const xemDanhSachPhongMay = async () => {
-    const result = await getAPI("/xemDanhSachPhongMayTheoToaNha/1");
+    const result = await getAPI(`/phongmay/${toaNha_id}/phantrang/${page - 1}/1`);
     if (result.status === 200) {
-      setdsPhongMay(result.data);
-      // setTotalPage(result.data.totalPages);
+      setdsPhongMay(result.data.content);
+      setTotalPage(result.data.totalPages);
     }
   };
+
+  const xemToaNha = async () => {
+    const result = await getAPI(`toanha/${toaNha_id}`);
+    if (result.status === 200) {
+      console.log(result.data);
+    }
+  };
+
+  useEffect(() => {
+    xemToaNha();
+  },[]);
 
   useEffect(() => {
     xemDanhSachPhongMay();
@@ -99,7 +121,7 @@ export default function DanhSachPhongMay() {
             <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
               Tòa nhà
             </Link>
-            <Typography color="text.primary">Nhà H</Typography>
+            <Typography color="text.primary">{location.state.tenToaNha}</Typography>
           </Breadcrumbs>
         </div>
 
@@ -172,7 +194,7 @@ export default function DanhSachPhongMay() {
                   gutterBottom
                 >
                   <Typography sx={{ mb: 1.5 }} variant="h5" component="div">
-                  Phòng:
+                  Phòng: {phongMay.soPhong}
                 </Typography>
                   <Tooltip title="Cài đặt phòng">
                     <IconButton
@@ -240,12 +262,20 @@ export default function DanhSachPhongMay() {
                   </Menu>
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  Quy mô phòng:
+                  Quy mô phòng: {phongMay.loaiPhong.tenLoaiPhong}
                 </Typography>
-                <Typography variant="body2">Số lượng máy:</Typography>
+                <Typography variant="body2">Số lượng máy: {phongMay.loaiPhong.soLuongMay}</Typography>
               </CardContent>
               <CardActions>
-                <Link href="/danhsachmaytinh" size="small">Xem chi tiết</Link>
+                <Button
+                  onClick={() => {
+                    navigate("/quan-ly-phong-may/danhsachmaytinh", {
+                      state: {
+                        phongMay_id: phongMay.id
+                      },
+                    });
+                  }}
+             size="small">Xem chi tiết</Button>
               </CardActions>
             </Card>
           </Grid>
@@ -259,6 +289,12 @@ export default function DanhSachPhongMay() {
         shape="rounded"
         onChange={(event, value) => setPage(value)}
       />
+      <TaoPhongMay 
+      xemDanhSachPhongMay = {xemDanhSachPhongMay}
+      open = {openTaoPhongMay}
+      setOpen= {setOpenTaoPhongMay}
+      tieuDe = {tieuDe}
+      toaNha_id = {toaNha_id}/>
     </div>
   );
 }

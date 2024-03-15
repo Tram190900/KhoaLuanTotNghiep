@@ -3,8 +3,11 @@ package com.iuh.nhom6.controller;
 import java.util.List;
 
 import com.iuh.nhom6.model.PhongMay;
+import com.iuh.nhom6.model.ToaNha;
 import com.iuh.nhom6.repository.PhongMayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,16 +30,16 @@ public class MayTinhController {
   @Autowired
   private PhongMayRepository phongMayRepository;
 
-  /*@PostMapping("/saveMayTinh")
+  @PostMapping("/saveMayTinh")
   public ResponseEntity<?> saveMayTinh(@RequestBody MayTinh mayTinh) {
     PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(mayTinh.getPhongMay().getSoPhong());
-    if(phongMay==null){
+    /* if(phongMay==null){
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Phòng này không tồn tại !");
     }
     MayTinh checkExitSoMay = mayTinhRepository.findMayTinhBySoMayContainingIgnoreCase(mayTinh.getSoMay());
     if(checkExitSoMay!=null){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số máy này đã tồn tại");
-    }
+    } */
 
     mayTinh.setPhongMay(phongMay);
     MayTinh savedMayTinh = mayTinhRepository.save(mayTinh);
@@ -79,9 +82,11 @@ public class MayTinhController {
   String deleteMayTinh(@PathVariable Long id) { 
     mayTinhRepository.deleteMayTinhById(id);
     return "May tinh with id " + id + " has been deleted success.";
-  } */
-  @GetMapping("/getAllMayTinh")
-  public List<MayTinh> getAllMayTinh() {
-    return mayTinhRepository.findAll();
+  } 
+
+  @GetMapping("/maytinh/{id}/phantrang/{offset}/{pageSize}")
+  public Page<MayTinh> xemDanhSachMayTinhPhanTrang(@PathVariable Long id,@PathVariable int offset, @PathVariable int pageSize) {
+    PhongMay phongMay = phongMayRepository.findById(id).get();
+    return mayTinhRepository.findMayTinhByPhongMay(phongMay, PageRequest.of(offset, pageSize));
   }
 }

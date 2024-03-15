@@ -25,10 +25,10 @@ public class ChiTietLapDatController {
     }
     @PostMapping("/saveChiTietLapDat")
     public ChiTietLapDat saveChiTietLApDat(@RequestBody ChiTietLapDat chiTietLapDat) {
-        MayTinh mayTinh = mayTinhRepository.findById(chiTietLapDat.getMayTinh().getId()).get();
-        ThietBi thietBi = thietBiRepository.findById(chiTietLapDat.getThietBi().getId()).get();
+        MayTinh mayTinh = mayTinhRepository.findMayTinhBySoMay(chiTietLapDat.getMayTinh().getSoMay());
+        // ThietBi thietBi = thietBiRepository.findById(chiTietLapDat.getThietBi().getId()).get();
         chiTietLapDat.setMayTinh(mayTinh);
-        chiTietLapDat.setThietBi(thietBi);
+        // chiTietLapDat.setThietBi(thietBi);
         return chiTietLapDatRepository.save(chiTietLapDat);
     }
 }

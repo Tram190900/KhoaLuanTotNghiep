@@ -1,6 +1,10 @@
 package com.iuh.nhom6.repository;
 
 import com.iuh.nhom6.model.PhongMay;
+import com.iuh.nhom6.model.ToaNha;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.iuh.nhom6.model.MayTinh;
@@ -18,4 +22,8 @@ public interface MayTinhRepository extends JpaRepository<MayTinh,Long> {
   @Modifying
   @Query(value = "delete from may_tinh mt where mt.may_tinh_id =?1", nativeQuery = true)
   void deleteMayTinhById(Long id);
+
+  public MayTinh findMayTinhBySoMay(String soMay);
+
+  Page<MayTinh> findMayTinhByPhongMay(PhongMay phongMay, PageRequest pageRequest);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,10 @@ public class ToaNhaController {
   @GetMapping
   public List<ToaNha> xemDanhSachToaNha() {
     return toaNhaRepository.findAll();
+  }
+
+  @GetMapping("/{id}")
+  public ToaNha xemToaNhaTheoId(@PathVariable Long id) {
+    return toaNhaRepository.findById(id).get();
   }
 }

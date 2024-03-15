@@ -14,6 +14,7 @@ import MonHoc from "./view/MonHoc";
 import NhanVien from "./view/NhanVien";
 import LichSuSuaChua from "./view/LichSuSuaChua";
 import ThongKe from "./view/ThongKe";
+import ThongTinMayTinh from "./view/PhongMay/ThongTinMayTinh/ThongTinMayTinh";
 
 export const MenuContext = createContext(null);
 
@@ -33,6 +34,7 @@ function App() {
               <Route index element={<PhongMay />}></Route>
               <Route path="danhsachphongmay" element={<DanhSachPhongMay />} />
               <Route path="danhsachmaytinh" element={<DanhSachMayTinh />} />
+              <Route path="thongtinmaytinh" element={<ThongTinMayTinh />} />
               <Route path="may-tinh" element={<MayTinh />} />
               <Route path="thiet-bi" element={<ThietBi />} />
               <Route path="phan-mem" element={<PhanMem />} />
