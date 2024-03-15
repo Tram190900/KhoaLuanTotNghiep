@@ -11,8 +11,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
 import {  useNavigate } from "react-router-dom";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import { Link } from "@mui/joy";
-// import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export default function Menu() {
   const menu = useContext(MenuContext);
@@ -109,6 +109,19 @@ export default function Menu() {
       >
         <ManageHistoryIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Lịch sử sửa đổi
+      </div>
+      <div
+        onClick={() => {
+          menu.setMenuActive("thong-ke");
+          navigate('thong-ke')
+        }}
+        className={clsx(
+          style.menuItem,
+          menu.menuActive === "thong-ke" ? style.active : ""
+        )}
+      >
+        <AssessmentOutlinedIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+        Thống kê
       </div>
       {/* <div
         onClick={() => {

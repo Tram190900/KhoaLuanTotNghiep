@@ -22,12 +22,12 @@ import com.iuh.nhom6.repository.MayTinhRepository;
 @RestController
 @CrossOrigin
 public class MayTinhController {
-  /* @Autowired
+  @Autowired
   private MayTinhRepository mayTinhRepository;
   @Autowired
   private PhongMayRepository phongMayRepository;
 
-  @PostMapping("/saveMayTinh")
+  /*@PostMapping("/saveMayTinh")
   public ResponseEntity<?> saveMayTinh(@RequestBody MayTinh mayTinh) {
     PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(mayTinh.getPhongMay().getSoPhong());
     if(phongMay==null){
@@ -80,4 +80,8 @@ public class MayTinhController {
     mayTinhRepository.deleteMayTinhById(id);
     return "May tinh with id " + id + " has been deleted success.";
   } */
+  @GetMapping("/getAllMayTinh")
+  public List<MayTinh> getAllMayTinh() {
+    return mayTinhRepository.findAll();
+  }
 }

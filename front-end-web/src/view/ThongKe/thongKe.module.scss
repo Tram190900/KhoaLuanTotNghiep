@@ -1,0 +1,42 @@
+.thongKe {
+  padding: 0 1%;
+  .card_wrap {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    .card {
+      width: 30%;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: center !important;
+      padding: 2%;
+      .card_content{
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+      }
+      .soLuong {
+        font-size: 30px;
+      }
+      &:first-child{
+        color: rgba(75,192,192,1);
+        background-color: rgba(75,192,192,0.6);
+        
+      }
+      &:nth-child(2){
+        background-color: rgb(100, 149, 237, 0.6);
+        color: rgb(100, 149, 237);
+      }
+      &:nth-child(3){
+        background-color: rgb(220, 53, 69, 0.4);
+        color: rgb(220, 53, 69, 0.9);
+      }
+    }
+  }
+  .barChart{
+    width: 60%;
+    margin: 1.5%;
+    background-color: lightcyan;
+  }
+}

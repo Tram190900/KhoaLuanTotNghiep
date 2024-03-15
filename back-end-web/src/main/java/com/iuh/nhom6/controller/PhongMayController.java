@@ -102,4 +102,8 @@ public class PhongMayController {
     ToaNha toaNha = toaNhaRepository.findById(id).get();
     return phongMayRepository.findPhongMayByToaNha(toaNha);
   }
+  @GetMapping("/getAllPhongMay")
+  public List<PhongMay> getAllPhongMay() {
+    return phongMayRepository.findAll();
+  }
 }
