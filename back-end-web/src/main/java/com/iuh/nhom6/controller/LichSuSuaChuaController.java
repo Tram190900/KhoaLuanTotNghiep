@@ -17,6 +17,7 @@ import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+
 @RestController
 @CrossOrigin
 @RequestMapping("/lichSuSuaChua")
@@ -37,6 +38,16 @@ public class LichSuSuaChuaController {
   @GetMapping("/top5Phong/{thang}")
   public List<Map<String, Object>> getTop5PhongMayGapLoiTrongThang(@PathVariable int thang) {
       return lichSuSuaChuaRepository.getTop5PhongMayGapLoiTrongThang(thang);
+  }
+  
+  @GetMapping("/phanTramMucDoLoi")
+  public Map<String, Object> getPhanTramMucDoLoi() {
+      return lichSuSuaChuaRepository.getPhantramMucDoLoi();
+  }
+  
+  @GetMapping("/soLanSuaCuaTungMayTheoPhong/{soPhong}")
+  public List<Map<String, Object>> getSoLanSuaTungMayTheoPhong(@PathVariable String soPhong) {
+      return lichSuSuaChuaRepository.getSoLanSuaChuaCuaTungMayTheoPhong(soPhong);
   }
   
 }

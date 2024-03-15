@@ -18,7 +18,7 @@ import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC"
 import Swal from "sweetalert2";
 
 export default function LichSuSuaChua() {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem("user"));
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
@@ -39,7 +39,7 @@ export default function LichSuSuaChua() {
     mayTinhId: "",
     loiGapPhai: "",
     ngayGapLoi: "",
-    ghiChu: "",
+    ghiChu: null,
     trangThai: null,
     chiTietLichSuSuaLoiId: "",
     lichSuSuaChuaId: "",
@@ -131,13 +131,15 @@ export default function LichSuSuaChua() {
   };
 
   const getNhanVienById = async (id) => {
-    try {
-      const result = await getAPI(`/getNhanVienById/${id}`);
-      if (result.status === 200) {
-        setNhanVien(result.data);
+    if (id) {
+      try {
+        const result = await getAPI(`/getNhanVienById/${id}`);
+        if (result.status === 200) {
+          setNhanVien(result.data);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -166,7 +168,7 @@ export default function LichSuSuaChua() {
       ghiChu: duLieuVao.ghiChu,
       ngaySuaLoi: moment().format("YYYY-MM-DD"),
       lichSuSuaChua: lichSuSuaChua,
-      nhanVien: {id: user.nhanVien.id}
+      nhanVien: { id: user.nhanVien.id },
     };
     try {
       const result = await postAPI(
@@ -179,6 +181,7 @@ export default function LichSuSuaChua() {
           icon: "success",
           confirmButtonText: "OK",
         });
+        setDuLieuVao({ ghiChu: "" });
         if (selectMayTinh) {
           xemDanhSachChiTietLichSuSuaChua(selectMayTinh.soMay);
         } else if (selectPhongMay) {
@@ -343,7 +346,7 @@ export default function LichSuSuaChua() {
               <Select
                 value={duLieuVao.trangThai}
                 onChange={(e) => {
-                  onInputChange(e)
+                  onInputChange(e);
                 }}
                 name="trangThai"
                 disabled
@@ -360,6 +363,7 @@ export default function LichSuSuaChua() {
                 minRows={3}
                 placeholder="Ghi chú…"
                 value={duLieuVao.ghiChu}
+                disabled={duLieuVao.trangThai ? "disabled" : ""}
               />
             </FormControl>
           </div>
@@ -409,7 +413,12 @@ export default function LichSuSuaChua() {
           </div>
         </div>
         <div className={clsx(style.searchWrap)}>
-          <Button onClick={() => luuChiTietLichSuSuaChua()} disabled={duLieuVao.trangThai?'disabled':''}>Cập nhật sửa lỗi</Button>
+          <Button
+            onClick={() => luuChiTietLichSuSuaChua()}
+            disabled={duLieuVao.trangThai ? "disabled" : ""}
+          >
+            Cập nhật sửa lỗi
+          </Button>
         </div>
         <Sheet id={"scroll-style-01"}>
           <Table stickyHeader hoverRow aria-label="striped table">
@@ -429,15 +438,15 @@ export default function LichSuSuaChua() {
                   <tr
                     className={clsx(
                       style.checkDate,
-                        !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi===3 &&
+                      !chiTietLichSuSuaChua.trangThai &&
+                        chiTietLichSuSuaChua.mucDoLoi === 3 &&
                         style.actionCao,
-                        !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi===2 &&
+                      !chiTietLichSuSuaChua.trangThai &&
+                        chiTietLichSuSuaChua.mucDoLoi === 2 &&
                         style.actionVua,
-                        !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi===1 &&
-                        style.actionThay
+                      !chiTietLichSuSuaChua.trangThai &&
+                        chiTietLichSuSuaChua.mucDoLoi === 1 &&
+                        style.actionThap
                     )}
                     key={index}
                     onClick={() => {

@@ -6,14 +6,17 @@ import BusinessIcon from "@mui/icons-material/Business";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { getAPI } from "../../api";
 import Top5PhongBiLoiNhieu from "../../components/Chart/Top5PhongBiLoiNhieu";
+import PhanTramMucDoLoi from "../../components/Chart/PhanTramMucDoLoi";
+import moment from 'moment';
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();
   const [soLuongMayTinh, setSoLuongMayTinh] = useState();
   const [soMayBaoTri, setSoMayBaoTri] = useState();
 
-  const [selectThang, setSelectThang] = useState(1);
+  const [selectThang, setSelectThang] = useState(Number(moment().format('M')));
   const [top5PhongBiLoiNhieu, setTop5PhongLoiNhieu] = useState();
+  const [phanTramMucDoLoi, setPhanTramMucDoLoi] = useState();
 
   const handleSelectThang = (event, value) => {
     setSelectThang(value);
@@ -26,9 +29,21 @@ export default function ThongKe() {
     }
   };
 
+  const handleMucDoloiGapPhai = async () => {
+    try {
+      const result = await getAPI(`/lichSuSuaChua/phanTramMucDoLoi`);
+      if (result.status === 200) {
+        setPhanTramMucDoLoi(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleSoLuongPhong();
     handleSoLuongMayTinh();
+    handleMucDoloiGapPhai();
   }, []);
 
   useEffect(() => {
@@ -60,7 +75,7 @@ export default function ThongKe() {
   };
   return (
     <div className={clsx(style.thongKe)}>
-      <h2>Thống kê</h2>
+      <h1>Thống kê</h1>
       <div className={clsx(style.card_wrap)}>
         <Card variant="soft" className={clsx(style.card)}>
           <CardContent className={clsx(style.card_content)}>
@@ -99,16 +114,28 @@ export default function ThongKe() {
           <CardContent>
             <span className="d-flex align-items-center">
               <b>Top 5 Phòng có số lần sửa chữa nhiều theo tháng &nbsp;</b>
-              <Select
-                value={selectThang}
-                onChange={handleSelectThang}
-              >
+              <Select value={selectThang} onChange={handleSelectThang}>
                 <Option value={1}>Tháng 1</Option>
                 <Option value={2}>Tháng 2</Option>
                 <Option value={3}>Tháng 3</Option>
+                <Option value={4}>Tháng 4</Option>
+                <Option value={5}>Tháng 5</Option>
+                <Option value={6}>Tháng 6</Option>
+                <Option value={7}>Tháng 7</Option>
+                <Option value={8}>Tháng 8</Option>
+                <Option value={9}>Tháng 9</Option>
+                <Option value={10}>Tháng 10</Option>
+                <Option value={11}>Tháng 11</Option>
+                <Option value={12}>Tháng 12</Option>
               </Select>
             </span>
             <Top5PhongBiLoiNhieu data={top5PhongBiLoiNhieu} />
+          </CardContent>
+        </Card>
+        <Card className={clsx(style.pieChart)}>
+          <CardContent>
+            <b>Phần trăm mức độ lỗi gặp phải trong năm nay</b>
+            <PhanTramMucDoLoi data={phanTramMucDoLoi}/>
           </CardContent>
         </Card>
       </div>

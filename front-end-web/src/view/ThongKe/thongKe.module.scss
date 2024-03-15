@@ -1,5 +1,7 @@
 .thongKe {
   padding: 0 1%;
+  height: 100%;
+  overflow: auto;
   .card_wrap {
     display: flex;
     width: 100%;
@@ -35,8 +37,12 @@
     }
   }
   .barChart{
-    width: 60%;
+    width: 65%;
     margin: 1.5%;
     background-color: lightcyan;
+  }
+  .pieChart{
+    width: 30%;
+    margin: 1.5%;
   }
 }
