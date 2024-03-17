@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./nhanVien.module.scss";
-import { getAPI, postAPI, putAPI } from "./../../api/index";
+import {
+  getAPI,
+  postAPI,
+  postAPIWithImg,
+  putAPI,
+  putApiWithImage,
+} from "./../../api/index";
 import {
   Button,
   FormControl,
@@ -41,6 +47,7 @@ export default function NhanVien() {
 
   const inputFileReference = useRef(null);
   const [imageURL, setImageURL] = useState("");
+  const [fileImage, setFileImage] = useState();
 
   useEffect(() => {
     handleGetAllNhanvien();
@@ -71,15 +78,23 @@ export default function NhanVien() {
   };
 
   const handleSaveNhanVien = async () => {
-    const data = {
-      hoTenNhanVien: hoTen,
-      email: email,
-      sdt: sdt,
-      gioiTinh: gioiTinh,
-      diaChi: diaChi,
-      trangThai: true,
-    };
-    const result = await postAPI("/saveNhanVien", data);
+    // const data = {
+    //   hoTenNhanVien: hoTen,
+    //   email: email,
+    //   sdt: sdt,
+    //   gioiTinh: gioiTinh,
+    //   diaChi: diaChi,
+    //   trangThai: true,
+    // };
+    const data = new FormData();
+    data.append("hoTenNhanVien", hoTen);
+    data.append("email", email);
+    data.append("sdt", sdt);
+    data.append("gioiTinh", gioiTinh);
+    data.append("diaChi", diaChi);
+    data.append("trangThai", trangThai);
+    data.append("file", fileImage);
+    const result = await postAPIWithImg("/saveNhanVien", data);
     if (result.status === 200) {
       const tk = {
         tenTaiKhoan: result.data.hoTenNhanVien
@@ -104,15 +119,15 @@ export default function NhanVien() {
   };
 
   const handleCapNhatNhanVien = async () => {
-    const data = {
-      hoTenNhanVien: hoTen,
-      email: email,
-      sdt: sdt,
-      gioiTinh: gioiTinh,
-      diaChi: diaChi,
-      trangThai: trangThai,
-    };
-    const result = await putAPI(`updateNhanVien/${nhanVienId}`, data);
+    const data = new FormData();
+    data.append("hoTenNhanVien", hoTen);
+    data.append("email", email);
+    data.append("sdt", sdt);
+    data.append("gioiTinh", gioiTinh);
+    data.append("diaChi", diaChi);
+    data.append("trangThai", trangThai);
+    data.append("file", fileImage);
+    const result = await putApiWithImage(`updateNhanVien/${nhanVienId}`, data);
     if (result.status === 200) {
       Swal.fire({
         text: "Cập nhật thông tin nhân viên thành công",
@@ -152,6 +167,7 @@ export default function NhanVien() {
 
   const uploadImage = async () => {
     const selectedFile = inputFileReference.current.files[0];
+    setFileImage(selectedFile);
     const url = URL.createObjectURL(selectedFile);
     await setImageURL(url);
   };
@@ -175,6 +191,7 @@ export default function NhanVien() {
                     : "https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
                 }
                 alt="avatar"
+                style={{ borderRadius: "5%" }}
               />
               <Button
                 onClick={() => {
@@ -317,7 +334,7 @@ export default function NhanVien() {
             />
           </FormControl>
           <Button onClick={() => handleTimKiem()}>Tìm kiếm</Button>
-          {user?.role === 'admin' ? (
+          {user?.role === "admin" ? (
             <Button onClick={() => handleSaveNhanVien()}>Thêm mới</Button>
           ) : null}
           <Button onClick={() => handleCapNhatNhanVien()}>Cập nhật</Button>
@@ -347,6 +364,7 @@ export default function NhanVien() {
                     setSDT(item.sdt);
                     setTrangThai(item.trangThai);
                     setNhanVienId(item.id);
+                    setImageURL(item.image);
                     handleGetCaTrucByNhanVien(item.id);
                   }}
                 >
