@@ -62,9 +62,15 @@ public class MayTinhController {
     return mayTinhRepository.findMayTinhBySoMayContainingIgnoreCase((soMay));
   }
 
-  @GetMapping("/getMayTinhByPhong/{phong}")
-  public List<MayTinh> getMayTinhByPhong(@PathVariable String phong){
-    PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(phong);
+  @GetMapping("/getMayTinhByPhong/{soPhong}")
+  public List<MayTinh> getMayTinhByPhong(@PathVariable String soPhong){
+    PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(soPhong);
+    return mayTinhRepository.findMayTinhsByPhongMay(phongMay);
+  }
+
+  @GetMapping("/getMayTinhByIdPhong/{id}")
+  public List<MayTinh> getMayTinhByPhong(@PathVariable Long id){
+    PhongMay phongMay = phongMayRepository.findById(id).get();
     return mayTinhRepository.findMayTinhsByPhongMay(phongMay);
   }
 
@@ -80,7 +86,7 @@ public class MayTinhController {
 
   @DeleteMapping("/deleteMayTinh/{id}")
   String deleteMayTinh(@PathVariable Long id) { 
-    mayTinhRepository.deleteMayTinhById(id);
+    mayTinhRepository.deleteById(id);
     return "May tinh with id " + id + " has been deleted success.";
   } 
 
@@ -88,5 +94,10 @@ public class MayTinhController {
   public Page<MayTinh> xemDanhSachMayTinhPhanTrang(@PathVariable Long id,@PathVariable int offset, @PathVariable int pageSize) {
     PhongMay phongMay = phongMayRepository.findById(id).get();
     return mayTinhRepository.findMayTinhByPhongMay(phongMay, PageRequest.of(offset, pageSize));
+  }
+
+  @GetMapping("/maytinh/{trangthai}/phantrangtrangthai/{offset}/{pageSize}")
+  public Page<MayTinh> xemDanhSachTrangThaiMayTinhPhanTrang(@PathVariable int trangthai,@PathVariable int offset, @PathVariable int pageSize) {
+    return mayTinhRepository.findMayTinhByTrangThai(trangthai, PageRequest.of(offset, pageSize));
   }
 }

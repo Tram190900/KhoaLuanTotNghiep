@@ -26,4 +26,5 @@ public interface MayTinhRepository extends JpaRepository<MayTinh,Long> {
   public MayTinh findMayTinhBySoMay(String soMay);
 
   Page<MayTinh> findMayTinhByPhongMay(PhongMay phongMay, PageRequest pageRequest);
+  Page<MayTinh> findMayTinhByTrangThai(int trangThai, PageRequest pageRequest);
 }

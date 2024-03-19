@@ -22,7 +22,7 @@ export default function LichSuSuaChua() {
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
-
+  console.log(user);
   const [allToaNha, setAllToaNha] = useState([]);
   const [selectToaNha, setSelectToaNha] = useState(null);
 

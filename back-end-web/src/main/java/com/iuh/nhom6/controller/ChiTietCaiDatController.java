@@ -1,6 +1,9 @@
 package com.iuh.nhom6.controller;
 
 import com.iuh.nhom6.model.ChiTietCaiDat;
+import com.iuh.nhom6.model.ChiTietCaiDatPK;
+import com.iuh.nhom6.model.ChiTietLapDatPK;
+import com.iuh.nhom6.model.LoaiPhong;
 import com.iuh.nhom6.model.MayTinh;
 import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.ChiTietCaiDatRepository;
@@ -33,5 +36,24 @@ public class ChiTietCaiDatController {
         chiTietCaiDat.setMayTinh(mayTinh);
         // chiTietCaiDat.setPhanMem(phanMem);
         return chiTietCaiDatRepository.save(chiTietCaiDat);
+    }
+
+    @PutMapping("capNhapChiTietCaiDat/{mayTinh_id}/{phanMem_id}")
+    public ChiTietCaiDat capNhapChiTietCaiDat(@RequestBody ChiTietCaiDat newChiTietCaiDat, 
+    @PathVariable Long mayTinh_id, @PathVariable Long phanMem_id) {
+        ChiTietCaiDatPK chiTietCaiDatPK = new ChiTietCaiDatPK(mayTinh_id,phanMem_id);
+        return chiTietCaiDatRepository.findById(chiTietCaiDatPK)
+        .map(chiTietCaiDat -> {
+            chiTietCaiDat.setPhanMem(newChiTietCaiDat.getPhanMem());
+            chiTietCaiDat.setNgayCaiDat(newChiTietCaiDat.getNgayCaiDat());
+            return chiTietCaiDatRepository.save(chiTietCaiDat);
+        }).orElseThrow();
+    }
+
+    @GetMapping("xemChiTietCaiDat/{mayTinh_id}/{phanMem_id}")
+    public ChiTietCaiDat xemChiTietCaiDat( 
+    @PathVariable Long mayTinh_id, @PathVariable Long phanMem_id) {
+        ChiTietCaiDatPK chiTietCaiDatPK = new ChiTietCaiDatPK(mayTinh_id,phanMem_id);
+        return chiTietCaiDatRepository.findById(chiTietCaiDatPK).get();
     }
 }

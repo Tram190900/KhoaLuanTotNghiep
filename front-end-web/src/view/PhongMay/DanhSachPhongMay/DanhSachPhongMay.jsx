@@ -29,6 +29,8 @@ export default function DanhSachPhongMay(props) {
   const [dsPhongMay, setdsPhongMay] = useState([]);
 
   const [phongMay_id, setPhongMay_id] = useState();
+  
+  const [tenPhongMay, setTenPhongMay] = useState();
 
   const [tieuDe, setTieuDe] = useState();
 
@@ -44,10 +46,9 @@ export default function DanhSachPhongMay(props) {
 
   const toaNha_id = location.state.toaNha_id;
   
-  console.log(location.state);
 
   const xemDanhSachPhongMay = async () => {
-    const result = await getAPI(`/phongmay/${toaNha_id}/phantrang/${page - 1}/1`);
+    const result = await getAPI(`/phongmay/${toaNha_id}/phantrang/${page - 1}/8`);
     if (result.status === 200) {
       setdsPhongMay(result.data.content);
       setTotalPage(result.data.totalPages);
@@ -198,6 +199,11 @@ export default function DanhSachPhongMay(props) {
                 </Typography>
                   <Tooltip title="Cài đặt phòng">
                     <IconButton
+                    onClick={(e) => {
+                      handleClick(e);
+                      setPhongMay_id(phongMay.id);
+                      setTenPhongMay(phongMay.soPhong);
+                    }}
                       size="small"
                       sx={{ ml: 2 }}
                       aria-controls={open ? "account-menu" : undefined}
@@ -271,7 +277,10 @@ export default function DanhSachPhongMay(props) {
                   onClick={() => {
                     navigate("/quan-ly-phong-may/danhsachmaytinh", {
                       state: {
-                        phongMay_id: phongMay.id
+                        phongMay_id: phongMay.id,
+                        soPhong: phongMay.soPhong,
+                        toaNha: phongMay.toaNha.tenToaNha,
+                        toaNha_id: phongMay.toaNha.id
                       },
                     });
                   }}
@@ -294,7 +303,9 @@ export default function DanhSachPhongMay(props) {
       open = {openTaoPhongMay}
       setOpen= {setOpenTaoPhongMay}
       tieuDe = {tieuDe}
-      toaNha_id = {toaNha_id}/>
+      toaNha_id = {toaNha_id}
+      phongMay_id = {phongMay_id}
+      tenPhongMay = {tenPhongMay}/>
     </div>
   );
 }

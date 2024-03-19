@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Transactional
@@ -26,4 +29,8 @@ public class PhongMay implements Serializable {
   @ManyToOne
   @JoinColumn(name = "loaiPhong_id")
   private LoaiPhong loaiPhong;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "phongMay",cascade = CascadeType.ALL)
+  private List<MayTinh> mayTinhs;
 }

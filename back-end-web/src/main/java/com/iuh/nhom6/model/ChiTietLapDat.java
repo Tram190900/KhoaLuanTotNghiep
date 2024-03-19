@@ -20,7 +20,7 @@ public class ChiTietLapDat implements Serializable {
     private MayTinh mayTinh;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "thietBi_id",referencedColumnName = "thietBi_id")
     private ThietBi thietBi;
 

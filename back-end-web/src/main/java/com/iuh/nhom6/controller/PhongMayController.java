@@ -68,15 +68,14 @@ public class PhongMayController {
           phongMay.setSoPhong(newPhongMay.getSoPhong());
           phongMay.setToaNha(newPhongMay.getToaNha());
           phongMay.setLoaiPhong(newPhongMay.getLoaiPhong());
-          LoaiPhong loaiPhong = newPhongMay.getLoaiPhong();
           try {
-            loaiPhongRepository.save(loaiPhong);
+            loaiPhongRepository.save(newPhongMay.getLoaiPhong());
             return phongMayRepository.save(phongMay);
           } catch (Exception e) {
-            loaiPhong = loaiPhongRepository
-                .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
-                    loaiPhong.getSoLuongMay());
-            phongMay.setLoaiPhong(loaiPhong);
+            LoaiPhong loaiPhong_2 = loaiPhongRepository
+                .findByTenLoaiPhongAndSoLuongMay(newPhongMay.getLoaiPhong().getTenLoaiPhong(),
+                    newPhongMay.getLoaiPhong().getSoLuongMay());
+            phongMay.setLoaiPhong(loaiPhong_2);
             return phongMayRepository.save(phongMay);
           }
         }).orElseThrow();
@@ -94,11 +93,11 @@ public class PhongMayController {
     return toaNhaList;
   }
 
-/*   @GetMapping("/getPhongMay/{toaNha}")
+  @GetMapping("/getPhongMay/{toaNha}")
   public List<PhongMay> getMethodName(@PathVariable ToaNha toaNha) {
     List<PhongMay> phongMays = phongMayRepository.findPhongMaysByToaNha(toaNha);
       return phongMays;
-  } */
+  }
 
   @GetMapping("/xemDanhSachPhongMayTheoToaNha/{id}") 
   public List<PhongMay> xemDanhSachPhongMayTheoToaNha(@PathVariable Long id) {

@@ -50,7 +50,7 @@ export default function MayTinh() {
   };
   const handleGetPhongMayTheoToaNha = async (value) => {
     try {
-      const result = await getAPI(`getPhongMay/${value}`);
+      const result = await getAPI(`xemDanhSachPhongMayTheoToaNha/${value.id}`);
       if (result.status === 200) {
         setPhongMay(result.data);
       }
@@ -73,8 +73,6 @@ export default function MayTinh() {
   const handleToaNha =  (event, newValue) => {
     setSelectToaNha(newValue);
     handleGetPhongMayTheoToaNha(newValue);
-    
-    
   };
 
   const handlePhongMay = async (event, newValue) => {
@@ -128,6 +126,8 @@ export default function MayTinh() {
   const handleChange = (event, newValue) => {
     setTrangThai(newValue);
   };
+
+  console.log(selectToaNha);
 
   return (
     <>

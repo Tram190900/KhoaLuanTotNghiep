@@ -10,6 +10,9 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Transactional
 @Data
@@ -24,7 +27,7 @@ public class ChiTietCaiDat implements Serializable {
     private MayTinh mayTinh;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "phanMem_id", referencedColumnName = "phanMem_id")
     private PhanMem phanMem;
 

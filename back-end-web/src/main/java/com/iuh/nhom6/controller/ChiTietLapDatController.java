@@ -31,4 +31,22 @@ public class ChiTietLapDatController {
         // chiTietLapDat.setThietBi(thietBi);
         return chiTietLapDatRepository.save(chiTietLapDat);
     }
+
+    @PutMapping("capNhapChiTietLapDat/{mayTinh_id}/{thietBi_id}")
+    public ChiTietLapDat capNhapChiTietLapDat(@RequestBody ChiTietLapDat newChiTietLapDat, 
+    @PathVariable Long mayTinh_id, @PathVariable Long thietBi_id) {
+        ChiTietLapDatPK chiTietLapDatPK = new ChiTietLapDatPK(mayTinh_id,thietBi_id);
+        return chiTietLapDatRepository.findById(chiTietLapDatPK)
+        .map(chiTietLapDat -> {
+            chiTietLapDat.setThietBi(newChiTietLapDat.getThietBi());
+            return chiTietLapDatRepository.save(chiTietLapDat);
+        }).orElseThrow();
+    }
+
+    @GetMapping("xemChiTietLapDat/{mayTinh_id}/{thietBi_id}")
+    public ChiTietLapDat xemChiTietLapDat( 
+    @PathVariable Long mayTinh_id, @PathVariable Long thietBi_id) {
+        ChiTietLapDatPK chiTietLapDatPK = new ChiTietLapDatPK(mayTinh_id,thietBi_id);
+        return chiTietLapDatRepository.findById(chiTietLapDatPK).get();
+    }
 }

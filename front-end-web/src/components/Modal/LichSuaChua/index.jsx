@@ -8,6 +8,8 @@ import {
   Modal,
   ModalClose,
   ModalDialog,
+  Option,
+  Select,
   Sheet,
   Table,
 } from "@mui/joy";
@@ -16,23 +18,35 @@ import React, { useState } from "react";
 import style from "./lichSuaChua.module.scss";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import Swal from "sweetalert2";
-import { postAPI } from "../../../api";
+import { postAPI, putAPI } from "../../../api";
 
 export default function LichSuaChua(props) {
+  const date = new Date();
+  const defaultValue = date.toLocaleDateString('en-CA');
   const [duLieuInput, setDuLieuInput] = useState({
     loiGapPhai: "",
-    ngayGapLoi: "",
+    ngayGapLoi: defaultValue,
   });
+
 
   const inputOnChange = (e) => {
     setDuLieuInput({ ...duLieuInput, [e.target.name]: e.target.value });
   };
 
+  const capNhapMayTinh = async () => {
+    const mayTinh = props.mayTinh;
+    mayTinh.trangThai = 2;
+    await putAPI(`/updateMayTinh/${props.mayTinh.id}`,mayTinh);
+  }
+
   const themLoi = async () => {
+    capNhapMayTinh();
     const loi = {
       loiGapPhai: duLieuInput.loiGapPhai,
       ngayGapLoi: duLieuInput.ngayGapLoi,
+      mucDoLoi: duLieuInput.mucDoLoi,
       mayTinh: props.mayTinh,
+      trangThai: false
     };
     const result = await postAPI("/lichSuSuaChua", loi);
     if (result.status === 200) {
@@ -82,15 +96,24 @@ export default function LichSuaChua(props) {
                   placeholder="Lỗi mắc phải..."
                 />
               </FormControl>
+              <FormLabel>Mức độ lỗi</FormLabel>
+              <Select
+                  placeholder="Mức độ lỗi..."
+                  onChange={(e,v) => setDuLieuInput({...duLieuInput, mucDoLoi:v})}
+                >
+                  <Option value={1}>Sửa trong ngày</Option>
+                  <Option value={2}>Không quá 7 ngày</Option>
+                  <Option value={3}>Không quá 30 ngày</Option>
+                </Select>
               <FormControl>
                 <FormLabel>Ngày gặp lỗi</FormLabel>
                 <Input
                   name="ngayGapLoi"
-                  defaultValue={new Date()}
+                  id="dateRequired" type="date" defaultValue={defaultValue}
                   onChange={(e) => inputOnChange(e)}
-                  type="date"
                   placeholder="Ngày sửa"
                 />
+                
               </FormControl>
               {/* <FormControl>
                 <FormLabel>Ghi chú</FormLabel>

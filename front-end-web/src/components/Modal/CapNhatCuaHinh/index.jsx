@@ -119,11 +119,6 @@ export default function CapNhatCauHinh(props) {
                           onClick={() => handleSelectFriends(item.id)}
                         >
                           <Checkbox
-                            checked={
-                              props.phanMemCaiDat.some(
-                                (i) => i.phanMem.id === item.id
-                              ) || selectPhanMem.some((i) => i === item.id)
-                            }
                             sx={{ marginTop: "40%" }}
                             id={item.id}
                           />
@@ -156,11 +151,6 @@ export default function CapNhatCauHinh(props) {
                           onClick={() => handleSelectThietBi(item.id)}
                         >
                           <Checkbox
-                            checked={
-                              props.thietBiLapDat.some(
-                                (i) => i.thietBi.id === item.id
-                              ) || selectThietBi.some((i) => i === item.id)
-                            }
                             sx={{ marginTop: "40%" }}
                             id={item.id}
                           />

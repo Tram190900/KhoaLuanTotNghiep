@@ -37,6 +37,12 @@ const ThongTinMayTinh = () => {
     }
   };
 
+  const ghiTrangThai = (mayTinh) => {
+    if (mayTinh.trangThai === 1) return "Hoạt động"
+    else if (mayTinh.trangThai === 2) return "Bảo trì"
+    else return "Hỏng"
+  }
+
   const handleGetThietBiLapDat = async (id) => {
     const result = await getAPI(`/getAllChiTietLapDat/${id}`);
     if (result.status === 200 && result.data.length > 0) {
@@ -69,7 +75,7 @@ const ThongTinMayTinh = () => {
           Tòa nhà
         </Link>
         <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
-          Nhà H
+          {mayTinh.phongMay.toaNha.tenToaNha}
         </Link>
         <Button
           onClick={() => {
@@ -80,7 +86,7 @@ const ThongTinMayTinh = () => {
             });
           }}
         >
-          H1.1
+          {mayTinh.phongMay.soPhong}
         </Button>
         <Typography color="text.primary">{mayTinh.soMay}</Typography>
       </Breadcrumbs>
@@ -91,7 +97,7 @@ const ThongTinMayTinh = () => {
         Phòng máy: {mayTinh.phongMay.soPhong}
       </Paper>
       <Paper sx={{ width: "50%" }} square={false}>
-        Trạng thái: {mayTinh.trangThai ? "Tốt" : "Xấu"}
+        Trạng thái: {ghiTrangThai(mayTinh)}
       </Paper>
       <div className={clsx(Style.button)}>
         <Button onClick={() => setOpenLichSuaChua(!openLichSuaChua)} variant="contained">Báo lỗi</Button>

@@ -20,7 +20,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { deleteAPI, getAPI, postAPI } from "../../../api";
+import { deleteAPI, getAPI, postAPI, putAPI } from "../../../api";
 import Swal from "sweetalert2";
 
 const TaoPhongMay = (props) => {
@@ -29,6 +29,7 @@ const TaoPhongMay = (props) => {
   const [dsPhanMemChon, setDsPhanMemChon] = useState([]);
   const [dsThietBiChon, setDsThietBiChon] = useState([]);
   const [toaNha, setToaNha] = useState([]);
+  // const [dsMayTinhCapNhap, setDanhSachMayTinhCapNhap] = useState([]);
   const [duLieuVao, setDuLieuVao] = useState({
     soPhong: "",
     tenLoaiPhong: "",
@@ -95,6 +96,8 @@ const TaoPhongMay = (props) => {
     };
     await postAPI("/savePhongMay", phongMay);
     luuMayTinh();
+    setDsPhanMemChon([]);
+    setDsThietBiChon([]);
     props.xemDanhSachPhongMay();
     props.setOpen(false);
   };
@@ -106,26 +109,26 @@ const TaoPhongMay = (props) => {
           i > 8
             ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
             : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1),
-        trangThai: true,
+        trangThai: 1,
         phongMay: {
-          soPhong: duLieuVao.soPhong
-        }
+          soPhong: duLieuVao.soPhong,
+        },
       };
       await postAPI("/saveMayTinh", mayTinh);
       dsPhanMemChon.map(async (phanMem) => {
         const chiTietCaiDat = {
           mayTinh: mayTinh,
           phanMem: phanMem,
-          ngayCaiDat: new Date()
-        }
+          ngayCaiDat: new Date(),
+        };
         await postAPI("/saveChiTietCaiDat", chiTietCaiDat);
       });
       dsThietBiChon.map(async (thietBi) => {
         const chiTietLapDat = {
           mayTinh: mayTinh,
           thietBi: thietBi,
-          ngayLapDat: new Date()
-        }
+          ngayLapDat: new Date(),
+        };
         await postAPI("/saveChiTietLapDat", chiTietLapDat);
       });
     }
@@ -172,9 +175,75 @@ const TaoPhongMay = (props) => {
   };
 
   const capNhapPhongMay = async () => {
-    await deleteAPI(`/deletePhongMay/${props.phongMay_id}`);
-    luuPhongMay();
+    const phongMay = {
+      soPhong: duLieuVao.soPhong,
+      toaNha: toaNha,
+      loaiPhong: {
+        tenLoaiPhong: duLieuVao.tenLoaiPhong,
+        soLuongMay: duLieuVao.soLuongMay,
+      },
+    };
+    try {
+      const result = await putAPI(
+        `/updatePhongMay/${props.phongMay_id}`,
+        phongMay
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Cập nhập phòng máy thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        props.setOpen(false);
+        capNhapMayTinh();
+        props.xemDanhSachPhongMay();
+        setDsPhanMemChon([]);
+        setDsThietBiChon([]);
+      }
+    } catch (error) {
+      props.setOpen(false);
+      Swal.fire({
+        text: error.response.data,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
+
+/* const xemDanhSachMayTinhCapNhap = async (tenPhongMay) => {
+  const result = await getAPI(`/getMayTinhByPhong/${tenPhongMay}`);
+  console.log("ten PHong May");
+  console.log(tenPhongMay);
+    setDanhSachMayTinhCapNhap(result.data);
+} */
+  const capNhapMayTinh = async () => {
+    const result = await getAPI(`/getMayTinhByIdPhong/${props.phongMay_id}`);
+    const dsMayTinhCapNhap = result.data;
+    for (let i = 0; i < dsMayTinhCapNhap.length; i++) {
+      dsMayTinhCapNhap[i].soMay = 
+          i > 8
+            ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
+            : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1);
+      dsMayTinhCapNhap[i].trangThai = 1;
+      await putAPI(`/updateMayTinh/${dsMayTinhCapNhap[i].id}`, dsMayTinhCapNhap[i]);
+      dsPhanMemChon.map(async (phanMem) => {
+        const chiTietCaiDat = {
+          phanMem: phanMem,
+          ngayCaiDat: new Date(),
+        };
+        await putAPI(`/capNhapChiTietCaiDat/${dsMayTinhCapNhap[i].id}/${phanMem.id}`, chiTietCaiDat);
+      });
+      dsThietBiChon.map(async (thietBi) => {
+        const chiTietLapDat = {
+          thietBi: thietBi,
+          ngayLapDat: new Date(),
+        };
+        await putAPI(`/capNhapChiTietLapDat/${thietBi.id}/${dsMayTinhCapNhap[i].id}`, chiTietLapDat);
+      });
+    }
+    props.setOpen(false);
+  };
+
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
