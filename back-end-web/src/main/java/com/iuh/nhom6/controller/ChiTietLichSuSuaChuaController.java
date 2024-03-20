@@ -1,7 +1,7 @@
 package com.iuh.nhom6.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,15 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iuh.nhom6.dto.ChiTietLichSuChuaSuaDTO;
 import com.iuh.nhom6.model.ChiTietLichSuSuaChua;
 import com.iuh.nhom6.model.LichSuSuaChua;
 import com.iuh.nhom6.model.MayTinh;
-import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.repository.ChiTietLichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
-import com.iuh.nhom6.repository.NhanVienRepository;
 
 @RestController
 @CrossOrigin
@@ -37,18 +34,14 @@ public class ChiTietLichSuSuaChuaController {
   @Autowired
   MayTinhRepository mayTinhRepository;
 
-  @Autowired
-  NhanVienRepository nhanVienRepository;
-
   @PostMapping()
   public ChiTietLichSuSuaChua luuLichSuSuaChua(
       @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChua) {
-    LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId()).get();
-    NhanVien nhanVien = nhanVienRepository.findById(chiTietLichSuSuaChua.getNhanVien().getId()).get();
+    LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId())
+        .get();
     lichSuSuaChua.setTrangThai(true);
     lichSuSuaChuaRepository.save(lichSuSuaChua);
     chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
-    chiTietLichSuSuaChua.setNhanVien(nhanVien);
     return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
   }
 
@@ -83,44 +76,40 @@ public class ChiTietLichSuSuaChuaController {
         }).orElseThrow();
   }
 
-  @PutMapping("/{id}/nhanVien")
-  public ChiTietLichSuSuaChua capNhapNhanVienSuaChua(
-      @PathVariable Long id,
-      @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChuaMoi) {
-    return chiTietLichSuSuaChuaRepository.findById(id)
-        .map((chiTietLichSuSuaChua) -> {
-          chiTietLichSuSuaChua.setNgaySuaLoi(chiTietLichSuSuaChuaMoi.getNgaySuaLoi());
-          chiTietLichSuSuaChua.setNhanVien(chiTietLichSuSuaChuaMoi.getNhanVien());
-          return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
-        }).orElseThrow();
+  // @PutMapping("/{id}/nhanVien")
+  // public ChiTietLichSuSuaChua capNhapNhanVienSuaChua(
+  // @PathVariable Long id,
+  // @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChuaMoi) {
+  // return chiTietLichSuSuaChuaRepository.findById(id)
+  // .map((chiTietLichSuSuaChua) -> {
+  // chiTietLichSuSuaChua.setNgaySuaLoi(chiTietLichSuSuaChuaMoi.getNgaySuaLoi());
+  // chiTietLichSuSuaChua.setNhanVien(chiTietLichSuSuaChuaMoi.getNhanVien());
+  // return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
+  // }).orElseThrow();
 
-  }
+  // }
 
   @GetMapping("/{mayTinhId}")
-  public List<ChiTietLichSuChuaSuaDTO> getChiTietLichSuSuaLoiDTOs(@PathVariable Long mayTinhId) {
-    List<Object[]> result = chiTietLichSuSuaChuaRepository.findChiTietLichSuTheoMay(mayTinhId);
-    List<ChiTietLichSuChuaSuaDTO> resultList = new ArrayList<>();
-
-    for (Object[] row : result) {
-      ChiTietLichSuChuaSuaDTO dto = new ChiTietLichSuChuaSuaDTO(row);
-      resultList.add(dto);
-      System.out.println(resultList.toString());
+  public List<Map<String, Object>> getChiTietLichSuSuaLoiDTOs(@PathVariable Long mayTinhId) {
+    try {
+      List<Map<String, Object>> resultList = chiTietLichSuSuaChuaRepository.findChiTietLichSuTheoMay(mayTinhId);
+      return resultList;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
 
-    return resultList;
   }
 
   @GetMapping("/getByPhongMay/{id}")
-  public List<ChiTietLichSuChuaSuaDTO> getChiTietLichSuSuaLoiDTOsByPhongMay(@PathVariable Long id) {
-    List<Object[]> result = chiTietLichSuSuaChuaRepository.findChiTietLichSuTheoPhong(id);
-    List<ChiTietLichSuChuaSuaDTO> resultList = new ArrayList<>();
-
-    for (Object[] row : result) {
-      ChiTietLichSuChuaSuaDTO dto = new ChiTietLichSuChuaSuaDTO(row);
-      resultList.add(dto);
+  public List<Map<String, Object>> getChiTietLichSuSuaLoiDTOsByPhongMay(@PathVariable Long id) {
+    try {
+      List<Map<String, Object>> resultList = chiTietLichSuSuaChuaRepository.findChiTietLichSuTheoPhong(id);
+      return resultList;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
-
-    return resultList;
   }
 
 }

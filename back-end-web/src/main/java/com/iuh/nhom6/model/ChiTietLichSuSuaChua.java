@@ -29,7 +29,5 @@ public class ChiTietLichSuSuaChua {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "lichSuSuaChua_id", referencedColumnName = "id")
   private LichSuSuaChua lichSuSuaChua;
-  @ManyToOne
-  @JoinColumn(name = "nhanVien_id")
-  private NhanVien nhanVien;
+  
 }

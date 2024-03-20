@@ -27,6 +27,7 @@ public class LichSuSuaChua {
   private Long id;
   private String loiGapPhai;
   private Date ngayGapLoi;
+  private Date ngayDuKienSua;
   private int mucDoLoi;
   private Boolean trangThai;
 /*   @OneToOne(mappedBy = "lichSuSuaChua")
@@ -38,4 +39,7 @@ public class LichSuSuaChua {
   @JsonIgnore
   @OneToOne(mappedBy = "lichSuSuaChua" ,cascade = CascadeType.ALL)
   private ChiTietLichSuSuaChua chiTietLichSuSuaChua;
+  @ManyToOne
+  @JoinColumn(name = "nhanVien_id")
+  private NhanVien nhanVien;
 }
