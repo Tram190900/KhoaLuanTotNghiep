@@ -16,13 +16,13 @@ import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import moment from "moment";
 import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC";
 import Swal from "sweetalert2";
+import ModalNhanVien from "../../components/Chart/Top5PhongBiLoiNhieu/ModalNhanVien";
 
 export default function LichSuSuaChua() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
-  console.log(user);
   const [allToaNha, setAllToaNha] = useState([]);
   const [selectToaNha, setSelectToaNha] = useState(null);
 
@@ -143,15 +143,15 @@ export default function LichSuSuaChua() {
     }
   };
 
-  const getMayTinhById = async (id) => {
-    try {
-      const result = await getAPI(`/getMayTinhById/${id}`);
-      return result.data; // Assuming your API response contains the needed data
-    } catch (error) {
-      console.error(error);
-      return null; // Handle the error if needed
-    }
-  };
+  // const getMayTinhById = async (id) => {
+  //   try {
+  //     const result = await getAPI(`/getMayTinhById/${id}`);
+  //     return result.data; // Assuming your API response contains the needed data
+  //   } catch (error) {
+  //     console.error(error);
+  //     return null; // Handle the error if needed
+  //   }
+  // };
 
   const luuChiTietLichSuSuaChua = async () => {
     const lichSuSuaChua = {
@@ -163,12 +163,12 @@ export default function LichSuSuaChua() {
       },
       trangThai: duLieuVao.trangThai,
       mucDoLoi: duLieuVao.mucDoLoi,
+      nhanVien: { id: user.nhanVien.id },
     };
     const chiTietLichSuSuaChua = {
       ghiChu: duLieuVao.ghiChu,
       ngaySuaLoi: moment().format("YYYY-MM-DD"),
       lichSuSuaChua: lichSuSuaChua,
-      nhanVien: { id: user.nhanVien.id },
     };
     try {
       const result = await postAPI(
@@ -198,64 +198,64 @@ export default function LichSuSuaChua() {
     }
   };
 
-  const xoaChiTietLichSuSuaChua = () => {
-    Swal.fire({
-      text: "Bạn có chắc muốn xóa",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Có",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await deleteAPI(`/chiTietLichSuSuaChua/${chiTietLichSuSuaChua.id}`)
-          .then(() => {
-            Swal.fire({
-              text: "Xóa lịch sử sửa chữa thành công",
-              icon: "success",
-            });
-            xemDanhSachChiTietLichSuSuaChua();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    });
-  };
+  // const xoaChiTietLichSuSuaChua = () => {
+  //   Swal.fire({
+  //     text: "Bạn có chắc muốn xóa",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Có",
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       await deleteAPI(`/chiTietLichSuSuaChua/${chiTietLichSuSuaChua.id}`)
+  //         .then(() => {
+  //           Swal.fire({
+  //             text: "Xóa lịch sử sửa chữa thành công",
+  //             icon: "success",
+  //           });
+  //           xemDanhSachChiTietLichSuSuaChua();
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     }
+  //   });
+  // };
 
-  const capNhapChiTietLichSuSuaChua = async () => {
-    Swal.fire({
-      text: "Bạn có chắc muốn cập nhập?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Có",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        chiTietLichSuSuaChua.ghiChu = duLieuVao.ghiChu;
-        chiTietLichSuSuaChua.mayTinhId = Number(selectMayTinh.id);
-        chiTietLichSuSuaChua.loiGapPhai = duLieuVao.loiGapPhai;
-        chiTietLichSuSuaChua.ngayGapLoi = duLieuVao.ngayGapLoi;
-        chiTietLichSuSuaChua.chiTietLichSuSuaLoiId =
-          duLieuVao.chiTietLichSuSuaLoiId;
-        await putAPI(
-          `/chiTietLichSuSuaChua/${duLieuVao.chiTietLichSuSuaLoiId}`,
-          chiTietLichSuSuaChua
-        )
-          .then(() => {
-            Swal.fire({
-              text: "Cập nhập lịch sử sửa chữa thành công",
-              icon: "success",
-            });
-            xemDanhSachChiTietLichSuSuaChua();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    });
-  };
+  // const capNhapChiTietLichSuSuaChua = async () => {
+  //   Swal.fire({
+  //     text: "Bạn có chắc muốn cập nhập?",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Có",
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       chiTietLichSuSuaChua.ghiChu = duLieuVao.ghiChu;
+  //       chiTietLichSuSuaChua.mayTinhId = Number(selectMayTinh.id);
+  //       chiTietLichSuSuaChua.loiGapPhai = duLieuVao.loiGapPhai;
+  //       chiTietLichSuSuaChua.ngayGapLoi = duLieuVao.ngayGapLoi;
+  //       chiTietLichSuSuaChua.chiTietLichSuSuaLoiId =
+  //         duLieuVao.chiTietLichSuSuaLoiId;
+  //       await putAPI(
+  //         `/chiTietLichSuSuaChua/${duLieuVao.chiTietLichSuSuaLoiId}`,
+  //         chiTietLichSuSuaChua
+  //       )
+  //         .then(() => {
+  //           Swal.fire({
+  //             text: "Cập nhập lịch sử sửa chữa thành công",
+  //             icon: "success",
+  //           });
+  //           xemDanhSachChiTietLichSuSuaChua();
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     }
+  //   });
+  // };
 
   console.log(chiTietLichSuSuaChua);
 
@@ -384,22 +384,32 @@ export default function LichSuSuaChua() {
                   </tr>
                 </thead>
                 <tbody>
-                  {chiTietLichSuSuaChua.nhanVienId != null ? (
+                  {chiTietLichSuSuaChua?.nhan_vien_id != null ? (
                     <td>{nhanVien.hoTenNhanVien}</td>
                   ) : (
                     <td></td>
                   )}
-                  {chiTietLichSuSuaChua.ngaySuaLoi != null && (
+                  {chiTietLichSuSuaChua.ngay_sua_loi != null && (
                     <td>
-                      {moment(chiTietLichSuSuaChua.ngaySuaLoi).format(
+                      {moment(chiTietLichSuSuaChua.ngay_sua_loi).format(
                         "DD-MM-YYYY"
                       )}
                     </td>
                   )}
                 </tbody>
+                {user?.role === "admin" && chiTietLichSuSuaChua!==null && !chiTietLichSuSuaChua.trang_thai ? (
+                  <tfoot>
+                    <tr>
+                      <td colSpan={2} style={{ textAlign: "center" }}>
+                        <Button onClick={()=>setOpenCapNhapNhanVien(true)}>Chỉ định nhân viên sửa</Button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                ) : null}
               </Table>
             </Sheet>
             <div className={clsx(style.notes)}>
+              <b>Chú thích thêm:</b>
               <span className={clsx(style.notes_thap)}>
                 Lỗi phải sửa trong ngày
               </span>
@@ -408,6 +418,9 @@ export default function LichSuSuaChua() {
               </span>
               <span className={clsx(style.notes_khac)}>
                 Lỗi không để quá <strong>&nbsp;30 ngày&nbsp;</strong>
+              </span>
+              <span className={clsx(style.notes_baoDo)}>
+                Lỗi phải sửa trong ngày
               </span>
             </div>
           </div>
@@ -433,51 +446,50 @@ export default function LichSuSuaChua() {
               </tr>
             </thead>
             <tbody>
-              {chiTietLichSuSuaChuas.map((chiTietLichSuSuaChua, index) => {
+              {chiTietLichSuSuaChuas.map((item, index) => {
                 return (
                   <tr
                     className={clsx(
                       style.checkDate,
-                      !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi === 3 &&
-                        style.actionCao,
-                      !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi === 2 &&
-                        style.actionVua,
-                      !chiTietLichSuSuaChua.trangThai &&
-                        chiTietLichSuSuaChua.mucDoLoi === 1 &&
-                        style.actionThap
+                      moment().diff(
+                        moment(item.ngay_du_kien_sua),
+                        "days"
+                      ) === 0&&
+                        !item.trang_thai &&
+                        style.suaGap
                     )}
                     key={index}
                     onClick={() => {
-                      setChiTietLichSuSuaChua(chiTietLichSuSuaChua);
+                      setChiTietLichSuSuaChua(item);
                       setDuLieuVao({
-                        mayTinhId: chiTietLichSuSuaChua.mayTinhId,
-                        loiGapPhai: chiTietLichSuSuaChua.loiGapPhai,
-                        ngayGapLoi: moment(
-                          chiTietLichSuSuaChua.ngayGapLoi
-                        ).format("YYYY-MM-DD"),
-                        ghiChu: chiTietLichSuSuaChua.ghiChu,
-                        trangThai: chiTietLichSuSuaChua.trangThai,
-                        chiTietLichSuSuaLoiId:
-                          chiTietLichSuSuaChua.chiTietLichSuSuaLoiId,
-                        lichSuSuaChuaId: chiTietLichSuSuaChua.lichSuSuaChuaId,
+                        mayTinhId: item.may_tinh_id,
+                        loiGapPhai: item.loi_gap_phai,
+                        ngayGapLoi: moment(item.ngay_gap_loi).format(
+                          "YYYY-MM-DD"
+                        ),
+                        ghiChu: item.ghi_chu,
+                        trangThai: item.trang_thai,
+                        lichSuSuaChuaId: item.id,
+                        chiTietLichSuSuaLoiId: item.chi_tiet_sua_chua_id,
                       });
-                      getNhanVienById(chiTietLichSuSuaChua.nhanVienId);
+                      getNhanVienById(item.nhan_vien_id);
                     }}
                   >
-                    <td>{chiTietLichSuSuaChua.soMay}</td>
-                    <td>{chiTietLichSuSuaChua.loiGapPhai}</td>
-                    <td>
-                      {moment(chiTietLichSuSuaChua.ngayGapLoi).format(
-                        "DD-MM-YYYY"
+                    <td>{item.so_may}</td>
+                    <td>{item.loi_gap_phai}</td>
+                    <td>{moment(item.ngay_gap_loi).format("DD-MM-YYYY")}</td>
+                    <td
+                      className={clsx(
+                        style.mucDo,
+                        item.muc_do_loi === 3 && style.actionCao,
+                        item.muc_do_loi === 2 && style.actionVua,
+                        item.muc_do_loi === 1 && style.actionThap
                       )}
+                    >
+                      {item?.muc_do_loi}
                     </td>
-                    <td>{chiTietLichSuSuaChua?.mucDoLoi}</td>
-                    <td>
-                      {chiTietLichSuSuaChua?.trangThai ? "Đã sửa" : "Chưa sửa"}
-                    </td>
-                    <td>{chiTietLichSuSuaChua?.ghiChu}</td>
+                    <td>{item?.trang_thai ? "Đã sửa" : "Chưa sửa"}</td>
+                    <td>{item?.ghi_chu}</td>
                   </tr>
                 );
               })}
@@ -489,6 +501,12 @@ export default function LichSuSuaChua() {
         open={openCapNhapNhanVien}
         setOpen={setOpenCapNhapNhanVien}
         chiTietLichSuSuaChua={chiTietLichSuSuaChua}
+      />
+      <ModalNhanVien
+        open={openCapNhapNhanVien}
+        setOpen={setOpenCapNhapNhanVien}
+        lichSuId={chiTietLichSuSuaChua.id}
+        soMay={chiTietLichSuSuaChua.so_may}
       />
     </>
   );

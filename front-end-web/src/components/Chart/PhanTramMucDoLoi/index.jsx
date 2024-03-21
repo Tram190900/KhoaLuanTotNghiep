@@ -20,7 +20,7 @@ export default function PhanTramMucDoLoi(props) {
           props.data?.loi_muc_2,
           props.data?.loi_muc_3,
         ],
-        backgroundColor: ["#1da1f2", "rgba(255, 255, 0, 0.644)", "red"],
+        backgroundColor: ["#1da1f2", "rgba(255, 120, 0, 0.644)", "red"],
         hoverOffset: 4,
       },
     ],

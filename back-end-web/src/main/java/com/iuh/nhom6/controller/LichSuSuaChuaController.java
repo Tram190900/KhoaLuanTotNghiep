@@ -1,5 +1,6 @@
 package com.iuh.nhom6.controller;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,17 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.LichSuSuaChua;
+import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.iuh.nhom6.repository.NhanVienRepository;
 
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
 @CrossOrigin
 @RequestMapping("/lichSuSuaChua")
 public class LichSuSuaChuaController {
-  @Autowired 
+  @Autowired
   LichSuSuaChuaRepository lichSuSuaChuaRepository;
+
+  @Autowired
+  NhanVienRepository nhanVienRepository;
 
   @GetMapping
   public List<LichSuSuaChua> getLichSuSuaChuas() {
@@ -35,19 +42,56 @@ public class LichSuSuaChuaController {
     return lichSuSuaChuaRepository.save(lichSuSuaChua);
   }
 
-  @GetMapping("/top5Phong/{thang}")
-  public List<Map<String, Object>> getTop5PhongMayGapLoiTrongThang(@PathVariable int thang) {
-      return lichSuSuaChuaRepository.getTop5PhongMayGapLoiTrongThang(thang);
+  @PostMapping("/top5Phong")
+  public List<Map<String, Object>> getTop5PhongMayGapLoiTrongThang(@RequestParam("startDate") Date startDate,
+      @RequestParam("endDate") Date endDate,
+      @RequestParam("toaNha") Long toaNha,
+      @RequestParam("trangThai") Boolean trangThai) {
+    return lichSuSuaChuaRepository.getTop5PhongMayGapLoiTrongThang(startDate, endDate, toaNha, trangThai);
   }
-  
+
   @GetMapping("/phanTramMucDoLoi")
   public Map<String, Object> getPhanTramMucDoLoi() {
-      return lichSuSuaChuaRepository.getPhantramMucDoLoi();
+    return lichSuSuaChuaRepository.getPhantramMucDoLoi();
   }
-  
-  @GetMapping("/soLanSuaCuaTungMayTheoPhong/{soPhong}")
-  public List<Map<String, Object>> getSoLanSuaTungMayTheoPhong(@PathVariable String soPhong) {
-      return lichSuSuaChuaRepository.getSoLanSuaChuaCuaTungMayTheoPhong(soPhong);
+
+  @PostMapping("/soLanSuaCuaTungMayTheoPhong")
+  public List<Map<String, Object>> getSoLanSuaTungMayTheoPhong(@RequestParam String soPhong,
+      @RequestParam Boolean trangThai) {
+    try {
+      return lichSuSuaChuaRepository.getSoLanSuaChuaCuaTungMayTheoPhong(soPhong, trangThai);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+      // TODO: handle exception
+    }
   }
-  
+
+  @PostMapping("/loiPhaiSuaTheoPhong")
+  public List<Map<String, Object>> getLoiSuaTrongNgayTheoPhongTrongMotKhoangThoiGian(
+      @RequestParam("soPhong") String soPhong, @RequestParam("startDate") Date startDate,
+      @RequestParam("endDate") Date endDate) {
+    try {
+      return lichSuSuaChuaRepository.getLoiSuaTrongNgayTheoPhongTrongMotKhoangThoiGian(soPhong, startDate, endDate);
+    } catch (Exception e) {
+      e.printStackTrace();// TODO: handle exception
+      return null;
+    }
+  }
+
+  @PutMapping("/updateNhanVienSua/{id}")
+  public LichSuSuaChua updateNhanVienSua(@PathVariable Long id, @RequestParam("nhanVienId") Long nhanVienId) {
+    try {
+      
+      LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(id).get();
+      NhanVien nhanVien = nhanVienRepository.findById(nhanVienId).get();
+      lichSuSuaChua.setNhanVien(nhanVien);
+      return lichSuSuaChuaRepository.save(lichSuSuaChua);
+    } catch (Exception e) {
+      // TODO: handle exception
+      e.printStackTrace();
+      return null;
+    }
+  }
+
 }

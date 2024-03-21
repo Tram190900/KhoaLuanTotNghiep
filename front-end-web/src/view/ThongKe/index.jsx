@@ -4,29 +4,45 @@ import clsx from "clsx";
 import { Card, CardContent, Option, Select, Typography } from "@mui/joy";
 import BusinessIcon from "@mui/icons-material/Business";
 import DvrIcon from "@mui/icons-material/Dvr";
-import { getAPI } from "../../api";
+import { getAPI, postAPI } from "../../api";
 import Top5PhongBiLoiNhieu from "../../components/Chart/Top5PhongBiLoiNhieu";
 import PhanTramMucDoLoi from "../../components/Chart/PhanTramMucDoLoi";
-import moment from 'moment';
+import moment from "moment";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import axios from "axios";
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();
   const [soLuongMayTinh, setSoLuongMayTinh] = useState();
   const [soMayBaoTri, setSoMayBaoTri] = useState();
+  const [startDate, setStartDate] = useState(dayjs(Date().now));
+  const [endDate, setEndDate] = useState(dayjs(Date().now));
+  const [allToaNha, setAllToaNha] = useState([]);
+  const [selectToaNha, setSelectToaNha] = useState(1);
+  const [trangThai, setTrangThai] = useState(false)
 
-  const [selectThang, setSelectThang] = useState(Number(moment().format('M')));
   const [top5PhongBiLoiNhieu, setTop5PhongLoiNhieu] = useState();
   const [phanTramMucDoLoi, setPhanTramMucDoLoi] = useState();
 
-  const handleSelectThang = (event, value) => {
-    setSelectThang(value);
-  };
 
   const handleTop5PhongBaoLoiNhieu = async () => {
-    const result = await getAPI(`lichSuSuaChua/top5Phong/${selectThang}`);
-    if (result.status === 200) {
-      setTop5PhongLoiNhieu(result.data);
+    try {
+      const dt = new FormData()
+      dt.append("startDate", startDate.format('YYYY-MM-DD'))
+      dt.append("endDate", endDate.format('YYYY-MM-DD'))
+      dt.append("toaNha", selectToaNha)
+      dt.append("trangThai", trangThai)
+     const result = await postAPI('/lichSuSuaChua/top5Phong', dt)
+     if(result.status===200){
+      setTop5PhongLoiNhieu(result.data)
+     }
+    } catch (error) {
+      console.log(error);
     }
+
   };
 
   const handleMucDoloiGapPhai = async () => {
@@ -40,15 +56,35 @@ export default function ThongKe() {
     }
   };
 
+  const handleToaNha = (event, newValue) => {
+    setSelectToaNha(newValue);
+  };
+
+  const handleTrangThai = (event, newValue) =>{
+    setTrangThai(newValue)
+  }
+
+  const handleGetAllToaNha = async () => {
+    try {
+      const result = await getAPI("/toanha");
+      if (result.status === 200) {
+        setAllToaNha(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleSoLuongPhong();
     handleSoLuongMayTinh();
     handleMucDoloiGapPhai();
+    handleGetAllToaNha();
   }, []);
 
   useEffect(() => {
     handleTop5PhongBaoLoiNhieu();
-  }, [selectThang]);
+  }, [startDate, endDate, selectToaNha, trangThai]);
   const handleSoLuongPhong = async () => {
     try {
       const result = await getAPI("getAllPhongMay");
@@ -65,7 +101,7 @@ export default function ThongKe() {
       if (result.status === 200) {
         setSoLuongMayTinh(result.data.length);
         const mayBaoTri = result.data?.filter((item) => {
-          return !item.trangThai;
+          return item.trangThai===2;
         });
         setSoMayBaoTri(mayBaoTri.length);
       }
@@ -112,30 +148,52 @@ export default function ThongKe() {
       <div className="d-flex w-100">
         <Card className={clsx(style.barChart)}>
           <CardContent>
-            <span className="d-flex align-items-center">
-              <b>Top 5 Phòng có số lần sửa chữa nhiều theo tháng &nbsp;</b>
-              <Select value={selectThang} onChange={handleSelectThang}>
-                <Option value={1}>Tháng 1</Option>
-                <Option value={2}>Tháng 2</Option>
-                <Option value={3}>Tháng 3</Option>
-                <Option value={4}>Tháng 4</Option>
-                <Option value={5}>Tháng 5</Option>
-                <Option value={6}>Tháng 6</Option>
-                <Option value={7}>Tháng 7</Option>
-                <Option value={8}>Tháng 8</Option>
-                <Option value={9}>Tháng 9</Option>
-                <Option value={10}>Tháng 10</Option>
-                <Option value={11}>Tháng 11</Option>
-                <Option value={12}>Tháng 12</Option>
-              </Select>
+            <span className="d-flex-column align-items-center">
+              <b>Thống kê số lỗi đang gặp phải &nbsp;</b>
+              <div className="d-flex mt-3">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoItem components={["DatePicker"]}>
+                    <DatePicker
+                      value={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      label="Dự kiến sửa từ ngày"
+                      format="DD-MM-YYYY"
+                    />
+                  </DemoItem>
+                  <DemoItem components={["DatePicker"]}>
+                    <DatePicker
+                      value={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      label="Đến ngày"
+                      format="DD-MM-YYYY"
+                    />
+                  </DemoItem>
+                </LocalizationProvider>
+                <Select
+                  value={selectToaNha}
+                  onChange={handleToaNha}
+                  placeholder="Tòa nhà..."
+                  sx={{ height: "55px", margin: "0 2rem" }}
+                >
+                  {allToaNha?.map((item, index) => (
+                    <Option value={item.id} key={index}>
+                      {item.tenToaNha}
+                    </Option>
+                  ))}
+                </Select>
+                {/* <Select value={trangThai} onChange={handleTrangThai} placeholder="Trạng thái lỗi" sx={{ height: "55px" }}>
+                  <Option value={true}>Đã sửa</Option>
+                  <Option value={false}>Chưa sửa</Option>
+                </Select> */}
+              </div>
             </span>
-            <Top5PhongBiLoiNhieu data={top5PhongBiLoiNhieu} />
+            <Top5PhongBiLoiNhieu data={top5PhongBiLoiNhieu} startDate={startDate} endDate={endDate}/>
           </CardContent>
         </Card>
         <Card className={clsx(style.pieChart)}>
           <CardContent>
             <b>Phần trăm mức độ lỗi gặp phải trong năm nay</b>
-            <PhanTramMucDoLoi data={phanTramMucDoLoi}/>
+            <PhanTramMucDoLoi data={phanTramMucDoLoi} />
           </CardContent>
         </Card>
       </div>

@@ -9,8 +9,26 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { Modal, ModalClose, ModalDialog, Typography } from "@mui/joy";
-import { getAPI } from "../../../api";
+import {
+  Dropdown,
+  IconButton,
+  Menu,
+  MenuButton,
+  Modal,
+  ModalClose,
+  ModalDialog,
+  Sheet,
+  Table,
+  Typography,
+  MenuItem,
+  DialogTitle,
+  DialogContent,
+} from "@mui/joy";
+import MoreVert from "@mui/icons-material/MoreVert";
+import { postAPI } from "../../../api";
+import moment from "moment";
+import EditIcon from "@mui/icons-material/Edit";
+import ModalNhanVien from "./ModalNhanVien";
 
 ChartJS.register(
   CategoryScale,
@@ -24,16 +42,28 @@ ChartJS.register(
 export default function Top5PhongBiLoiNhieu(props) {
   const [selectedPhong, setSelectPhong] = useState();
   const [openDetail, setOpenDetail] = useState(false);
+  const [openNV, setOpenNV] = useState(false);
+  const [nhanVienId, setNhanVienId] = useState();
+  const [soMay, setSoMay] = useState();
+  const [lichSuId, setLichSuId] = useState()
+
   const [detailData, setDetailData] = useState();
 
   const chartData = {
     labels: props.data?.map((item) => item.so_phong),
     datasets: [
       {
-        label: "Số lần sửa chữa",
-        data: props.data?.map((item) => item.so_lan_sua_chua),
-        backgroundColor: "rgba(75,192,192,0.6)", // Màu của cột
-        borderColor: "rgba(75,192,192,1)",
+        label: "Số lỗi phải sửa trong hôm nay",
+        data: props.data?.map((item) => item.sua_trong_ngay),
+        backgroundColor: "red", // Màu của cột
+        borderColor: "rgba(255, 0, 0, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Số lỗi sửa ngày khác",
+        data: props.data?.map((item) => item.sua_ngay_khac),
+        backgroundColor: "rgba(255, 120, 0)", // Màu vàng
+        borderColor: "rgba(255, 120, 0, 1)",
         borderWidth: 1,
       },
     ],
@@ -43,38 +73,20 @@ export default function Top5PhongBiLoiNhieu(props) {
     if (item.length > 0) {
       const phongIndex = item[0].index;
       const select = props.data[phongIndex].so_phong;
-      const result = await getAPI(
-        `/lichSuSuaChua/soLanSuaCuaTungMayTheoPhong/${select}`
-      );
-      const data = {
-        labels: result.data?.map((item) => item.so_may),
-        datasets: [
-          {
-            label: "Lỗi mức độ 3",
-            data: result.data.map((item) => Math.round(item.so_lan_loi_muc_1)),
-            backgroundColor: "red", // Màu đỏ
-            borderColor: "rgba(255, 0, 0, 1)",
-            borderWidth: 1,
-          },
-          {
-            label: "Lỗi mức độ 2",
-            data: result.data.map((item) => Math.round(item.so_lan_loi_muc_2)),
-            backgroundColor: "rgba(255, 255, 0, 0.644)", // Màu vàng
-            borderColor: "rgba(255, 255, 0, 1)",
-            borderWidth: 1,
-          },
-          {
-            label: "Lỗi mức độ 1",
-            data: result.data.map((item) => Math.round(item.so_lan_loi_muc_3)),
-            backgroundColor: "#1da1f2", // Màu xanh dương
-            borderColor: "rgba(0, 0, 255, 1)",
-            borderWidth: 1,
-          },
-        ],
-      };
-      setDetailData(data);
-      setSelectPhong(select);
-      setOpenDetail(true);
+      try {
+        const dt = new FormData();
+        dt.append("soPhong", select);
+        dt.append("startDate", props.startDate.format("YYYY-MM-DD"));
+        dt.append("endDate", props.endDate.format("YYYY-MM-DD"));
+        const result = await postAPI("/lichSuSuaChua/loiPhaiSuaTheoPhong", dt);
+        if (result.status === 200) {
+          setDetailData(result.data);
+          setSelectPhong(select);
+          setOpenDetail(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -93,26 +105,111 @@ export default function Top5PhongBiLoiNhieu(props) {
             justifyContent: "center",
             alignItems: "center",
             width: "50%",
+            height:'50%'
           }}
         >
           <ModalClose />
-          <Typography>
-            <b>Chi tiết số máy sửa của phòng {selectedPhong}</b>
-          </Typography>
-          <Bar
-            data={detailData}
-            options={{
-              scales: {
-                y: {
-                  ticks: {
-                    stepSize: 1,
-                  },
-                },
-              },
-            }}
-          />
+          <DialogTitle>
+            Danh sách lỗi cần phải sửa của phòng {selectedPhong}
+          </DialogTitle>
+          <DialogContent>
+            <span className="d-flex align-items-center">
+              <div
+                style={{
+                  width: "35px",
+                  height: "15px",
+                  background: "red",
+                  marginRight: "10px",
+                }}
+              ></div>
+              Lỗi phải sửa trong ngày
+            </span>
+            <Sheet id={"scroll-style-01"}>
+              <Table tickyHeader hoverRow aria-label="striped table">
+                <thead>
+                  <tr>
+                    <th>Máy tính</th>
+                    <th>Lỗi gặp phải</th>
+                    <th>Ngày gặp lỗi</th>
+                    <th>Ngày dự kiến sửa</th>
+                    <th>Trạng thái</th>
+                    <th>Nhân viên phụ trách</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {detailData?.map((item, index) => (
+                    <tr
+                      key={index}
+                      style={{
+                        background:
+                          moment().diff(
+                            moment(item.ngay_du_kien_sua),
+                            "days"
+                          ) === 0
+                            ? "red"
+                            : "",
+                        color:
+                          moment().diff(
+                            moment(item.ngay_du_kien_sua),
+                            "days"
+                          ) === 0
+                            ? "white"
+                            : "",
+                      }}
+                      onClick={() => {
+                        setSoMay(item.so_may);
+                        setNhanVienId(item.nhan_vien_id);
+                        setLichSuId(item.id)
+                      }}
+                    >
+                      <td>{item.so_may}</td>
+                      <td>{item.loi_gap_phai}</td>
+                      <td>{moment(item.ngay_gap_loi).format("DD-MM-YYYY")}</td>
+                      <td>
+                        {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
+                      </td>
+                      <td>{item.trang_thai ? "Đã sửa" : "Chưa sửa"}</td>
+                      <td style={{display:'flex', alignItems:'center'}}>
+                        {item?.ho_ten_nhan_vien}
+                        <Dropdown key={index}>
+                          <MenuButton
+                            slots={{ root: IconButton }}
+                            slotProps={{
+                              root: { color: "neutral" },
+                            }}
+                            sx={{ float: "right" }}
+                          >
+                            <MoreVert />
+                          </MenuButton>
+                          <Menu sx={{ zIndex: "10000" }}>
+                            <MenuItem
+                              onClick={() => {
+                                setOpenNV(true);
+                              }}
+                            >
+                              <EditIcon />
+                              Câp nhật nhân viên
+                            </MenuItem>
+                          </Menu>
+                        </Dropdown>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Sheet>
+          </DialogContent>
         </ModalDialog>
       </Modal>
+      <ModalNhanVien
+        open={openNV}
+        setOpen={setOpenNV}
+        setOpenDetail={setOpenDetail}
+        nhanVienId={nhanVienId}
+        lichSuId={lichSuId}
+        soMay={soMay}
+        handleXemChiTietPhong={handleXemChiTietPhong}
+      />
     </>
   );
 }

@@ -39,6 +39,9 @@ public class ChiTietLichSuSuaChuaController {
       @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChua) {
     LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId())
         .get();
+    MayTinh mayTinh = mayTinhRepository.findById(lichSuSuaChua.getMayTinh().getId()).get();
+    mayTinh.setTrangThai(1);
+    mayTinhRepository.save(mayTinh);
     lichSuSuaChua.setTrangThai(true);
     lichSuSuaChuaRepository.save(lichSuSuaChua);
     chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
