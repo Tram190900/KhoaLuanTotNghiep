@@ -1,12 +1,21 @@
 .infoWrap{
     display: flex;
-    height: 280px;
+    height: fit-content;
     .left{
         width: 100%;
         .buttonGroup{
             *{
                 margin-right: 5%;
                 margin-top: 5%;
+            }
+        }
+        .group_date{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            FormControl{
+                width: 50%;
             }
         }
     }

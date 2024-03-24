@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import style from "./menu.module.scss";
 import ComputerIcon from "@mui/icons-material/Computer";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
@@ -9,20 +9,21 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import { Link } from "@mui/joy";
 
 export default function Menu() {
   const menu = useContext(MenuContext);
+  const [user,setUser]= useState(JSON.parse(localStorage.getItem("user")))
   const navigate = useNavigate();
   return (
     <div className={clsx(style.menu)}>
       <div
         onClick={() => {
           menu.setMenuActive("phong-may");
-          navigate('/quan-ly-phong-may')
+          navigate("/quan-ly-phong-may");
         }}
         className={clsx(
           style.menuItem,
@@ -35,7 +36,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("may-tinh");
-          navigate('may-tinh')
+          navigate("may-tinh");
         }}
         className={clsx(
           style.menuItem,
@@ -48,7 +49,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("thiet-bi");
-          navigate('thiet-bi')
+          navigate("thiet-bi");
         }}
         className={clsx(
           style.menuItem,
@@ -61,7 +62,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("phan-mem");
-          navigate('phan-mem')
+          navigate("phan-mem");
         }}
         className={clsx(
           style.menuItem,
@@ -74,7 +75,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("mon-hoc");
-          navigate('mon-hoc')
+          navigate("mon-hoc");
         }}
         className={clsx(
           style.menuItem,
@@ -84,23 +85,26 @@ export default function Menu() {
         <AutoStoriesIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Quản lý môn học
       </div>
-      <div
-        onClick={() => {
-          menu.setMenuActive("nhan-vien");
-          navigate('nhan-vien')
-        }}
-        className={clsx(
-          style.menuItem,
-          menu.menuActive === "nhan-vien" ? style.active : ""
-        )}
-      >
-        <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-        Quản lý nhân viên - Chấm công
-      </div>
+      {user.role === 'admin' ? (
+        <div
+          onClick={() => {
+            menu.setMenuActive("nhan-vien");
+            navigate("nhan-vien");
+          }}
+          className={clsx(
+            style.menuItem,
+            menu.menuActive === "nhan-vien" ? style.active : ""
+          )}
+        >
+          <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+          Quản lý nhân viên - Chấm công
+        </div>
+      ) : null}
+
       <div
         onClick={() => {
           menu.setMenuActive("lich-su-sua-chua");
-          navigate('lich-su-sua-chua')
+          navigate("lich-su-sua-chua");
         }}
         className={clsx(
           style.menuItem,
@@ -108,12 +112,12 @@ export default function Menu() {
         )}
       >
         <ManageHistoryIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-        Lịch sử sửa đổi
+        Lịch sử báo lỗi
       </div>
       <div
         onClick={() => {
           menu.setMenuActive("thong-ke");
-          navigate('thong-ke')
+          navigate("thong-ke");
         }}
         className={clsx(
           style.menuItem,
@@ -135,10 +139,7 @@ export default function Menu() {
         <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Lịch trực phòng máy
       </div> */}
-      <Link
-        className={clsx(style.logout)}
-        href={'/login'}
-      >
+      <Link className={clsx(style.logout)} href={"/login"}>
         <LogoutIcon sx={{ fontSize: 40 }} />
       </Link>
     </div>

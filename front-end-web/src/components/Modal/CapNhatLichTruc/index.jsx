@@ -6,7 +6,6 @@ import {
   DialogTitle,
   FormControl,
   FormLabel,
-  Input,
   Modal,
   ModalClose,
   ModalDialog,
@@ -16,18 +15,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { getAPI, postAPI } from "../../../api";
 import dayjs from "dayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Swal from "sweetalert2";
-import { DateCalendar, StaticDatePicker } from "@mui/x-date-pickers";
+import { DateCalendar } from "@mui/x-date-pickers";
 
 export default function CapNhatLichTruc(props) {
   const [phongTruc, setPhongTruc] = useState([]);
   const [phongMay, setPhongMay] = useState();
   const [allToaNha, setAllToaNha] = useState();
   const [toaNha, setToaNha] = useState("");
-  const [caTruc, setCaTruc] = useState("");
   const [ngayTruc, setNgayTruc] = useState(dayjs(Date.now()));
 
   useEffect(() => {
@@ -71,30 +68,26 @@ export default function CapNhatLichTruc(props) {
     setToaNha(newValue);
     handleGetPhongMayTheoToaNha(newValue);
   };
-  const handleCaTruc = (event, newValue) => {
-    setCaTruc(newValue);
-  };
 
-    const handleCapNhatLichTruc=async()=>{
-      const data = new FormData()
-      const phongMays = []
-      phongTruc?.map((item)=>{
-        phongMays.push(item.id)
-      })
-      data.append("phongMays", phongMays)
-      data.append("nhanVien", props.nhanVienId)
-      data.append("caLam", caTruc)
-      data.append("ngayTruc", ngayTruc.format("YYYY-MM-DD"))
-    const result = await postAPI('saveChamCong', data)
-      if(result.status===200){
-        Swal.fire({
-          text: "Cập nhật lịch trực thành công",
-          icon: "success",
-        });
-        props.handleGetCaTrucByNhanVien(props.nhanVienId)
-        props.setOpen(false)
-      }
+  const handleCapNhatLichTruc = async () => {
+    const data = new FormData();
+    const phongMays = [];
+    phongTruc?.map((item) => {
+      phongMays.push(item.id);
+    });
+    data.append("phongMays", phongMays);
+    data.append("nhanVien", props.nhanVienId);
+    data.append("ngayTruc", ngayTruc.format("YYYY-MM-DD"));
+    const result = await postAPI("saveChamCong", data);
+    if (result.status === 200) {
+      Swal.fire({
+        text: "Cập nhật lịch trực thành công",
+        icon: "success",
+      });
+      props.handleGetCaTrucByNhanVien(props.nhanVienId);
+      props.setOpen(false);
     }
+  };
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
@@ -110,18 +103,6 @@ export default function CapNhatLichTruc(props) {
               />
             </LocalizationProvider>
             <div className="w-50">
-              <FormControl>
-                <FormLabel>Ca trực</FormLabel>
-                <Select
-                  value={caTruc}
-                  onChange={handleCaTruc}
-                  placeholder="Ca trực ..."
-                >
-                  <Option value={"Sáng"}>Sáng</Option>
-                  <Option value={"Trưa"}>Trưa</Option>
-                  <Option value={"Tối"}>Tối</Option>
-                </Select>
-              </FormControl>
               <FormControl>
                 <FormLabel>Tòa nhà</FormLabel>
                 <Select
@@ -146,7 +127,7 @@ export default function CapNhatLichTruc(props) {
                     height: "13rem",
                     overflowY: "auto",
                     overflowX: "hidden",
-                    borderRight:"1px solid gray"
+                    borderRight: "1px solid gray",
                   }}
                 >
                   <FormLabel>Tất cả các phòng</FormLabel>
@@ -169,7 +150,7 @@ export default function CapNhatLichTruc(props) {
                     height: "13rem",
                     overflowY: "auto",
                     overflowX: "hidden",
-                    marginLeft:'2%'
+                    marginLeft: "2%",
                   }}
                 >
                   <FormLabel>Phòng được chọn</FormLabel>

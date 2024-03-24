@@ -139,8 +139,26 @@ export default function MonHoc() {
             </FormControl>
             <div className={clsx(style.buttonWrap)}>
               <Button onClick={() => addMonHoc()}>Thêm mới</Button>
-              <Button onClick={() => updateMonHoc()}>Cập nhật</Button>
-              <Button onClick={() => deleteMonHoc()}>Xóa</Button>
+              <Button
+                disabled={
+                  monHoc.tenMonHoc === "" && monHoc.khoa === ""
+                    ? "disabled"
+                    : ""
+                }
+                onClick={() => updateMonHoc()}
+              >
+                Cập nhật
+              </Button>
+              <Button
+                disabled={
+                  monHoc.tenMonHoc === "" && monHoc.khoa === ""
+                    ? "disabled"
+                    : ""
+                }
+                onClick={() => deleteMonHoc()}
+              >
+                Xóa
+              </Button>
             </div>
           </div>
           <div className={clsx(style.right)}>

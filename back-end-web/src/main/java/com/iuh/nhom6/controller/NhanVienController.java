@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
@@ -84,7 +87,8 @@ public class NhanVienController {
                         nhanVien.setDiaChi(newNhanVien.getDiaChi());
                         nhanVien.setGioiTinh(newNhanVien.getGioiTinh());
                         nhanVien.setTrangThai(newNhanVien.getTrangThai());
-                        nhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+                        nhanVien.setImage(
+                                "https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
                         return nhanVienRepository.save(nhanVien);
                     }).orElseThrow();
         } catch (Exception e) {
@@ -97,6 +101,17 @@ public class NhanVienController {
     @GetMapping("/getNhanVienById/{id}")
     public NhanVien getMethodName(@PathVariable Long id) {
         return nhanVienRepository.findById(id).get();
+    }
+
+    @PostMapping("/getNhanVienTheoCaTruc")
+    public NhanVien getNhanVienTheoCaTruc(@RequestParam("ngayTruc") Date ngayTruc,
+            @RequestParam("phongTruc") Long phongTruc) {
+                try {
+                    return nhanVienRepository.findNhanVienByNgayTrucAndPhongMay(ngayTruc, phongTruc);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
     }
 
 }

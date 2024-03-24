@@ -297,7 +297,7 @@ export default function NhanVien() {
                   <tr>
                     <th>Phòng trực</th>
                     <th>Ngày trực</th>
-                    <th>Ca trực</th>
+                    {/* <th>Ca trực</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -305,14 +305,14 @@ export default function NhanVien() {
                     <tr key={index}>
                       <td>{item.phongMay.soPhong}</td>
                       <td>{moment(item.ngayTruc).format("DD-MM-YYYY")}</td>
-                      <td>{item.caLam}</td>
+                      {/* <td>{item.caLam}</td> */}
                     </tr>
                   ))}
                 </tbody>
                 {user?.role === "admin" ? (
                   <tfoot>
                     <tr>
-                      <td colSpan={3} style={{ textAlign: "center" }}>
+                      <td colSpan={2} style={{ textAlign: "center" }}>
                         <Button onClick={() => setOpenLichTruc(!openLichTruc)}>
                           Cập nhật lịch trực
                         </Button>

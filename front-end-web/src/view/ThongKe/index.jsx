@@ -85,6 +85,7 @@ export default function ThongKe() {
   useEffect(() => {
     handleTop5PhongBaoLoiNhieu();
   }, [startDate, endDate, selectToaNha, trangThai]);
+  
   const handleSoLuongPhong = async () => {
     try {
       const result = await getAPI("getAllPhongMay");
@@ -111,7 +112,6 @@ export default function ThongKe() {
   };
   return (
     <div className={clsx(style.thongKe)}>
-      <h1>Thống kê</h1>
       <div className={clsx(style.card_wrap)}>
         <Card variant="soft" className={clsx(style.card)}>
           <CardContent className={clsx(style.card_content)}>

@@ -45,9 +45,10 @@ export default function Top5PhongBiLoiNhieu(props) {
   const [openNV, setOpenNV] = useState(false);
   const [nhanVienId, setNhanVienId] = useState();
   const [soMay, setSoMay] = useState();
-  const [lichSuId, setLichSuId] = useState()
+  const [lichSuId, setLichSuId] = useState();
 
   const [detailData, setDetailData] = useState();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const chartData = {
     labels: props.data?.map((item) => item.so_phong),
@@ -105,7 +106,7 @@ export default function Top5PhongBiLoiNhieu(props) {
             justifyContent: "center",
             alignItems: "center",
             width: "50%",
-            height:'50%'
+            height: "50%",
           }}
         >
           <ModalClose />
@@ -159,7 +160,7 @@ export default function Top5PhongBiLoiNhieu(props) {
                       onClick={() => {
                         setSoMay(item.so_may);
                         setNhanVienId(item.nhan_vien_id);
-                        setLichSuId(item.id)
+                        setLichSuId(item.id);
                       }}
                     >
                       <td>{item.so_may}</td>
@@ -169,29 +170,31 @@ export default function Top5PhongBiLoiNhieu(props) {
                         {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
                       </td>
                       <td>{item.trang_thai ? "Đã sửa" : "Chưa sửa"}</td>
-                      <td style={{display:'flex', alignItems:'center'}}>
+                      <td style={{ display: "flex", alignItems: "center" }}>
                         {item?.ho_ten_nhan_vien}
-                        <Dropdown key={index}>
-                          <MenuButton
-                            slots={{ root: IconButton }}
-                            slotProps={{
-                              root: { color: "neutral" },
-                            }}
-                            sx={{ float: "right" }}
-                          >
-                            <MoreVert />
-                          </MenuButton>
-                          <Menu sx={{ zIndex: "10000" }}>
-                            <MenuItem
-                              onClick={() => {
-                                setOpenNV(true);
+                        {user?.role === "admin" ? (
+                          <Dropdown key={index}>
+                            <MenuButton
+                              slots={{ root: IconButton }}
+                              slotProps={{
+                                root: { color: "neutral" },
                               }}
+                              sx={{ float: "right" }}
                             >
-                              <EditIcon />
-                              Câp nhật nhân viên
-                            </MenuItem>
-                          </Menu>
-                        </Dropdown>
+                              <MoreVert />
+                            </MenuButton>
+                            <Menu sx={{ zIndex: "10000" }}>
+                              <MenuItem
+                                onClick={() => {
+                                  setOpenNV(true);
+                                }}
+                              >
+                                <EditIcon />
+                                Câp nhật nhân viên
+                              </MenuItem>
+                            </Menu>
+                          </Dropdown>
+                        ) : null}
                       </td>
                     </tr>
                   ))}

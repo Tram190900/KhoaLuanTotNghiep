@@ -17,7 +17,7 @@ public class ChamCong implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chamCong_id")
     private Long id;
-    private String caLam;
+    // private String caLam;
     private Date ngayTruc;
     @ManyToOne
     @JoinColumn(name = "nhanVien_id")

@@ -10,34 +10,39 @@ import {
   ModalDialog,
   Option,
   Select,
-  Sheet,
-  Table,
 } from "@mui/joy";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./lichSuaChua.module.scss";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import Swal from "sweetalert2";
-import { postAPI, putAPI } from "../../../api";
+import { getAPI, postAPI, putAPI } from "../../../api";
+import moment from "moment";
 
 export default function LichSuaChua(props) {
   const date = new Date();
-  const defaultValue = date.toLocaleDateString('en-CA');
+  const defaultValue = date.toLocaleDateString("en-CA");
   const [duLieuInput, setDuLieuInput] = useState({
     loiGapPhai: "",
     ngayGapLoi: defaultValue,
+    ngayDuKienSua: moment().format('YYYY-MM-DD'),
   });
-
+  const [allNhanVien, setAllNhanVien] = useState();
+  const [selectNhanVien, setSelectNhanVien] = useState();
 
   const inputOnChange = (e) => {
     setDuLieuInput({ ...duLieuInput, [e.target.name]: e.target.value });
   };
 
+  const handleSelectNV = (event, newValue) => {
+    setSelectNhanVien(newValue);
+  };
+
   const capNhapMayTinh = async () => {
     const mayTinh = props.mayTinh;
     mayTinh.trangThai = 2;
-    await putAPI(`/updateMayTinh/${props.mayTinh.id}`,mayTinh);
-  }
+    await putAPI(`/updateMayTinh/${props.mayTinh.id}`, mayTinh);
+  };
 
   const themLoi = async () => {
     capNhapMayTinh();
@@ -45,8 +50,10 @@ export default function LichSuaChua(props) {
       loiGapPhai: duLieuInput.loiGapPhai,
       ngayGapLoi: duLieuInput.ngayGapLoi,
       mucDoLoi: duLieuInput.mucDoLoi,
-      mayTinh: props.mayTinh,
-      trangThai: false
+      mayTinh: { id: props.mayTinh?.id },
+      trangThai: false,
+      ngayDuKienSua: duLieuInput.ngayDuKienSua,
+      nhanVien: { id: selectNhanVien },
     };
     const result = await postAPI("/lichSuSuaChua", loi);
     if (result.status === 200) {
@@ -58,6 +65,47 @@ export default function LichSuaChua(props) {
       props.setOpen(false);
     }
   };
+
+  const getAllNhanVien = async () => {
+    try {
+      const result = await getAPI("getAllNhanVien");
+      if (result.status === 200) {
+        setAllNhanVien(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getNhanVienTruc = async () => {
+    try {
+      const dt = new FormData();
+      dt.append(
+        "ngayTruc",
+        moment(duLieuInput.ngayDuKienSua).format("YYYY-MM-DD")
+      );
+      dt.append("phongTruc", props.phongMay?.id);
+      const result = await postAPI("/getNhanVienTheoCaTruc", dt);
+      if (result.status === 200 && result.data) {
+        setSelectNhanVien(result.data.id);
+      } else {
+        setSelectNhanVien(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (props.open) {
+      getAllNhanVien();
+      getNhanVienTruc();
+    }
+  }, [props.open]);
+
+  useEffect(() => {
+    getNhanVienTruc();
+  }, [duLieuInput.ngayDuKienSua]);
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
@@ -98,27 +146,48 @@ export default function LichSuaChua(props) {
               </FormControl>
               <FormLabel>Mức độ lỗi</FormLabel>
               <Select
-                  placeholder="Mức độ lỗi..."
-                  onChange={(e,v) => setDuLieuInput({...duLieuInput, mucDoLoi:v})}
-                >
-                  <Option value={1}>Sửa trong ngày</Option>
-                  <Option value={2}>Không quá 7 ngày</Option>
-                  <Option value={3}>Không quá 30 ngày</Option>
-                </Select>
-              <FormControl>
-                <FormLabel>Ngày gặp lỗi</FormLabel>
-                <Input
-                  name="ngayGapLoi"
-                  id="dateRequired" type="date" defaultValue={defaultValue}
-                  onChange={(e) => inputOnChange(e)}
-                  placeholder="Ngày sửa"
-                />
-                
-              </FormControl>
-              {/* <FormControl>
-                <FormLabel>Ghi chú</FormLabel>
-                <Input placeholder="Ghi chú" />
-              </FormControl> */}
+                placeholder="Mức độ lỗi..."
+                onChange={(e, v) =>
+                  setDuLieuInput({ ...duLieuInput, mucDoLoi: v })
+                }
+              >
+                <Option value={1}>Sửa trong ngày</Option>
+                <Option value={2}>Không quá 7 ngày</Option>
+                <Option value={3}>Không quá 30 ngày</Option>
+              </Select>
+              <div className={clsx(style.group_date)}>
+                <FormControl>
+                  <FormLabel>Ngày gặp lỗi</FormLabel>
+                  <Input
+                    name="ngayGapLoi"
+                    id="dateRequired"
+                    type="date"
+                    defaultValue={defaultValue}
+                    onChange={(e) => inputOnChange(e)}
+                    placeholder="Ngày sửa"
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Ngày dự kiến sửa</FormLabel>
+                  <Input
+                    name="ngayDuKienSua"
+                    id="dateRequired"
+                    type="date"
+                    defaultValue={defaultValue}
+                    onChange={(e) => inputOnChange(e)}
+                    placeholder="Ngày dự kiến"
+                  />
+                </FormControl>
+              </div>
+
+              <FormLabel>Nhân viên phụ trách</FormLabel>
+              <Select value={selectNhanVien} onChange={handleSelectNV}>
+                {allNhanVien?.map((item, index) => (
+                  <Option key={index} value={item.id}>
+                    {item.hoTenNhanVien}
+                  </Option>
+                ))}
+              </Select>
               <div className={clsx(style.buttonGroup)}>
                 <Button onClick={() => themLoi()}>Cập nhật lỗi mới</Button>
               </div>

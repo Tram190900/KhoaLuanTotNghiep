@@ -69,7 +69,7 @@ public class ChamCongController {
     @PostMapping("/saveChamCong")
     public String postMethodName(@RequestParam("phongMays") List<Long> phongMays,
             @RequestParam("nhanVien") Long nhanVien,
-            @RequestParam("caLam") String caLam,
+            // @RequestParam("caLam") String caLam,
             @RequestParam("ngayTruc") Date ngayTruc) {
         try {
 
@@ -80,7 +80,7 @@ public class ChamCongController {
 
                 NhanVien nhanVien1 = nhanVienRepository.findById(nhanVien)
                         .orElseThrow(() -> new RuntimeException("NhanVien not found with id: " + nhanVien));
-                chamCong.setCaLam(caLam);
+                // chamCong.setCaLam(caLam);
                 chamCong.setNgayTruc(ngayTruc);
                 chamCong.setNhanVien(nhanVien1);
                 chamCong.setPhongMay(phongMay);
