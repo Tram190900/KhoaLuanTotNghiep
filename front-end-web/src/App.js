@@ -15,6 +15,7 @@ import NhanVien from "./view/NhanVien";
 import LichSuSuaChua from "./view/LichSuSuaChua";
 import ThongKe from "./view/ThongKe";
 import ThongTinMayTinh from "./view/PhongMay/ThongTinMayTinh/ThongTinMayTinh";
+import LichTruc from "./view/LichTruc";
 
 export const MenuContext = createContext(null);
 
@@ -42,6 +43,7 @@ function App() {
               <Route path="nhan-vien" element={<NhanVien />} />
               <Route path="lich-su-sua-chua" element={<LichSuSuaChua />} />
               <Route path="thong-ke" element={<ThongKe />} />
+              <Route path="lich-truc" element={<LichTruc/>}/>
             </Route>
           </Route>
         </Routes>

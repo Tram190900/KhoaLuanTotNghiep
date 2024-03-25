@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @CrossOrigin
@@ -92,6 +93,16 @@ public class ChamCongController {
         }
 
         return "Successfully saved ChamCong";
+    }
+
+    @PostMapping("/getChamCongByNgayTrucAndNhanVien/{id}")
+    public List<ChamCong> getChamCongByNgayTrucAndNhanVien(@PathVariable Long id, @RequestParam("ngayTruc") Date ngayTruc) {
+        try {
+            return chamCongRepository.findChamCongByNgayTrucAndNhanVien(id, ngayTruc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;// TODO: handle exception
+        }
     }
 
 }

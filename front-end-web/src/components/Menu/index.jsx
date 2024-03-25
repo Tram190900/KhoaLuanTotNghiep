@@ -12,11 +12,12 @@ import { MenuContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Link } from "@mui/joy";
 
 export default function Menu() {
   const menu = useContext(MenuContext);
-  const [user,setUser]= useState(JSON.parse(localStorage.getItem("user")))
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const navigate = useNavigate();
   return (
     <div className={clsx(style.menu)}>
@@ -85,7 +86,7 @@ export default function Menu() {
         <AutoStoriesIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Quản lý môn học
       </div>
-      {user.role === 'admin' ? (
+      {user.role === "admin" ? (
         <div
           onClick={() => {
             menu.setMenuActive("nhan-vien");
@@ -99,7 +100,21 @@ export default function Menu() {
           <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
           Quản lý nhân viên - Chấm công
         </div>
-      ) : null}
+      ) : (
+        <div
+          onClick={() => {
+            menu.setMenuActive("lich-truc");
+            navigate("lich-truc");
+          }}
+          className={clsx(
+            style.menuItem,
+            menu.menuActive === "lich-truc" ? style.active : ""
+          )}
+        >
+          <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+          Xem lịch trực
+        </div>
+      )}
 
       <div
         onClick={() => {
