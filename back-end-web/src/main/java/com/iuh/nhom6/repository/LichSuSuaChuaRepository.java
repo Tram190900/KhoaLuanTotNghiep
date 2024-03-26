@@ -20,7 +20,7 @@ public interface LichSuSuaChuaRepository extends JpaRepository<LichSuSuaChua, Lo
                         "LEFT JOIN computerlab.may_tinh ON lich_su_sua_chua.may_tinh_id = may_tinh.may_tinh_id " +
                         "LEFT JOIN computerlab.phong_may ON may_tinh.phong_may_id = phong_may.phong_may_id " +
                         "LEFT JOIN computerlab.toa_nha ON toa_nha.id = phong_may.toa_nha_id " +
-                        "WHERE Date(computerlab.lich_su_sua_chua.ngay_du_kien_sua) BETWEEN ?1 AND ?2 " +
+                        "WHERE Date(computerlab.lich_su_sua_chua.ngay_gap_loi) BETWEEN ?1 AND ?2 " +
                         "AND computerlab.toa_nha.id = ?3 " +
                         "AND computerlab.lich_su_sua_chua.trang_thai = ?4 " +
                         "GROUP BY phong_may.so_phong ", nativeQuery = true)
@@ -62,7 +62,7 @@ public interface LichSuSuaChuaRepository extends JpaRepository<LichSuSuaChua, Lo
                         "LEFT JOIN computerlab.phong_may on phong_may.phong_may_id = may_tinh.phong_may_id " +
                         "LEFT JOIN computerlab.nhan_vien on nhan_vien.nhan_vien_id = lich_su_sua_chua.nhan_vien_id " +
                         "where phong_may.so_phong = ?1 " +
-                        "and Date(lich_su_sua_chua.ngay_du_kien_sua) between ?2 and ?3 " +
+                        "and Date(lich_su_sua_chua.ngay_gap_loi) between ?2 and ?3 " +
                         "and lich_su_sua_chua.trang_thai = 0", nativeQuery = true)
         List<Map<String, Object>> getLoiSuaTrongNgayTheoPhongTrongMotKhoangThoiGian(String soPhong, Date startDate,
                         Date endDate);
