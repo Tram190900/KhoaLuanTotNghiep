@@ -100,4 +100,10 @@ public class MayTinhController {
   public Page<MayTinh> xemDanhSachTrangThaiMayTinhPhanTrang(@PathVariable int trangthai,@PathVariable int offset, @PathVariable int pageSize) {
     return mayTinhRepository.findMayTinhByTrangThai(trangthai, PageRequest.of(offset, pageSize));
   }
+
+  @GetMapping("/maytinh/{soPhong}")
+  public List<MayTinh> xemDanhSachMayTinhTheoTrangThai(@PathVariable String soPhong) {
+    PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(soPhong);
+    return mayTinhRepository.findMayTinhsByPhongMay(phongMay);
+  }
 }

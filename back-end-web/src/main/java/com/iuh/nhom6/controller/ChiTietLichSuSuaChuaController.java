@@ -48,6 +48,20 @@ public class ChiTietLichSuSuaChuaController {
     return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
   }
 
+  @PostMapping("/hong")
+  public ChiTietLichSuSuaChua luuLichSuSuaChuaHong(
+      @RequestBody ChiTietLichSuSuaChua chiTietLichSuSuaChua) {
+    LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(chiTietLichSuSuaChua.getLichSuSuaChua().getId())
+        .get();
+    MayTinh mayTinh = mayTinhRepository.findById(lichSuSuaChua.getMayTinh().getId()).get();
+    mayTinh.setTrangThai(3);
+    mayTinhRepository.save(mayTinh);
+    lichSuSuaChua.setTrangThai(true);
+    lichSuSuaChuaRepository.save(lichSuSuaChua);
+    chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
+    return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
+  }
+
   @GetMapping
   public List<ChiTietLichSuSuaChua> xemChiTietLichSuSuaChua() {
     return chiTietLichSuSuaChuaRepository.findAll();

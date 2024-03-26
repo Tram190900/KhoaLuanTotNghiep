@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import {
+  Box,
   Button,
   DialogContent,
   DialogTitle,
@@ -22,8 +23,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../../api";
 import Swal from "sweetalert2";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const TaoPhongMay = (props) => {
+  const [loading, setLoading] = useState(true);
   const [dsPhanMem, setDsPhanMem] = useState([]);
   const [dsThietBi, setDsThietBi] = useState([]);
   const [dsPhanMemChon, setDsPhanMemChon] = useState([]);
@@ -85,6 +88,10 @@ const TaoPhongMay = (props) => {
     setDuLieuVao({ ...duLieuVao, [e.target.name]: e.target.value });
   };
 
+  const showProgress = () => {
+    document.getElementById('element').style.display = 'block';
+  }
+
   const luuPhongMay = async () => {
     const phongMay = {
       soPhong: duLieuVao.soPhong,
@@ -95,11 +102,14 @@ const TaoPhongMay = (props) => {
       },
     };
     await postAPI("/savePhongMay", phongMay);
-    luuMayTinh();
+    await luuMayTinh().then((comment) => {
+      setLoading(false);
+    });
     setDsPhanMemChon([]);
     setDsThietBiChon([]);
     props.xemDanhSachPhongMay();
     props.setOpen(false);
+    setLoading(true);
   };
 
   const luuMayTinh = async () => {
@@ -195,7 +205,9 @@ const TaoPhongMay = (props) => {
           confirmButtonText: "OK",
         });
         props.setOpen(false);
-        capNhapMayTinh();
+        await capNhapMayTinh().then((comment) => {
+          setLoading(false);
+        });
         props.xemDanhSachPhongMay();
         setDsPhanMemChon([]);
         setDsThietBiChon([]);
@@ -210,7 +222,7 @@ const TaoPhongMay = (props) => {
     }
   };
 
-/* const xemDanhSachMayTinhCapNhap = async (tenPhongMay) => {
+  /* const xemDanhSachMayTinhCapNhap = async (tenPhongMay) => {
   const result = await getAPI(`/getMayTinhByPhong/${tenPhongMay}`);
   console.log("ten PHong May");
   console.log(tenPhongMay);
@@ -220,30 +232,36 @@ const TaoPhongMay = (props) => {
     const result = await getAPI(`/getMayTinhByIdPhong/${props.phongMay_id}`);
     const dsMayTinhCapNhap = result.data;
     for (let i = 0; i < dsMayTinhCapNhap.length; i++) {
-      dsMayTinhCapNhap[i].soMay = 
-          i > 8
-            ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
-            : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1);
+      dsMayTinhCapNhap[i].soMay =
+        i > 8
+          ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
+          : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1);
       dsMayTinhCapNhap[i].trangThai = 1;
-      await putAPI(`/updateMayTinh/${dsMayTinhCapNhap[i].id}`, dsMayTinhCapNhap[i]);
+      await putAPI(
+        `/updateMayTinh/${dsMayTinhCapNhap[i].id}`,
+        dsMayTinhCapNhap[i]
+      );
+      await deleteAPI(`/xoaChiTietCaiDat/${dsMayTinhCapNhap[i].id}`);
+      await deleteAPI(`/xoaChiTietLapDat/${dsMayTinhCapNhap[i].id}`);
       dsPhanMemChon.map(async (phanMem) => {
         const chiTietCaiDat = {
+          mayTinh: dsMayTinhCapNhap[i],
           phanMem: phanMem,
           ngayCaiDat: new Date(),
         };
-        await putAPI(`/capNhapChiTietCaiDat/${dsMayTinhCapNhap[i].id}/${phanMem.id}`, chiTietCaiDat);
+        await postAPI("/saveChiTietCaiDat", chiTietCaiDat);
       });
       dsThietBiChon.map(async (thietBi) => {
         const chiTietLapDat = {
+          mayTinh: dsMayTinhCapNhap[i],
           thietBi: thietBi,
           ngayLapDat: new Date(),
         };
-        await putAPI(`/capNhapChiTietLapDat/${thietBi.id}/${dsMayTinhCapNhap[i].id}`, chiTietLapDat);
+        await postAPI("/saveChiTietLapDat", chiTietLapDat);
       });
     }
     props.setOpen(false);
   };
-
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
@@ -336,11 +354,16 @@ const TaoPhongMay = (props) => {
               </FormControl>
             </Grid>
           </Grid>
+          <Box id="element" sx={{ width: "100%", display: "none" }}>
+            {loading ? <LinearProgress /> : null} 
+          </Box>
           <Button
             onClick={() => {
               if (props.tieuDe === "Tạo phòng máy") {
+                showProgress();
                 luuPhongMay();
               } else if (props.tieuDe === "Cập nhập phòng máy") {
+                showProgress();
                 capNhapPhongMay();
               }
             }}

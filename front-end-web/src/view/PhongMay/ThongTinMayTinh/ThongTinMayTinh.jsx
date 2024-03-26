@@ -74,14 +74,37 @@ const ThongTinMayTinh = () => {
         <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
           Tòa nhà
         </Link>
-        <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
+{/*         <Link onClick={() => {
+            navigate("/quan-ly-phong-may/danhsachphongmay", {
+              state: {
+                toaNha_id: mayTinh.phongMay.toaNha.id,
+                tenToaNha: mayTinh.phongMay.toaNha,
+              },
+            });
+          }}>
           {mayTinh.phongMay.toaNha.tenToaNha}
-        </Link>
+        </Link> */}
+        <Button
+          onClick={() => {
+            navigate("/quan-ly-phong-may/danhsachphongmay", {
+              state: {
+                toaNha_id: mayTinh.phongMay.toaNha.id,
+                tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
+              },
+            });
+          }}
+        >
+          {mayTinh.phongMay.toaNha.tenToaNha}
+        </Button>
         <Button
           onClick={() => {
             navigate("/quan-ly-phong-may/danhsachmaytinh", {
               state: {
                 phongMay_id: mayTinh.phongMay.id,
+                soPhong: mayTinh.phongMay.soPhong,
+                toaNha: mayTinh.phongMay.toaNha.tenToaNha,
+                toaNha_id: mayTinh.phongMay.toaNha.id,
+                tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
               },
             });
           }}

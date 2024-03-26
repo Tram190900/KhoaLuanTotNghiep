@@ -56,4 +56,10 @@ public class ChiTietCaiDatController {
         ChiTietCaiDatPK chiTietCaiDatPK = new ChiTietCaiDatPK(mayTinh_id,phanMem_id);
         return chiTietCaiDatRepository.findById(chiTietCaiDatPK).get();
     }
+
+    @DeleteMapping("xoaChiTietCaiDat/{id}")
+    public String xoaChiTietCaiDat(@PathVariable Long id) {
+        chiTietCaiDatRepository.deleteByStudyId(id);
+        return "Ok";
+    }
 }

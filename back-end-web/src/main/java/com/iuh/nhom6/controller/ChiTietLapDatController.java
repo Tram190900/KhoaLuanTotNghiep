@@ -49,4 +49,10 @@ public class ChiTietLapDatController {
         ChiTietLapDatPK chiTietLapDatPK = new ChiTietLapDatPK(mayTinh_id,thietBi_id);
         return chiTietLapDatRepository.findById(chiTietLapDatPK).get();
     }
+
+    @DeleteMapping("xoaChiTietLapDat/{id}")
+    public String xoaChiTietCaiDat(@PathVariable Long id) {
+        chiTietLapDatRepository.deleteByStudyId(id);
+        return "Ok";
+    }
 }

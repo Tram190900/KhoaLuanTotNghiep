@@ -189,6 +189,52 @@ export default function LichSuSuaChua() {
     }
   };
 
+  const luuChiTietLichSuSuaChuaHong = async () => {
+    const lichSuSuaChua = {
+      id: Number(duLieuVao.lichSuSuaChuaId),
+      loiGapPhai: duLieuVao.loiGapPhai,
+      ngayGapLoi: duLieuVao.ngayGapLoi,
+      mayTinh: {
+        id: duLieuVao.mayTinhId,
+      },
+      trangThai: duLieuVao.trangThai,
+      mucDoLoi: duLieuVao.mucDoLoi,
+      ngayDuKienSua: duLieuVao.ngayDuKienSua,
+      // nhanVien: { id: user.nhanVien.id },
+    };
+    const chiTietLichSuSuaChua = {
+      ghiChu: duLieuVao.ghiChu,
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
+      lichSuSuaChua: lichSuSuaChua,
+    };
+    try {
+      const result = await postAPI(
+        "/chiTietLichSuSuaChua/hong",
+        chiTietLichSuSuaChua
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm lịch sửa máy tính thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        setDuLieuVao({ ghiChu: "" });
+        if (selectMayTinh) {
+          xemDanhSachChiTietLichSuSuaChua(selectMayTinh.soMay);
+        } else if (selectPhongMay) {
+          xemDanhSachChiTietLichSuSuaChuTheoPhong(selectPhongMay.id);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   useEffect(() => {
     if (openCapNhapNhanVien === false) {
       if (selectMayTinh) {
@@ -392,6 +438,12 @@ export default function LichSuSuaChua() {
             disabled={duLieuVao.trangThai ? "disabled" : ""}
           >
             Cập nhật sửa lỗi
+          </Button>
+          <Button
+            onClick={() => luuChiTietLichSuSuaChuaHong()}
+            disabled={duLieuVao.trangThai ? "disabled" : ""}
+          >
+            Báo hỏng
           </Button>
         </div>
         <Sheet id={"scroll-style-01"}>

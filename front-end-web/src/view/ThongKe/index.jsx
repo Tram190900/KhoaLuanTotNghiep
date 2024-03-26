@@ -138,9 +138,7 @@ export default function ThongKe() {
               {soMayBaoTri}
             </Typography>
             <Typography>
-              Máy
-              <br />
-              đang bảo trì
+              Máy đang bảo trì
             </Typography>
           </CardContent>
         </Card>
