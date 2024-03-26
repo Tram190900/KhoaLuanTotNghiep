@@ -88,7 +88,7 @@
   & .body {
     & .cell {
       position: relative;
-      min-height: 6em;
+      min-height: 9em;
       max-height: fit-content;
       border-right: 1px solid var(--border-color);
       overflow: hidden;
@@ -124,7 +124,7 @@
 
       & .number {
         position: absolute;
-        font-size: 82.5%;
+        font-size: 52.5%;
         line-height: 1;
         top: 0.75em;
         right: 0.75em;
@@ -162,12 +162,20 @@
       .task {
         background-color: rgba(132, 167, 211, 0.8);
         border-radius: 5px;
-        margin: 2%;
-        padding: 2% 2% 15% 2%;
-        font-size: 17px;
+        margin: 3%;
+        padding: 3% ;
+        font-size: 15px;
         .title {
           font-weight: bold;
         }
+      }
+      .taskError{
+        background-color: red;
+        color: white;
+        border-radius: 5px;
+        margin: 3%;
+        padding: 3%;
+        font-size: 15px;
       }
     }
 
@@ -180,22 +188,23 @@
   .profile {
     padding: 2% 2% 0% 2% ;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     .image_wrap {
-      width: 30%;
+      width: 25%;
       border-radius: 1rem;
       box-shadow: 2px 2px 10px #b6b6b6;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      height: 20rem;
+      height: 18rem;
       span {
         margin: 10% 0% 10%;
       }
     }
     .left_infor {
       width: 65%;
+      height: 18rem;
       border-radius: 1rem;
       box-shadow: 2px 2px 10px #b6b6b6;
       display: flex;

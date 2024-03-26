@@ -11,7 +11,14 @@ import {
 import style from "./lichTruc.module.scss";
 import clsx from "clsx";
 import { postAPI } from "../../api";
-import { Avatar, FormControl, FormLabel, Input, Option, Select } from "@mui/joy";
+import {
+  Avatar,
+  FormControl,
+  FormLabel,
+  Input,
+  Option,
+  Select,
+} from "@mui/joy";
 
 export default function LichTruc() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -35,6 +42,22 @@ export default function LichTruc() {
     }
   };
 
+  const getLoiPhaiSua = async (day) => {
+    const userId = nhanVien.id;
+    const dt = new FormData();
+    dt.append("ngayGapLoi", format(day, "yyyy-MM-dd"));
+    try {
+      const result = await postAPI(
+        `/lichSuSuaChua/getLoiChuaSuaTheoNhanVienVaNgayDuKien/${userId}`,
+        dt
+      );
+      return result.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchDataForWeek = async () => {
       const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
@@ -42,7 +65,8 @@ export default function LichTruc() {
       const newData = [];
       for (let day = startDate; day <= endDate; day = addDays(day, 1)) {
         const dataForDay = await getPhongTruc(day);
-        newData.push({ date: day, phongTruc: dataForDay });
+        const error = await getLoiPhaiSua(day);
+        newData.push({ date: day, phongTruc: dataForDay, loiPhaiSua: error });
       }
       setPhongTrucData(newData);
     };
@@ -67,7 +91,8 @@ export default function LichTruc() {
       <div className={`${style.header} ${style.row} ${style["flex-middle"]}`}>
         <div className={`${style.col} ${style["col-start"]}`}></div>
         <div className={`${style.col} ${style["col-center"]}`}>
-          <span>Lịch trực trong tuần</span><br/>
+          <span>Lịch trực trong tuần</span>
+          <br />
           <span>{format(currentMonth, dateFormat)}</span>
         </div>
         <div className={`${style.col} ${style["col-end"]}`}></div>
@@ -99,6 +124,17 @@ export default function LichTruc() {
           </span>
         );
       });
+      const loiPhaiSua = data.loiPhaiSua?.map((loi, index) => {
+        return (
+          <>
+            <span key={index}>
+              <strong>{loi.so_may}</strong>: {loi.loi_gap_phai}<br></br>
+              <span>Chú thích: Dự kiến sửa đến ngày <strong>{format(loi.ngay_du_kien_sua, 'yyyy-MM-dd')}</strong></span>
+            </span>
+            <br></br>
+          </>
+        );
+      });
       return (
         <div
           className={`${style.col} ${style.cell} ${
@@ -116,6 +152,9 @@ export default function LichTruc() {
               <br></br>
               {phongTruc}
             </div>
+          ) : null}
+          {loiPhaiSua.length > 0 ? (
+            <div className={style.taskError}>{loiPhaiSua}</div>
           ) : null}
         </div>
       );
@@ -156,7 +195,12 @@ export default function LichTruc() {
                 : "https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
             }
             alt="avatar"
-            sx={{width:'9rem', height:'9rem'}}
+            sx={{
+              width: "8rem",
+              height: "8rem",
+              boxShadow: "2px 2px 10px gray",
+              border: "5px solid white",
+            }}
           />
           <span>
             Trạng thái làm việc:{" "}
@@ -167,32 +211,48 @@ export default function LichTruc() {
           <div>
             <FormControl className={style.style_form}>
               <FormLabel>Họ tên</FormLabel>
-              <Input value={nhanVien.hoTenNhanVien} placeholder="Họ tên" disabled/>
+              <Input
+                value={nhanVien.hoTenNhanVien}
+                placeholder="Họ tên"
+                disabled
+              />
             </FormControl>
             <FormControl className={style.style_form}>
               <FormLabel>Email</FormLabel>
-              <Input value={nhanVien.email} placeholder="Email" disabled/>
+              <Input value={nhanVien.email} placeholder="Email" disabled />
             </FormControl>
             <FormControl className={style.style_form}>
               <FormLabel>Số điện thoại</FormLabel>
-              <Input value={nhanVien.sdt} placeholder="Số điện thoại" disabled/>
+              <Input
+                value={nhanVien.sdt}
+                placeholder="Số điện thoại"
+                disabled
+              />
             </FormControl>
           </div>
           <div>
             <FormControl className={style.style_form}>
               <FormLabel>Giới tính</FormLabel>
-              <Select value={nhanVien.gioiTinh} placeholder="Giới tính ..." disabled>
+              <Select
+                value={nhanVien.gioiTinh}
+                placeholder="Giới tính ..."
+                disabled
+              >
                 <Option value={true}>Nam</Option>
                 <Option value={false}>Nữ</Option>
               </Select>
             </FormControl>
             <FormControl className={style.style_form}>
               <FormLabel>Địa chỉ</FormLabel>
-              <Input value={nhanVien.diaChi} placeholder="Địa chỉ" disabled/>
+              <Input value={nhanVien.diaChi} placeholder="Địa chỉ" disabled />
             </FormControl>
             <FormControl className={style.style_form}>
               <FormLabel>Trạng thái</FormLabel>
-              <Select value={nhanVien.trangThai} placeholder="Trạng thái ..." disabled>
+              <Select
+                value={nhanVien.trangThai}
+                placeholder="Trạng thái ..."
+                disabled
+              >
                 <Option value={true}>Đi làm</Option>
                 <Option value={false}>Nghỉ làm</Option>
               </Select>
@@ -200,10 +260,12 @@ export default function LichTruc() {
           </div>
         </div>
       </div>
-      {renderHeader()}
-      {renderDays()}
-      {renderCells()}
-      {renderFooter()}
+      <div>
+        {renderHeader()}
+        {renderDays()}
+        {renderCells()}
+        {renderFooter()}
+      </div>
     </div>
   );
 }

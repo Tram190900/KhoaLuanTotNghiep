@@ -21,7 +21,6 @@ import com.iuh.nhom6.repository.NhanVienRepository;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
 @RestController
 @CrossOrigin
 @RequestMapping("/lichSuSuaChua")
@@ -82,7 +81,7 @@ public class LichSuSuaChuaController {
   @PutMapping("/updateNhanVienSua/{id}")
   public LichSuSuaChua updateNhanVienSua(@PathVariable Long id, @RequestParam("nhanVienId") Long nhanVienId) {
     try {
-      
+
       LichSuSuaChua lichSuSuaChua = lichSuSuaChuaRepository.findById(id).get();
       NhanVien nhanVien = nhanVienRepository.findById(nhanVienId).get();
       lichSuSuaChua.setNhanVien(nhanVien);
@@ -91,6 +90,17 @@ public class LichSuSuaChuaController {
       // TODO: handle exception
       e.printStackTrace();
       return null;
+    }
+  }
+
+  @PostMapping("/getLoiChuaSuaTheoNhanVienVaNgayDuKien/{id}")
+  public List<Map<String, Object>> getLoiByNhanVienAndNgayDuKien(@PathVariable Long id,
+      @RequestParam("ngayGapLoi") Date ngayGapLoi) {
+    try {
+      return lichSuSuaChuaRepository.findLoiChuaSuaByNhanVienAndNgayDuKien(id, ngayGapLoi);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;// TODO: handle exception
     }
   }
 

@@ -56,7 +56,8 @@ public interface LichSuSuaChuaRepository extends JpaRepository<LichSuSuaChua, Lo
                         "may_tinh.so_may", nativeQuery = true)
         List<Map<String, Object>> getSoLanSuaChuaCuaTungMayTheoPhong(String soPhong, Boolean trangThai);
 
-        @Query(value = "SELECT lich_su_sua_chua.*, may_tinh.so_may, nhan_vien.ho_ten_nhan_vien FROM computerlab.lich_su_sua_chua "+
+        @Query(value = "SELECT lich_su_sua_chua.*, may_tinh.so_may, nhan_vien.ho_ten_nhan_vien FROM computerlab.lich_su_sua_chua "
+                        +
                         "LEFT JOIN computerlab.may_tinh on may_tinh.may_tinh_id = lich_su_sua_chua.may_tinh_id " +
                         "LEFT JOIN computerlab.phong_may on phong_may.phong_may_id = may_tinh.phong_may_id " +
                         "LEFT JOIN computerlab.nhan_vien on nhan_vien.nhan_vien_id = lich_su_sua_chua.nhan_vien_id " +
@@ -65,4 +66,13 @@ public interface LichSuSuaChuaRepository extends JpaRepository<LichSuSuaChua, Lo
                         "and lich_su_sua_chua.trang_thai = 0", nativeQuery = true)
         List<Map<String, Object>> getLoiSuaTrongNgayTheoPhongTrongMotKhoangThoiGian(String soPhong, Date startDate,
                         Date endDate);
+
+        @Query(value = "SELECT lich_su_sua_chua.loi_gap_phai, lich_su_sua_chua.ngay_du_kien_sua ,may_tinh.so_may, phong_may.so_phong FROM computerlab.lich_su_sua_chua " +
+                        "LEFT JOIN computerlab.may_tinh on may_tinh.may_tinh_id = lich_su_sua_chua.may_tinh_id " + 
+                        "LEFT JOIN computerlab.phong_may on phong_may.phong_may_id = may_tinh.phong_may_id " +
+                        "LEFT JOIN computerlab.nhan_vien on nhan_vien.nhan_vien_id = lich_su_sua_chua.nhan_vien_id " +
+                        "where nhan_vien.nhan_vien_id = ?1 " +
+                        "and Date(lich_su_sua_chua.ngay_gap_loi) = ?2 " +
+                        "and lich_su_sua_chua.trang_thai = 0", nativeQuery = true)
+        List<Map<String, Object>> findLoiChuaSuaByNhanVienAndNgayDuKien(Long nhanVien, Date ngayGapLoi);
 }

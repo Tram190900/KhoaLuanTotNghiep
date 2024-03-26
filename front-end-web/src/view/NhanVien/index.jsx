@@ -9,6 +9,7 @@ import {
   putApiWithImage,
 } from "./../../api/index";
 import {
+  Avatar,
   Button,
   FormControl,
   FormLabel,
@@ -24,8 +25,6 @@ import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
-import dayjs from "dayjs";
-import { MenuContext } from "../../App";
 
 export default function NhanVien() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -184,14 +183,20 @@ export default function NhanVien() {
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
             <div className={clsx(style.left_image_wrap)}>
-              <img
+              <Avatar
                 src={
                   imageURL
                     ? imageURL
                     : "https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
                 }
                 alt="avatar"
-                style={{ borderRadius: "5%" }}
+                sx={{
+                  width: "14rem",
+                  height: "14rem",
+                  marginBottom: "2rem",
+                  boxShadow: "2px 2px 10px gray",
+                  border:'5px solid white'
+                }}
               />
               <Button
                 onClick={() => {
