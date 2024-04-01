@@ -1,5 +1,9 @@
 package com.iuh.nhom6.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.ChiTietLichSuSuaChua;
@@ -44,6 +49,18 @@ public class ChiTietLichSuSuaChuaController {
     mayTinhRepository.save(mayTinh);
     lichSuSuaChua.setTrangThai(true);
     lichSuSuaChuaRepository.save(lichSuSuaChua);
+
+    Date ngayHienTai = new Date(System.currentTimeMillis());
+    LocalDate localDateNgayHienTai = ngayHienTai.toLocalDate();
+    Date ngayDuKienSua = lichSuSuaChua.getNgayDuKienSua();
+    LocalDate localDateNgayDuKienSua = ngayDuKienSua.toLocalDate();
+    long khoangCachNgay = ChronoUnit.DAYS.between(localDateNgayDuKienSua, localDateNgayHienTai);
+
+    if (khoangCachNgay >= 1) {
+      chiTietLichSuSuaChua
+          .setGhiChu(chiTietLichSuSuaChua.getGhiChu() + ", quá ngày dự kiến sửa " + khoangCachNgay + " ngày");
+    }
+
     chiTietLichSuSuaChua.setLichSuSuaChua(lichSuSuaChua);
     return chiTietLichSuSuaChuaRepository.save(chiTietLichSuSuaChua);
   }
@@ -126,6 +143,19 @@ public class ChiTietLichSuSuaChuaController {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  @PostMapping("/filterLichSuLoi")
+  public List<Map<String, Object>> filterLichSuLoi(@RequestParam("phongMayId") Long phongMayId,
+      @RequestParam("ngayGapLoi") Date ngayGapLoi, @RequestParam("ngayDuKienSua") Date ngayDuKienSua,
+      @RequestParam("trangThai") Boolean trangThai) {
+    // TODO: process POST request
+    try {
+      return chiTietLichSuSuaChuaRepository.filterLichSuLoi(phongMayId, ngayGapLoi, ngayDuKienSua, trangThai);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;// TODO: handle exception
     }
   }
 

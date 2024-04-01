@@ -18,7 +18,6 @@ import CapNhatCauHinh from "../../components/Modal/CapNhatCuaHinh";
 export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
   const [openCapNhatCauHinh, setOpenCapNhatCauHinh] = useState(false);
-  const [openCapNhatThietBi, setOpenCapNhatThietBi] = useState(false);
 
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
   const [thietBiLapDat, setThietBiLapDat] = useState([]);

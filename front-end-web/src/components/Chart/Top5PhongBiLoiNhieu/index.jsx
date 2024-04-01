@@ -19,7 +19,6 @@ import {
   ModalDialog,
   Sheet,
   Table,
-  Typography,
   MenuItem,
   DialogTitle,
   DialogContent,
@@ -142,19 +141,12 @@ export default function Top5PhongBiLoiNhieu(props) {
                     <tr
                       key={index}
                       style={{
-                        background:
-                          moment().diff(
-                            moment(item.ngay_du_kien_sua),
-                            "days"
-                          ) === 0
-                            ? "red"
-                            : "",
                         color:
                           moment().diff(
                             moment(item.ngay_du_kien_sua),
                             "days"
                           ) === 0
-                            ? "white"
+                            ? "red"
                             : "",
                       }}
                       onClick={() => {

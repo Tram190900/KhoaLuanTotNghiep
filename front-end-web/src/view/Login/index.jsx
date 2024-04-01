@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import style from "./login.module.scss";
 import clsx from "clsx";
 import Button from "@mui/material/Button";
@@ -11,10 +11,8 @@ import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { getAPI } from "../../api";
 import Swal from "sweetalert2";
-import { MenuContext } from "../../App";
 
 export default function Login() {
-  const menu = useContext(MenuContext);
   const navigate = useNavigate();
   const [tenTK, setTenTK] = useState("");
   const [matKhau, setMatKhau] = useState("");

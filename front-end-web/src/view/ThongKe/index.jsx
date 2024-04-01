@@ -7,12 +7,10 @@ import DvrIcon from "@mui/icons-material/Dvr";
 import { getAPI, postAPI } from "../../api";
 import Top5PhongBiLoiNhieu from "../../components/Chart/Top5PhongBiLoiNhieu";
 import PhanTramMucDoLoi from "../../components/Chart/PhanTramMucDoLoi";
-import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import axios from "axios";
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();

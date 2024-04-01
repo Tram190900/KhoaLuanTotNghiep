@@ -22,7 +22,7 @@ import { deleteAPI, getAPI } from "../../../api";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import TaoPhongMay from "../../../components/Modal/TaoPhongMay";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function DanhSachPhongMay(props) {
   const navigate = useNavigate();

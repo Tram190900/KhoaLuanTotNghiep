@@ -142,18 +142,6 @@ export default function Menu() {
         <AssessmentOutlinedIcon sx={{ fontSize: 40, margin: "0 5%" }} />
         Thống kê
       </div>
-      {/* <div
-        onClick={() => {
-          menu.setMenuActive("lich-truc");
-        }}
-        className={clsx(
-          style.menuItem,
-          menu.menuActive === "lich-truc" ? style.active : ""
-        )}
-      >
-        <CalendarMonthIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-        Lịch trực phòng máy
-      </div> */}
       <Link className={clsx(style.logout)} href={"/login"}>
         <LogoutIcon sx={{ fontSize: 40 }} />
       </Link>

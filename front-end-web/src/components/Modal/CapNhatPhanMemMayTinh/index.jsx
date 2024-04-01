@@ -14,7 +14,6 @@ import style from "./capNhatPhanMemMayTinh.module.scss";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { getAPI, postAPI } from "../../../api";
-import moment from "moment";
 import Swal from "sweetalert2";
 
 export default function CapNhatPhanMemMayTinh(props) {

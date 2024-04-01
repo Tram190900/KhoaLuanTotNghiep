@@ -17,6 +17,10 @@ import moment from "moment";
 import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC";
 import Swal from "sweetalert2";
 import ModalNhanVien from "../../components/Chart/Top5PhongBiLoiNhieu/ModalNhanVien";
+import dayjs from "dayjs";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 
 export default function LichSuSuaChua() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -24,7 +28,7 @@ export default function LichSuSuaChua() {
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
   const [chiTietLichSuSuaChua, setChiTietLichSuSuaChua] = useState({});
   const [allToaNha, setAllToaNha] = useState([]);
-  const [selectToaNha, setSelectToaNha] = useState(null);
+  const [selectToaNha, setSelectToaNha] = useState(1);
 
   const [phongMay, setPhongMay] = useState([]);
   const [selectPhongMay, setSelectPhongMay] = useState(null);
@@ -37,9 +41,9 @@ export default function LichSuSuaChua() {
   const [duLieuVao, setDuLieuVao] = useState({
     mayTinhId: "",
     loiGapPhai: "",
-    ngayGapLoi: "",
-    ngayDuKienSua: "",
-    ghiChu: null,
+    ngayGapLoi: dayjs(Date().now),
+    ngayDuKienSua: dayjs(Date().now),
+    ghiChu: "",
     trangThai: null,
     chiTietLichSuSuaLoiId: "",
     lichSuSuaChuaId: "",
@@ -47,7 +51,24 @@ export default function LichSuSuaChua() {
 
   useEffect(() => {
     handleGetAllToaNha();
+    handleGetPhongMayTheoToaNha(selectToaNha);
   }, []);
+
+  const handleFilterLichSu = async () => {
+    try {
+      const dt = new FormData();
+      dt.append("phongMayId", selectPhongMay.id);
+      dt.append("ngayGapLoi", duLieuVao.ngayGapLoi.format("YYYY-MM-DD"));
+      dt.append("ngayDuKienSua", duLieuVao.ngayDuKienSua.format("YYYY-MM-DD"));
+      dt.append("trangThai", duLieuVao.trangThai);
+      const result = await postAPI("/chiTietLichSuSuaChua/filterLichSuLoi", dt);
+      if (result.status === 200) {
+        setChiTietLichSuSuaChuas(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const xemDanhSachChiTietLichSuSuaChua = async (soMay) => {
     try {
@@ -124,6 +145,13 @@ export default function LichSuSuaChua() {
     if (newValue) {
       xemDanhSachChiTietLichSuSuaChua(newValue.id);
     }
+  };
+
+  const handleTrangThai = (event, newValue) => {
+    setDuLieuVao((prevState) => ({
+      ...prevState,
+      trangThai: newValue, // replace newValue with the value you want to set trangThai to
+    }));
   };
 
   const onInputChange = (e) => {
@@ -235,6 +263,7 @@ export default function LichSuSuaChua() {
     }
   };
 
+
   useEffect(() => {
     if (openCapNhapNhanVien === false) {
       if (selectMayTinh) {
@@ -246,6 +275,8 @@ export default function LichSuSuaChua() {
   }, [openCapNhapNhanVien]);
 
   console.log(chiTietLichSuSuaChua);
+
+  console.log(duLieuVao);
 
   return (
     <>
@@ -282,7 +313,7 @@ export default function LichSuSuaChua() {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl className="w-50">
+              {/* <FormControl className="w-50">
                 <FormLabel>Số máy</FormLabel>
                 <Select
                   onChange={handleMayTinh}
@@ -296,16 +327,53 @@ export default function LichSuSuaChua() {
                     </Option>
                   ))}
                 </Select>
-                {/* <Input
-                id="soMay"
-                value={duLieuVao.soMay}
-                onChange={(e) => onInputChange(e)}
-                name="soMay"
-                placeholder="Máy tính"
-              /> */}
-              </FormControl>
+              </FormControl> */}
             </div>
 
+            <div style={{ flexDirection: "row", display: "flex" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoItem components={["DatePicker"]}>
+                  <FormLabel>Ngày gặp lỗi</FormLabel>
+                  <DatePicker
+                    id="ngayGapLoi"
+                    value={duLieuVao.ngayGapLoi}
+                    onChange={(date) => {
+                      setDuLieuVao((prevState) => ({
+                        ...prevState,
+                        ngayGapLoi: date, // replace newValue with the value you want to set trangThai to
+                      }));
+                    }}
+                    format="DD-MM-YYYY"
+                  />
+                </DemoItem>
+                <DemoItem components={["DatePicker"]}>
+                  <FormLabel>Ngày dự kiến sửa</FormLabel>
+                  <DatePicker
+                    id="ngayDuKienSua"
+                    value={duLieuVao.ngayDuKienSua}
+                    onChange={(date) => {
+                      setDuLieuVao((prevState) => ({
+                        ...prevState,
+                        ngayDuKienSua: date, // replace newValue with the value you want to set trangThai to
+                      }));
+                    }}
+                    format="DD-MM-YYYY"
+                  />
+                </DemoItem>
+              </LocalizationProvider>
+            </div>
+
+            <FormControl>
+              <FormLabel>Trạng thái</FormLabel>
+              <Select
+                value={duLieuVao.trangThai}
+                onChange={handleTrangThai}
+                name="trangThai"
+              >
+                <Option value={true}>Đã sửa</Option>
+                <Option value={false}>Chưa sửa</Option>
+              </Select>
+            </FormControl>
             <FormControl>
               <FormLabel>Lỗi gặp phải</FormLabel>
               <Input
@@ -316,47 +384,6 @@ export default function LichSuSuaChua() {
                 value={duLieuVao.loiGapPhai}
                 disabled
               />
-            </FormControl>
-            <div style={{ flexDirection: "row", display:'flex' }}>
-              <FormControl style={{width:'50%'}}>
-                <FormLabel>Ngày gặp lỗi</FormLabel>
-                <Input
-                  id="ngayGapLoi"
-                  onChange={(e) => onInputChange(e)}
-                  name="ngayGapLoi"
-                  type="date"
-                  placeholder="Ngày gặp lỗi"
-                  value={duLieuVao.ngayGapLoi}
-                  disabled
-                />
-              </FormControl>
-              <FormControl style={{width:'50%'}}>
-                <FormLabel>Ngày dự kiến sửa</FormLabel>
-                <Input
-                  id="ngayDuKienSua"
-                  onChange={(e) => onInputChange(e)}
-                  name="ngayDuKienSua"
-                  type="date"
-                  placeholder="Ngày dự kiến sửa"
-                  value={duLieuVao.ngayDuKienSua}
-                  disabled
-                />
-              </FormControl>
-            </div>
-
-            <FormControl>
-              <FormLabel>Trạng thái</FormLabel>
-              <Select
-                value={duLieuVao.trangThai}
-                onChange={(e) => {
-                  onInputChange(e);
-                }}
-                name="trangThai"
-                disabled
-              >
-                <Option value={true}>Đã sửa</Option>
-                <Option value={false}>Chưa sửa</Option>
-              </Select>
             </FormControl>
             <FormControl>
               <FormLabel>Ghi chú</FormLabel>
@@ -433,12 +460,14 @@ export default function LichSuSuaChua() {
           </div>
         </div>
         <div className={clsx(style.searchWrap)}>
+          <Button onClick={() => handleFilterLichSu()}>Tìm kiếm</Button>
           <Button
             onClick={() => luuChiTietLichSuSuaChua()}
             disabled={duLieuVao.trangThai ? "disabled" : ""}
           >
             Cập nhật sửa lỗi
           </Button>
+
           <Button
             onClick={() => luuChiTietLichSuSuaChuaHong()}
             disabled={duLieuVao.trangThai ? "disabled" : ""}
@@ -446,13 +475,15 @@ export default function LichSuSuaChua() {
             Báo hỏng
           </Button>
         </div>
-        <Sheet id={"scroll-style-01"}>
+        <Sheet id={"scroll-style-01"} className={style.tableLSL}>
           <Table stickyHeader hoverRow aria-label="striped table">
             <thead>
               <tr>
                 <th>Máy tính</th>
                 <th>Lỗi gặp phải</th>
                 <th>Ngày gặp lỗi</th>
+                <th>Ngày dự kiến sửa</th>
+                <th>Ngày sửa thực tế</th>
                 <th>Mức độ</th>
                 <th>Trạng thái</th>
                 <th>Ghi chú</th>
@@ -492,6 +523,10 @@ export default function LichSuSuaChua() {
                     <td>{item.so_may}</td>
                     <td>{item.loi_gap_phai}</td>
                     <td>{moment(item.ngay_gap_loi).format("DD-MM-YYYY")}</td>
+                    <td>
+                      {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
+                    </td>
+                    <td>{moment(item.ngay_sua_loi).format("DD-MM-YYYY")}</td>
                     <td
                       className={clsx(
                         style.mucDo,

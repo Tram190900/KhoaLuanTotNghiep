@@ -129,7 +129,7 @@ export default function LichTruc() {
           <>
             <span key={index}>
               <strong>{loi.so_may}</strong>: {loi.loi_gap_phai}<br></br>
-              <span>Chú thích: Dự kiến sửa đến ngày <strong>{format(loi.ngay_du_kien_sua, 'yyyy-MM-dd')}</strong></span>
+              <span>Chú thích: Dự kiến sửa đến ngày <strong>{format(loi.ngay_du_kien_sua, 'dd-MM-yyyy')}</strong></span>
             </span>
             <br></br>
           </>
