@@ -1,4 +1,4 @@
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./nhanVien.module.scss";
 import {
@@ -69,11 +69,15 @@ export default function NhanVien() {
 
   const handleTimKiem = async () => {
     const list = [];
-    const result = await getAPI(`/getNhanVienByTen/${timKiem}`);
-    if (result.status === 200) {
-      list.push(result.data);
+    try {
+      const result = await getAPI(`/getNhanVienByTen/${timKiem}`);
+      if (result.status === 200) {
+        list.push(result.data);
+      }
+      setAllNhanVien(list);
+    } catch (error) {
+      console.log(error);
     }
-    setAllNhanVien(list);
   };
 
   const handleSaveNhanVien = async () => {
@@ -195,7 +199,7 @@ export default function NhanVien() {
                   height: "14rem",
                   marginBottom: "2rem",
                   boxShadow: "2px 2px 10px gray",
-                  border:'5px solid white'
+                  border: "5px solid white",
                 }}
               />
               <Button

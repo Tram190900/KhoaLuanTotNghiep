@@ -1,6 +1,5 @@
 package com.iuh.nhom6.model;
 
-
 import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,16 +30,24 @@ public class LichSuSuaChua {
   private Date ngayDuKienSua;
   private int mucDoLoi;
   private Boolean trangThai;
-/*   @OneToOne(mappedBy = "lichSuSuaChua")
-  private ChiTietLichSuSuaChua chiTietLichSuSuaChua; */
+  /*
+   * @OneToOne(mappedBy = "lichSuSuaChua")
+   * private ChiTietLichSuSuaChua chiTietLichSuSuaChua;
+   */
   @ManyToOne
   @JoinColumn(name = "mayTinh_id", referencedColumnName = "mayTinh_id")
   private MayTinh mayTinh;
 
   @JsonIgnore
-  @OneToOne(mappedBy = "lichSuSuaChua" ,cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "lichSuSuaChua", cascade = CascadeType.ALL)
   private ChiTietLichSuSuaChua chiTietLichSuSuaChua;
+
   @ManyToOne
   @JoinColumn(name = "nhanVien_id")
   private NhanVien nhanVien;
+
+  @ManyToOne
+  @JoinColumn(name = "giangVien_id")
+  private GiangVien giangVien;
+
 }

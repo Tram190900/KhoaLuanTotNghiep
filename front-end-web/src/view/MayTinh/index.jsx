@@ -130,8 +130,8 @@ export default function MayTinh() {
 
   return (
     <>
-      <div className={clsx(style.maytinh)}>
-        <h1>QUẢN LÝ MÁY TÍNH</h1>
+      <div className={clsx(style.maytinh,'p-3')}>
+        <h1>Quản lý máy tính</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.content)}>
             <div className={clsx(style.leftWrap)}>

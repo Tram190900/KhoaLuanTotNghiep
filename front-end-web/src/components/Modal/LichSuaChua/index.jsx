@@ -25,10 +25,11 @@ export default function LichSuaChua(props) {
   const [duLieuInput, setDuLieuInput] = useState({
     loiGapPhai: "",
     ngayGapLoi: defaultValue,
-    ngayDuKienSua: moment().format('YYYY-MM-DD'),
+    ngayDuKienSua: moment().format("YYYY-MM-DD"),
   });
   const [allNhanVien, setAllNhanVien] = useState();
   const [selectNhanVien, setSelectNhanVien] = useState();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   const inputOnChange = (e) => {
     setDuLieuInput({ ...duLieuInput, [e.target.name]: e.target.value });
@@ -55,6 +56,9 @@ export default function LichSuaChua(props) {
       ngayDuKienSua: duLieuInput.ngayDuKienSua,
       nhanVien: { id: selectNhanVien },
     };
+    if(user.role==='giangvien'){
+      loi.giangVien={id: user.giangVien.id}
+    }
     const result = await postAPI("/lichSuSuaChua", loi);
     if (result.status === 200) {
       Swal.fire({
@@ -188,6 +192,13 @@ export default function LichSuaChua(props) {
                   </Option>
                 ))}
               </Select>
+              <FormLabel>Giảng viên báo lỗi</FormLabel>
+              <Input
+                value={
+                  user.role === "giangvien" ? user.giangVien.tenGiangVien : ""
+                }
+                disabled
+              />
               <div className={clsx(style.buttonGroup)}>
                 <Button onClick={() => themLoi()}>Cập nhật lỗi mới</Button>
               </div>

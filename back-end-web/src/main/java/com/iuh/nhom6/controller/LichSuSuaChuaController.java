@@ -104,4 +104,15 @@ public class LichSuSuaChuaController {
     }
   }
 
+  @GetMapping("/getLoiChuaSuaTheoMayTinhGanNhat/{id}")
+  public LichSuSuaChua getLoiChuaSuaTheoMayTinhGanNhat(@PathVariable Long id) {
+      try {
+        return lichSuSuaChuaRepository.findLoiChuaSuaTheoMayTinhGanNhat(id);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;// TODO: handle exception
+      }
+  }
+  
+
 }

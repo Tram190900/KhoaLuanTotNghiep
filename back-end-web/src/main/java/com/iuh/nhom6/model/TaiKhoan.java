@@ -23,4 +23,8 @@ public class TaiKhoan {
     @OneToOne
     @JoinColumn(name = "nhanVien_id")
     private NhanVien nhanVien;
+
+    @OneToOne
+    @JoinColumn(name ="giangVien_id")
+    private GiangVien giangVien;
 }

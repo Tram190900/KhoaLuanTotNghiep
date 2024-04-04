@@ -29,7 +29,7 @@ export default function DanhSachPhongMay(props) {
   const [dsPhongMay, setdsPhongMay] = useState([]);
 
   const [phongMay_id, setPhongMay_id] = useState();
-  
+
   const [tenPhongMay, setTenPhongMay] = useState();
 
   const [tieuDe, setTieuDe] = useState();
@@ -45,10 +45,11 @@ export default function DanhSachPhongMay(props) {
   const location = useLocation();
 
   const toaNha_id = location.state.toaNha_id;
-  
 
   const xemDanhSachPhongMay = async () => {
-    const result = await getAPI(`/phongmay/${toaNha_id}/phantrang/${page - 1}/8`);
+    const result = await getAPI(
+      `/phongmay/${toaNha_id}/phantrang/${page - 1}/8`
+    );
     if (result.status === 200) {
       setdsPhongMay(result.data.content);
       setTotalPage(result.data.totalPages);
@@ -64,7 +65,7 @@ export default function DanhSachPhongMay(props) {
 
   useEffect(() => {
     xemToaNha();
-  },[]);
+  }, []);
 
   useEffect(() => {
     xemDanhSachPhongMay();
@@ -122,7 +123,9 @@ export default function DanhSachPhongMay(props) {
             <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
               Tòa nhà
             </Link>
-            <Typography color="text.primary">{location.state.tenToaNha}</Typography>
+            <Typography color="text.primary">
+              {location.state.tenToaNha}
+            </Typography>
           </Breadcrumbs>
         </div>
 
@@ -183,7 +186,19 @@ export default function DanhSachPhongMay(props) {
         {dsPhongMay.map((phongMay) => (
           <Grid xs={3}>
             <Card variant="outlined">
-              <CardContent>
+              <CardContent
+              sx={{cursor:'pointer'}}
+                onClick={() => {
+                  navigate("/quan-ly-phong-may/danhsachmaytinh", {
+                    state: {
+                      phongMay_id: phongMay.id,
+                      soPhong: phongMay.soPhong,
+                      toaNha: phongMay.toaNha.tenToaNha,
+                      toaNha_id: phongMay.toaNha.id,
+                    },
+                  });
+                }}
+              >
                 <Typography
                   sx={{
                     fontSize: 14,
@@ -195,17 +210,17 @@ export default function DanhSachPhongMay(props) {
                   gutterBottom
                 >
                   <Typography sx={{ mb: 1.5 }} variant="h5" component="div">
-                  Phòng: {phongMay.soPhong}
-                </Typography>
+                    Phòng: {phongMay.soPhong}
+                  </Typography>
                   <Tooltip title="Cài đặt phòng">
                     <IconButton
-                    onClick={(e) => {
-                      handleClick(e);
-                      setPhongMay_id(phongMay.id);
-                      setTenPhongMay(phongMay.soPhong);
-                    }}
+                      onClick={(e) => {
+                        handleClick(e);
+                        setPhongMay_id(phongMay.id);
+                        setTenPhongMay(phongMay.soPhong);
+                      }}
                       size="small"
-                      sx={{ ml: 2 }}
+                      sx={{ ml: 2, zIndex:'9999' }}
                       aria-controls={open ? "account-menu" : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? "true" : undefined}
@@ -270,22 +285,10 @@ export default function DanhSachPhongMay(props) {
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                   Quy mô phòng: {phongMay.loaiPhong.tenLoaiPhong}
                 </Typography>
-                <Typography variant="body2">Số lượng máy: {phongMay.loaiPhong.soLuongMay}</Typography>
+                <Typography variant="body2">
+                  Số lượng máy: {phongMay.loaiPhong.soLuongMay}
+                </Typography>
               </CardContent>
-              <CardActions>
-                <Button
-                  onClick={() => {
-                    navigate("/quan-ly-phong-may/danhsachmaytinh", {
-                      state: {
-                        phongMay_id: phongMay.id,
-                        soPhong: phongMay.soPhong,
-                        toaNha: phongMay.toaNha.tenToaNha,
-                        toaNha_id: phongMay.toaNha.id
-                      },
-                    });
-                  }}
-             size="small">Xem chi tiết</Button>
-              </CardActions>
             </Card>
           </Grid>
         ))}
@@ -298,14 +301,15 @@ export default function DanhSachPhongMay(props) {
         shape="rounded"
         onChange={(event, value) => setPage(value)}
       />
-      <TaoPhongMay 
-      xemDanhSachPhongMay = {xemDanhSachPhongMay}
-      open = {openTaoPhongMay}
-      setOpen= {setOpenTaoPhongMay}
-      tieuDe = {tieuDe}
-      toaNha_id = {toaNha_id}
-      phongMay_id = {phongMay_id}
-      tenPhongMay = {tenPhongMay}/>
+      <TaoPhongMay
+        xemDanhSachPhongMay={xemDanhSachPhongMay}
+        open={openTaoPhongMay}
+        setOpen={setOpenTaoPhongMay}
+        tieuDe={tieuDe}
+        toaNha_id={toaNha_id}
+        phongMay_id={phongMay_id}
+        tenPhongMay={tenPhongMay}
+      />
     </div>
   );
 }

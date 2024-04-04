@@ -17,9 +17,11 @@ const ThongTinMayTinh = () => {
   const mayTinh = location.state.mayTinh;
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
   const [thietBiLapDat, setThietBiLapDat] = useState([]);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
   const [openCapNhatCauHinh, setOpenCapNhatCauHinh] = useState(false);
+  const [loiGapPhai, setLoiGapPhai] = useState(null);
 
   const handleGetPhanMemCaiDat = async (id) => {
     const result = await getAPI(`/getChiTietCaiDat/${id}`);
@@ -38,10 +40,10 @@ const ThongTinMayTinh = () => {
   };
 
   const ghiTrangThai = (mayTinh) => {
-    if (mayTinh.trangThai === 1) return "Hoạt động"
-    else if (mayTinh.trangThai === 2) return "Bảo trì"
-    else return "Hỏng"
-  }
+    if (mayTinh.trangThai === 1) return "Hoạt động";
+    else if (mayTinh.trangThai === 2) return "Bảo trì";
+    else return "Hỏng";
+  };
 
   const handleGetThietBiLapDat = async (id) => {
     const result = await getAPI(`/getAllChiTietLapDat/${id}`);
@@ -59,10 +61,29 @@ const ThongTinMayTinh = () => {
     }
   };
 
+  const handleGetLoiMacPhai = async (id) => {
+    try {
+      const result = await getAPI(
+        `/lichSuSuaChua/getLoiChuaSuaTheoMayTinhGanNhat/${id}`
+      );
+      if (result.status === 200) {
+        setLoiGapPhai(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleGetPhanMemCaiDat(mayTinh.id);
     handleGetThietBiLapDat(mayTinh.id);
   }, []);
+
+  useEffect(() => {
+    if (mayTinh.trangThai === 2) {
+      handleGetLoiMacPhai(mayTinh.id);
+    }
+  }, [mayTinh.trangThai]);
 
   return (
     <div className={clsx(Style.wrap)}>
@@ -74,7 +95,7 @@ const ThongTinMayTinh = () => {
         <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
           Tòa nhà
         </Link>
-{/*         <Link onClick={() => {
+        {/*         <Link onClick={() => {
             navigate("/quan-ly-phong-may/danhsachphongmay", {
               state: {
                 toaNha_id: mayTinh.phongMay.toaNha.id,
@@ -120,12 +141,30 @@ const ThongTinMayTinh = () => {
         Phòng máy: {mayTinh.phongMay.soPhong}
       </Paper>
       <Paper sx={{ width: "50%" }} square={false}>
-        Trạng thái: {ghiTrangThai(mayTinh)}
+        Trạng thái: {ghiTrangThai(mayTinh)}{" "}
+        {loiGapPhai ? `(${loiGapPhai.loiGapPhai})` : ""}
       </Paper>
       <div className={clsx(Style.button)}>
-        <Button onClick={() => setOpenLichSuaChua(!openLichSuaChua)} variant="contained">Báo lỗi</Button>
-        <Button variant="contained">Cập nhật trạng thái</Button>
-        <Button onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)} variant="contained">Cập nhật cấu hình</Button>
+        <Button
+          disabled={
+            mayTinh.trangThai === 2 || mayTinh.trangThai === 3 ? "disabled" : ""
+          }
+          onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+          variant="contained"
+        >
+          Báo lỗi
+        </Button>
+        {user.role === "giangvien" ? null : (
+          <>
+            <Button variant="contained">Cập nhật trạng thái</Button>
+            <Button
+              onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
+              variant="contained"
+            >
+              Cập nhật cấu hình
+            </Button>
+          </>
+        )}
       </div>
       <div className={clsx(Style.rightWrap)}>
         <Sheet id={"scroll-style-01"} className={clsx(Style.tablePhanMem)}>
