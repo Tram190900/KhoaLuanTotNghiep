@@ -180,6 +180,7 @@ export default function NhanVien() {
       handleGetChamCongByNgayTruc();
     }
   }, [startDate, endDate]);
+  console.log(imageURL);
   return (
     <>
       <div className={clsx(style.nhanVien)}>
@@ -373,7 +374,7 @@ export default function NhanVien() {
                     setSDT(item.sdt);
                     setTrangThai(item.trangThai);
                     setNhanVienId(item.id);
-                    setImageURL(item.image);
+                    setImageURL(`http://localhost:8080/${item.image}`);
                     handleGetCaTrucByNhanVien(item.id);
                   }}
                 >
