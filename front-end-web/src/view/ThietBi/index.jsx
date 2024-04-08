@@ -20,43 +20,60 @@ export default function ThietBi() {
     }
   };
 
-  const handleSaveThietBi = async () => {
-    const data = {
-      tenThietBi: tenThietBi,
-      soLuong: soLuong,
-    };
-    try {
-      const result = await postAPI("/saveThietBi", data);
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Thêm mới thiết bị thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        handleGetAllThietBi();
-      }
-    } catch (error) {
-      console.log(error);
+  const checkData = () => {
+    if (tenThietBi.trim().length > 0 && soLuong) {
+      return true;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Điền đầy đủ thông tin của thiết bị",
+      });
     }
   };
 
-  const handleUpdateThietBi = async () => {
-    try {
+  const handleSaveThietBi = async () => {
+    const check = checkData();
+    if (check) {
       const data = {
         tenThietBi: tenThietBi,
         soLuong: soLuong,
       };
-      const result = await putAPI(`/updateThietBi/${thietBiId}`,data);
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Cập nhật thiết bị thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        handleGetAllThietBi();
+      try {
+        const result = await postAPI("/saveThietBi", data);
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Thêm mới thiết bị thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          handleGetAllThietBi();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    }
+  };
+
+  const handleUpdateThietBi = async () => {
+    const check = checkData();
+    if (check) {
+      try {
+        const data = {
+          tenThietBi: tenThietBi,
+          soLuong: soLuong,
+        };
+        const result = await putAPI(`/updateThietBi/${thietBiId}`, data);
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Cập nhật thiết bị thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          handleGetAllThietBi();
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -108,8 +125,8 @@ export default function ThietBi() {
                 key={index}
                 onClick={() => {
                   setTenThietBi(item.tenThietBi);
-                  setSoLuong(item.soLuong)
-                  setThietBiId(item.id)
+                  setSoLuong(item.soLuong);
+                  setThietBiId(item.id);
                 }}
               >
                 <td>{item.id}</td>

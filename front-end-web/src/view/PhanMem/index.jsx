@@ -41,24 +41,43 @@ export default function PhanMem() {
     setPhanMem({ ...phanMem, [e.target.name]: e.target.value });
   };
 
+  const checkData = () => {
+    if (
+      phanMem.tenPhamMem.trim().length > 0 &&
+      phanMem.phienBan.trim().length > 0 &&
+      phanMem.theLoai.trim().length > 0 &&
+      phanMem.phatTrienBoi.trim().length > 0
+    ) {
+      return true;
+    } else {
+      Swal.fire({
+        icon:'error',
+        title:'Điền đầy đủ thông tin của phần mềm'
+      })
+    }
+  };
+
   const addPhanMem = async () => {
-    try {
-      const result = await postAPI("/savePhanMem", phanMem);
-      if (result.status === 200) {
+    const check = checkData()
+    if (check) {
+      try {
+        const result = await postAPI("/savePhanMem", phanMem);
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Thêm mới phần mềm thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          clearInputData();
+          loadPhanMems();
+        }
+      } catch (error) {
         Swal.fire({
-          text: "Thêm mới phần mềm thành công",
-          icon: "success",
+          text: error.response.data,
+          icon: "error",
           confirmButtonText: "OK",
         });
-        clearInputData();
-        loadPhanMems();
       }
-    } catch (error) {
-      Swal.fire({
-        text: error.response.data,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
     }
   };
 

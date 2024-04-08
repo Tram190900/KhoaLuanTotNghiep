@@ -162,7 +162,7 @@ export default function CapNhatLichTruc(props) {
             </div>
           </div>
 
-          <Button onClick={() => handleCapNhatLichTruc()}>Cập nhật</Button>
+          <Button disabled={phongTruc.length<=0?'disabled':''} onClick={() => handleCapNhatLichTruc()}>Cập nhật</Button>
         </DialogContent>
       </ModalDialog>
     </Modal>

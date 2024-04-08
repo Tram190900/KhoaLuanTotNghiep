@@ -33,24 +33,38 @@ export default function MonHoc() {
     setMonHoc({ ...monHoc, [e.target.name]: e.target.value });
   };
 
+  const checkData = () => {
+    if (monHoc.tenMonHoc.trim().length > 0 && monHoc.khoa.trim().length > 0) {
+      return true;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Điền đầy đủ thông tin môn học",
+      });
+    }
+  };
+
   const addMonHoc = async () => {
-    try {
-      const result = await postAPI("/monHocs", monHoc);
-      if (result.status === 200) {
+    const check = checkData();
+    if (check) {
+      try {
+        const result = await postAPI("/monHocs", monHoc);
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Thêm mới môn học thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          clearInputData();
+          loadMonHocs();
+        }
+      } catch (error) {
         Swal.fire({
-          text: "Thêm mới môn học thành công",
-          icon: "success",
+          text: error.response.data,
+          icon: "error",
           confirmButtonText: "OK",
         });
-        clearInputData();
-        loadMonHocs();
       }
-    } catch (error) {
-      Swal.fire({
-        text: error.response.data,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
     }
   };
 

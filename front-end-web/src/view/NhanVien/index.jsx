@@ -80,63 +80,80 @@ export default function NhanVien() {
     }
   };
 
+  const checkData = () => {
+    if (
+      hoTen.trim().length > 0 &&
+      email.trim().length > 0 &&
+      sdt.trim().length > 0 &&
+      diaChi.trim().length > 0
+    ) {
+      return true;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Điền đầy đủ thông tin của nhân viên",
+      });
+    }
+  };
+
   const handleSaveNhanVien = async () => {
-    // const data = {
-    //   hoTenNhanVien: hoTen,
-    //   email: email,
-    //   sdt: sdt,
-    //   gioiTinh: gioiTinh,
-    //   diaChi: diaChi,
-    //   trangThai: true,
-    // };
-    const data = new FormData();
-    data.append("hoTenNhanVien", hoTen);
-    data.append("email", email);
-    data.append("sdt", sdt);
-    data.append("gioiTinh", gioiTinh);
-    data.append("diaChi", diaChi);
-    data.append("trangThai", trangThai);
-    data.append("file", fileImage);
-    const result = await postAPIWithImg("/saveNhanVien", data);
-    if (result.status === 200) {
-      const tk = {
-        tenTaiKhoan: result.data.hoTenNhanVien
-          .toLowerCase()
-          .trim()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/\W/g, ""),
-        role: "nhanvien",
-        matKhau: "123456",
-        nhanVien: result.data,
-      };
-      const result2 = await postAPI("/taikhoan/dangKy", tk);
-      if (result2.status === 200) {
-        Swal.fire({
-          text: "Thêm nhân viên mới thành công",
-          icon: "success",
-        });
+    const check = checkData();
+    if (check) {
+      const data = new FormData();
+      data.append("hoTenNhanVien", hoTen);
+      data.append("email", email);
+      data.append("sdt", sdt);
+      data.append("gioiTinh", gioiTinh);
+      data.append("diaChi", diaChi);
+      data.append("trangThai", trangThai);
+      data.append("file", fileImage);
+      const result = await postAPIWithImg("/saveNhanVien", data);
+      if (result.status === 200) {
+        const tk = {
+          tenTaiKhoan: result.data.hoTenNhanVien
+            .toLowerCase()
+            .trim()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\W/g, ""),
+          role: "nhanvien",
+          matKhau: "123456",
+          nhanVien: result.data,
+        };
+        const result2 = await postAPI("/taikhoan/dangKy", tk);
+        if (result2.status === 200) {
+          Swal.fire({
+            text: "Thêm nhân viên mới thành công",
+            icon: "success",
+          });
+        }
+        handleGetAllNhanvien();
       }
-      handleGetAllNhanvien();
     }
   };
 
   const handleCapNhatNhanVien = async () => {
-    const data = new FormData();
-    data.append("hoTenNhanVien", hoTen);
-    data.append("email", email);
-    data.append("sdt", sdt);
-    data.append("gioiTinh", gioiTinh);
-    data.append("diaChi", diaChi);
-    data.append("trangThai", trangThai);
-    data.append("file", fileImage);
-    const result = await putApiWithImage(`updateNhanVien/${nhanVienId}`, data);
-    if (result.status === 200) {
-      Swal.fire({
-        text: "Cập nhật thông tin nhân viên thành công",
-        icon: "success",
-      });
-      handleGetAllNhanvien();
+    const check = checkData();
+    if (check) {
+      const data = new FormData();
+      data.append("hoTenNhanVien", hoTen);
+      data.append("email", email);
+      data.append("sdt", sdt);
+      data.append("gioiTinh", gioiTinh);
+      data.append("diaChi", diaChi);
+      data.append("trangThai", trangThai);
+      data.append("file", fileImage);
+      const result = await putApiWithImage(
+        `updateNhanVien/${nhanVienId}`,
+        data
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Cập nhật thông tin nhân viên thành công",
+          icon: "success",
+        });
+        handleGetAllNhanvien();
+      }
     }
   };
 

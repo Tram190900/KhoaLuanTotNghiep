@@ -89,27 +89,54 @@ const TaoPhongMay = (props) => {
   };
 
   const showProgress = () => {
-    document.getElementById('element').style.display = 'block';
-  }
+    document.getElementById("element").style.display = "block";
+  };
+
+  const checkData = () => {
+    if (
+      duLieuVao.soPhong.trim().length > 0 &&
+      duLieuVao.soLuongMay.trim().length > 0 &&
+      duLieuVao.tenLoaiPhong.trim().length > 0
+    ) {
+      return true;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Điền đầy đủ thông tin phòng máy",
+        customClass: {
+          container: 'custom-swal-container' // Thêm một class tùy chỉnh cho container của Swal.fire
+        },
+        didOpen: () => {
+          const swalContainer = document.querySelector('.custom-swal-container');
+          if (swalContainer) {
+            swalContainer.style.zIndex = '10000'; // Đặt z-index của container lên giá trị cao hơn (ví dụ: 10000)
+          }
+        }
+      });
+    }
+  };
 
   const luuPhongMay = async () => {
-    const phongMay = {
-      soPhong: duLieuVao.soPhong,
-      toaNha: toaNha,
-      loaiPhong: {
-        tenLoaiPhong: duLieuVao.tenLoaiPhong,
-        soLuongMay: duLieuVao.soLuongMay,
-      },
-    };
-    await postAPI("/savePhongMay", phongMay);
-    await luuMayTinh().then((comment) => {
-      setLoading(false);
-    });
-    setDsPhanMemChon([]);
-    setDsThietBiChon([]);
-    props.xemDanhSachPhongMay();
-    props.setOpen(false);
-    setLoading(true);
+    const check = checkData();
+    if (check) {
+      const phongMay = {
+        soPhong: duLieuVao.soPhong,
+        toaNha: toaNha,
+        loaiPhong: {
+          tenLoaiPhong: duLieuVao.tenLoaiPhong,
+          soLuongMay: duLieuVao.soLuongMay,
+        },
+      };
+      await postAPI("/savePhongMay", phongMay);
+      await luuMayTinh().then((comment) => {
+        setLoading(false);
+      });
+      setDsPhanMemChon([]);
+      setDsThietBiChon([]);
+      props.xemDanhSachPhongMay();
+      props.setOpen(false);
+      setLoading(true);
+    }
   };
 
   const luuMayTinh = async () => {
@@ -355,7 +382,7 @@ const TaoPhongMay = (props) => {
             </Grid>
           </Grid>
           <Box id="element" sx={{ width: "100%", display: "none" }}>
-            {loading ? <LinearProgress /> : null} 
+            {loading ? <LinearProgress /> : null}
           </Box>
           <Button
             onClick={() => {
