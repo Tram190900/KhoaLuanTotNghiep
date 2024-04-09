@@ -9,19 +9,31 @@
     margin-top: 20px;
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     height: 80%;
     .tablePhanMem {
-      border: 1px solid rgb(175, 175, 175);
       height: 100%;
       overflow: auto;
-      width: 45%;
+      width: 48%;
     }
     .tableThietBi {
-      border: 1px solid rgb(175, 175, 175);
       height: 100%;
       overflow: auto;
-      width: 45%;
+      width: 48%;
     }
+  }
+  .mayTinhInfo {
+    margin: 15px 0;
+    font-size: 18px;
+    font-style: normal;
+  }
+  .hoatDong {
+    color: green
+  }
+  .hong {
+    color: red;
+  }
+  .baoTri {
+    color: rgb(180, 180, 9);
   }
 }

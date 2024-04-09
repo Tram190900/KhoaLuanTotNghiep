@@ -11,6 +11,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();
@@ -109,6 +110,8 @@ export default function ThongKe() {
     }
   };
   return (
+    <>
+    <PrimarySearchAppBar/>
     <div className={clsx(style.thongKe)}>
       <div className={clsx(style.card_wrap)}>
         <Card variant="soft" className={clsx(style.card)}>
@@ -194,5 +197,6 @@ export default function ThongKe() {
         </Card>
       </div>
     </div>
+    </>
   );
 }

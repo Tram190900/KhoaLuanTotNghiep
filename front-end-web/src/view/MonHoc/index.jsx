@@ -5,6 +5,7 @@ import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
 import PhanMemSuDung from "../../components/Modal/PhanMemSuDung";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function MonHoc() {
   const [openCapNhatMonHoc, setOpenCapNhatMonHoc] = useState(false);
@@ -128,8 +129,9 @@ export default function MonHoc() {
   };
 
   return (
-    <>
-      <div className={clsx(style.monHoc)}>
+    <div className={clsx(style.wrap)}>
+      <PrimarySearchAppBar/>
+      <div className={clsx(style.monHoc, "p-3")}>
         <h1>QUẢN LÝ MÔN HỌC</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
@@ -248,6 +250,6 @@ export default function MonHoc() {
         setOpen={setOpenCapNhatMonHoc}
         softwares={setSoftwares}
       />
-    </>
+    </div>
   );
 }

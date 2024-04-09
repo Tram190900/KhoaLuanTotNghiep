@@ -4,6 +4,7 @@ import style from "./thietBi.module.scss";
 import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
 import { getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function ThietBi() {
   const [allThietBi, setAllThietBi] = useState([]);
@@ -77,7 +78,9 @@ export default function ThietBi() {
     }
   };
   return (
-    <div className={clsx(style.thietBi)}>
+    <div>
+      <PrimarySearchAppBar/>
+      <div className={clsx(style.thietBi, "p-3")}>
       <h1>QUẢN LÝ THIẾT BỊ</h1>
       <div className={clsx(style.infoWrap)}>
         <div className={clsx(style.left)}>
@@ -137,6 +140,7 @@ export default function ThietBi() {
           </tbody>
         </Table>
       </Sheet>
+    </div>
     </div>
   );
 }

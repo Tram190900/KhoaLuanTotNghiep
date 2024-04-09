@@ -19,6 +19,7 @@ import {
   Option,
   Select,
 } from "@mui/joy";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function LichTruc() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -185,6 +186,9 @@ export default function LichTruc() {
   };
 
   return (
+    <div className={clsx(style.wrap)}>
+      <PrimarySearchAppBar/>
+
     <div className={clsx(style.calendar)}>
       <div className={style.profile}>
         <div className={style.image_wrap}>
@@ -266,6 +270,7 @@ export default function LichTruc() {
         {renderCells()}
         {renderFooter()}
       </div>
+    </div>
     </div>
   );
 }

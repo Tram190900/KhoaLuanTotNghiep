@@ -23,6 +23,8 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import TaoPhongMay from "../../../components/Modal/TaoPhongMay";
 import { useLocation, useNavigate } from "react-router-dom";
+import PrimarySearchAppBar from "../../../components/AppBar/PrimarySearchAppBar";
+import style from "./danhSachPhongMay.module.scss"
 
 export default function DanhSachPhongMay(props) {
   const navigate = useNavigate();
@@ -112,10 +114,12 @@ export default function DanhSachPhongMay(props) {
   };
 
   return (
+    <div>
+      <PrimarySearchAppBar/>
     <div className={clsx(Style.wrap)}>
       <div className={clsx(Style.header)}>
         <div className={clsx(Style.h4)}>
-          <h4>Quản lý phòng máy</h4>
+          <h1>Quản lý phòng máy</h1>
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
               Quản lý phòng máy
@@ -130,6 +134,7 @@ export default function DanhSachPhongMay(props) {
         </div>
 
         <Button
+          className={clsx(style.button)}
           Style={{ textTransform: "none" }}
           variant="contained"
           startIcon={<AddIcon />}
@@ -185,19 +190,19 @@ export default function DanhSachPhongMay(props) {
       >
         {dsPhongMay.map((phongMay) => (
           <Grid xs={3}>
+            <Tooltip title="Double Click để xem chi tiết">
             <Card variant="outlined">
-              <CardContent
-              sx={{cursor:'pointer'}}
-                onClick={() => {
-                  navigate("/quan-ly-phong-may/danhsachmaytinh", {
-                    state: {
-                      phongMay_id: phongMay.id,
-                      soPhong: phongMay.soPhong,
-                      toaNha: phongMay.toaNha.tenToaNha,
-                      toaNha_id: phongMay.toaNha.id,
-                    },
-                  });
-                }}
+              <CardContent sx={{ cursor: "pointer" }}
+              onDoubleClick={() => {
+                navigate("/quan-ly-phong-may/danhsachmaytinh", {
+                  state: {
+                    phongMay_id: phongMay.id,
+                    soPhong: phongMay.soPhong,
+                    toaNha: phongMay.toaNha.tenToaNha,
+                    toaNha_id: phongMay.toaNha.id,
+                  },
+                });
+              }}
               >
                 <Typography
                   sx={{
@@ -220,7 +225,7 @@ export default function DanhSachPhongMay(props) {
                         setTenPhongMay(phongMay.soPhong);
                       }}
                       size="small"
-                      sx={{ ml: 2, zIndex:'9999' }}
+                      sx={{ ml: 2 }}
                       aria-controls={open ? "account-menu" : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? "true" : undefined}
@@ -290,6 +295,7 @@ export default function DanhSachPhongMay(props) {
                 </Typography>
               </CardContent>
             </Card>
+            </Tooltip>
           </Grid>
         ))}
       </Grid>
@@ -311,5 +317,20 @@ export default function DanhSachPhongMay(props) {
         tenPhongMay={tenPhongMay}
       />
     </div>
+    </div>
   );
+}
+{
+  /* <Button
+onDoubleClick={() => {
+  navigate("/quan-ly-phong-may/danhsachmaytinh", {
+    state: {
+      phongMay_id: phongMay.id,
+      soPhong: phongMay.soPhong,
+      toaNha: phongMay.toaNha.tenToaNha,
+      toaNha_id: phongMay.toaNha.id,
+    },
+  });
+}}
+> */
 }

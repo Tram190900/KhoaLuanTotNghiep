@@ -9,6 +9,13 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { MenuContext } from "../../App";
 import { Link, useNavigate } from "react-router-dom";
 import BusinessIcon from "@mui/icons-material/Business";
+import Tooltip from "@mui/material/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import CardContent from "@mui/material/CardContent";
+import clsx from "clsx";
+import style from "./phongMay.module.scss";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function PhongMay(props) {
   const id = 2;
@@ -28,31 +35,31 @@ export default function PhongMay(props) {
   const navigate = useNavigate();
 
   return (
-    <div className="p-3">
-      <h1>Quản lý phòng máy</h1>
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        onClick={() => menu.setMenuActive("phong-may")}
-      >
-        <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
-          Quản lý phòng máy
-        </Link>
-        <Typography color="text.primary">Tòa nhà</Typography>
-      </Breadcrumbs>
-      <Grid
-        mt={3}
-        container
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-      >
-        {dsToaNha.map((toaNha) => (
-          <Grid xs={6} height={"25"}>
-            <Card variant="outlined">
-              <CardActions onClick={() => menu.setMenuActive("")}>
+    <div>
+      <PrimarySearchAppBar />
+      <div className="p-3">
+        <h1>Quản lý phòng máy</h1>
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          onClick={() => menu.setMenuActive("phong-may")}
+        >
+          <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+            Quản lý phòng máy
+          </Link>
+          <Typography color="text.primary">Tòa nhà</Typography>
+        </Breadcrumbs>
+        <Grid
+          mt={3}
+          container
+          rowSpacing={1}
+          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        >
+          {dsToaNha.map((toaNha) => (
+            <Grid xs={6}>
+              <Tooltip title="Double Click để xem chi tiết">
                 <Button
-                sx={{fontSize:'20px'}}
-                  endIcon={<BusinessIcon />}
-                  onClick={() => {
+                  className={clsx(style.button)}
+                  onDoubleClick={() => {
                     navigate("/quan-ly-phong-may/danhsachphongmay", {
                       state: {
                         toaNha_id: toaNha.id,
@@ -61,13 +68,47 @@ export default function PhongMay(props) {
                     });
                   }}
                 >
-                  {toaNha.tenToaNha}
+                  <Card sx={{ minWidth: 275 }}>
+                    <CardContent>
+                      <BusinessIcon sx={{ fontSize: 400 }} />
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {toaNha.tenToaNha}
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+              </Tooltip>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
     </div>
   );
+}
+
+{
+  /* <Grid xs={6} height={"25"}>
+<Card variant="outlined">
+  <CardActions onClick={() => menu.setMenuActive("")}>
+    <Button
+    sx={{fontSize:'20px'}}
+      endIcon={<BusinessIcon />}
+      onClick={() => {
+        navigate("/quan-ly-phong-may/danhsachphongmay", {
+          state: {
+            toaNha_id: toaNha.id,
+            tenToaNha: toaNha.tenToaNha,
+          },
+        });
+      }}
+    >
+      {toaNha.tenToaNha}
+    </Button>
+  </CardActions>
+</Card>
+</Grid> */
 }

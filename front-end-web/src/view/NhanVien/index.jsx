@@ -25,6 +25,7 @@ import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function NhanVien() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -200,6 +201,7 @@ export default function NhanVien() {
   console.log(imageURL);
   return (
     <>
+      <PrimarySearchAppBar/>
       <div className={clsx(style.nhanVien)}>
         <h1>QUẢN LÝ NHÂN VIÊN</h1>
         <div className={clsx(style.infoWrap)}>

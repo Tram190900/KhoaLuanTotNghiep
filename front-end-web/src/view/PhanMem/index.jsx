@@ -14,6 +14,8 @@ import {
 } from "@mui/joy";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
+import { PanoramaPhotosphereSelectOutlined } from "@mui/icons-material";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function PhanMem() {
   const [phanMems, setPhanMems] = useState();
@@ -144,7 +146,10 @@ export default function PhanMem() {
   };
 
   return (
-    <div className={clsx(style.phanMem)}>
+    <div className={clsx(style.wrap)}>
+      <PrimarySearchAppBar/>
+    
+    <div className={clsx(style.phanMem, "p-3")}>
       <h1>QUẢN LÝ PHẦN MỀM</h1>
       <div className={clsx(style.info)}>
         <FormControl>
@@ -227,6 +232,7 @@ export default function PhanMem() {
           </tbody>
         </Table>
       </Sheet>
+    </div>
     </div>
   );
 }

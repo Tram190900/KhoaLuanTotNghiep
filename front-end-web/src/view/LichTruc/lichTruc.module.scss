@@ -18,6 +18,10 @@
     align-items: center;
   }
 }
+.wrap{
+  height: 100%;
+  overflow: scroll;
+}
 
 .col {
   flex-grow: 1;

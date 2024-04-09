@@ -385,6 +385,7 @@ const TaoPhongMay = (props) => {
             {loading ? <LinearProgress /> : null}
           </Box>
           <Button
+          className={clsx(style.button)}
             onClick={() => {
               if (props.tieuDe === "Tạo phòng máy") {
                 showProgress();

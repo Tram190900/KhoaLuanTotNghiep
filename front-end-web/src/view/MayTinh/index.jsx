@@ -1,19 +1,41 @@
 import clsx from "clsx";
+import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import style from "./mayTinh.module.scss";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Option,
-  Select,
-  Sheet,
-  Table,
-} from "@mui/joy";
+import { FormControl, FormLabel, Option, Select } from "@mui/joy";
+import {  Button } from "@mui/material";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
-import { getAPI,  } from "../../api";
+import { getAPI } from "../../api";
 import moment from "moment";
 import CapNhatCauHinh from "../../components/Modal/CapNhatCuaHinh";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function MayTinh() {
   const [openLichSuaChua, setOpenLichSuaChua] = useState(false);
@@ -32,6 +54,8 @@ export default function MayTinh() {
   const [selectMayTinh, setSelectMayTinh] = useState(null);
 
   const [trangThai, setTrangThai] = useState(true);
+
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
     handleGetAllToaNha();
@@ -69,7 +93,7 @@ export default function MayTinh() {
     }
   };
 
-  const handleToaNha =  (event, newValue) => {
+  const handleToaNha = (event, newValue) => {
     setSelectToaNha(newValue);
     handleGetPhongMayTheoToaNha(newValue);
   };
@@ -126,11 +150,10 @@ export default function MayTinh() {
     setTrangThai(newValue);
   };
 
-  console.log(selectToaNha);
-
   return (
-    <>
-      <div className={clsx(style.maytinh,'p-3')}>
+    <div className={clsx(style.wrap)}>
+      <PrimarySearchAppBar />
+      <div className={clsx(style.maytinh, "p-3")}>
         <h1>Quản lý máy tính</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.content)}>
@@ -190,81 +213,91 @@ export default function MayTinh() {
                   <Option value={false}>Bảo trì</Option>
                 </Select>
               </FormControl>
-              <Button
-                className={clsx(style.leftWrap_button)}
-                onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-                disabled={selectMayTinh ? "" : "disabled"}
-              >
-                Báo lỗi
-              </Button>
-              <Button
-                className={clsx(style.leftWrap_button)}
-                // onClick={() => handleCapNhatMayTinh()}
-                disabled={selectMayTinh ? "" : "disabled"}
-              >
-                Cập nhật trạng thái
-              </Button>
-              <Button
-                className={clsx(style.leftWrap_button)}
-                onClick={() => setOpenCapNhatCauHinh(true)}
-                disabled={selectPhongMay ? "" : "disabled"}
-              >
-                Cập nhật cấu hình
-              </Button>
             </div>
           </div>
         </div>
+        <div className={clsx(style.button)}>
+          <Button
+            color="error"
+            disabled={
+              mayTinh.trangThai === 2 || mayTinh.trangThai === 3
+                ? "disabled"
+                : ""
+            }
+            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+          >
+            Báo lỗi
+          </Button>
+          {user.role === "giangvien" ? null : (
+            <>
+              <Button
+                onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
+                variant="contained"
+                sx={{ textTransform: "capitalize" }}
+                color="warning"
+              >
+                Cập nhật cấu hình
+              </Button>
+            </>
+          )}
+        </div>
         <div className={clsx(style.rightWrap)}>
-          <Sheet id={"scroll-style-01"} className={clsx(style.tablePhanMem)}>
-            <Table
-              aria-label="table with sticky header"
-              stickyHeader
-              stickyFooter
-              stripe="odd"
-              hoverRow
-            >
-              <thead>
-                <tr>
-                  <th>Tên phần mềm</th>
-                  <th>Phiên bản</th>
-                  <th>Ngày cài đặt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {phanMemCaiDat?.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.phanMem.tenPhamMem}</td>
-                    <td>{item.phanMem.phienBan}</td>
-                    <td>{moment(item.ngayCaiDat).format("DD-MM-YYYY")}</td>
-                  </tr>
+          <TableContainer
+            component={Paper}
+            className={clsx(style.tablePhanMem)}
+          >
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Tên phần mềm</StyledTableCell>
+                  <StyledTableCell align="right">Phiên bản</StyledTableCell>
+                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {phanMemCaiDat.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.phanMem.tenPhamMem}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.phanMem.phienBan}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {moment(row.ngayCaiDat).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                  </StyledTableRow>
                 ))}
-              </tbody>
+              </TableBody>
             </Table>
-          </Sheet>
-          <Sheet id={"scroll-style-01"} className={clsx(style.tableThietBi)}>
-            <Table
-              aria-label="table with sticky header"
-              stickyHeader
-              stickyFooter
-              stripe="odd"
-              hoverRow
-            >
-              <thead>
-                <tr>
-                  <th>Tên thiết bị</th>
-                  <th>Ngày cài đặt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {thietBiLapDat?.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.thietBi.tenThietBi}</td>
-                    <td>{moment(item.ngayLapDat).format("DD-MM-YYYY")}</td>
-                  </tr>
+          </TableContainer>
+          <TableContainer
+            component={Paper}
+            className={clsx(style.tablePhanMem)}
+          >
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Tên thiết bị</StyledTableCell>
+                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {thietBiLapDat.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.thietBi.tenThietBi}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {moment(row.ngayLapDat).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                  </StyledTableRow>
                 ))}
-              </tbody>
+              </TableBody>
             </Table>
-          </Sheet>
+          </TableContainer>
         </div>
       </div>
       <LichSuaChua
@@ -281,6 +314,7 @@ export default function MayTinh() {
         mayTinhId={selectMayTinh?.id}
         handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
       />
-    </>
+    </div>
+    
   );
 }

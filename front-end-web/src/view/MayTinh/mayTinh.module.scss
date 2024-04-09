@@ -1,8 +1,16 @@
-.maytinh {
+.wrap {
   height: 100%;
+  overflow-y: scroll;
+}
+.maytinh {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  .button {
+    margin-top: 10px;
+    display: flex;
+    gap:10px;
+  }
   .infoWrap {
     height: 45%;
     .content {
@@ -21,21 +29,17 @@
     }
   }
   .rightWrap {
+    margin-top: 20px;
     width: 100%;
     display: flex;
-    justify-content: space-around;
-    height: 80%;
+    justify-content: space-between;
     .tablePhanMem {
-      border: 1px solid rgb(175, 175, 175);
-      height: 100%;
       overflow: auto;
-      width: 45%;
+      width: 48%;
     }
     .tableThietBi {
-      border: 1px solid rgb(175, 175, 175);
-      height: 100%;
       overflow: auto;
-      width: 45%;
+      width: 48%;
     }
   }
 }

@@ -17,6 +17,7 @@ import moment from "moment";
 import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC";
 import Swal from "sweetalert2";
 import ModalNhanVien from "../../components/Chart/Top5PhongBiLoiNhieu/ModalNhanVien";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function LichSuSuaChua() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -292,7 +293,8 @@ export default function LichSuSuaChua() {
 
   return (
     <>
-      <div className={clsx(style.lichSuSuaChua)}>
+      <PrimarySearchAppBar/>
+      <div className={clsx(style.lichSuSuaChua, "p-3")}>
         <h1>Lịch sửa báo lỗi</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>

@@ -17,3 +17,6 @@
   flex-direction: row;
   justify-content: space-between;
 }
+.button:focus {
+  outline: 0 !important;
+}

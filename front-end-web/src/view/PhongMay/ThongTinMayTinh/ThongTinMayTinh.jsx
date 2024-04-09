@@ -1,15 +1,55 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import Style from "./thongTinMayTinh.module.scss";
-import Paper from "@mui/material/Paper";
+import style from "./thongTinMayTinh.module.scss";
 import { useLocation, useNavigate } from "react-router";
-import { Breadcrumbs, Button, Table, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Typography } from "@mui/material";
 import { Sheet } from "@mui/joy";
 import moment from "moment";
 import { getAPI } from "../../../api";
 import { Link } from "react-router-dom";
 import LichSuaChua from "../../../components/Modal/LichSuaChua";
 import CapNhatCauHinh from "../../../components/Modal/CapNhatCuaHinh";
+import PrimarySearchAppBar from "../../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+];
 
 const ThongTinMayTinh = () => {
   const navigate = useNavigate();
@@ -86,16 +126,19 @@ const ThongTinMayTinh = () => {
   }, [mayTinh.trangThai]);
 
   return (
-    <div className={clsx(Style.wrap)}>
-      <h2>Thông tin máy tính</h2>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
-          Quản lý phòng máy
-        </Link>
-        <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
-          Tòa nhà
-        </Link>
-        {/*         <Link onClick={() => {
+    <div>
+      <PrimarySearchAppBar />
+
+      <div className={clsx(style.wrap)}>
+        <h1>Thông tin máy tính</h1>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
+            Quản lý phòng máy
+          </Link>
+          <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
+            Tòa nhà
+          </Link>
+          {/*         <Link onClick={() => {
             navigate("/quan-ly-phong-may/danhsachphongmay", {
               state: {
                 toaNha_id: mayTinh.phongMay.toaNha.id,
@@ -105,133 +148,165 @@ const ThongTinMayTinh = () => {
           }}>
           {mayTinh.phongMay.toaNha.tenToaNha}
         </Link> */}
-        <Button
-          onClick={() => {
-            navigate("/quan-ly-phong-may/danhsachphongmay", {
-              state: {
-                toaNha_id: mayTinh.phongMay.toaNha.id,
-                tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
-              },
-            });
-          }}
-        >
-          {mayTinh.phongMay.toaNha.tenToaNha}
-        </Button>
-        <Button
-          onClick={() => {
-            navigate("/quan-ly-phong-may/danhsachmaytinh", {
-              state: {
-                phongMay_id: mayTinh.phongMay.id,
-                soPhong: mayTinh.phongMay.soPhong,
-                toaNha: mayTinh.phongMay.toaNha.tenToaNha,
-                toaNha_id: mayTinh.phongMay.toaNha.id,
-                tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
-              },
-            });
-          }}
-        >
-          {mayTinh.phongMay.soPhong}
-        </Button>
-        <Typography color="text.primary">{mayTinh.soMay}</Typography>
-      </Breadcrumbs>
-      <Paper sx={{ width: "50%" }} square={false}>
-        Tên máy: {mayTinh.soMay}
-      </Paper>
-      <Paper sx={{ width: "50%" }} square={false}>
-        Phòng máy: {mayTinh.phongMay.soPhong}
-      </Paper>
-      <Paper sx={{ width: "50%" }} square={false}>
-        Trạng thái: {ghiTrangThai(mayTinh)}{" "}
-        {loiGapPhai ? `(${loiGapPhai.loiGapPhai})` : ""}
-      </Paper>
-      <div className={clsx(Style.button)}>
-        <Button
-          disabled={
-            mayTinh.trangThai === 2 || mayTinh.trangThai === 3 ? "disabled" : ""
-          }
-          onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-          variant="contained"
-        >
-          Báo lỗi
-        </Button>
-        {user.role === "giangvien" ? null : (
-          <>
-            <Button variant="contained">Cập nhật trạng thái</Button>
-            <Button
-              onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
-              variant="contained"
-            >
-              Cập nhật cấu hình
-            </Button>
-          </>
-        )}
-      </div>
-      <div className={clsx(Style.rightWrap)}>
-        <Sheet id={"scroll-style-01"} className={clsx(Style.tablePhanMem)}>
-          <Table
-            aria-label="table with sticky header"
-            stickyHeader
-            stickyFooter
-            stripe="odd"
-            hoverRow
+          <Button
+            onClick={() => {
+              navigate("/quan-ly-phong-may/danhsachphongmay", {
+                state: {
+                  toaNha_id: mayTinh.phongMay.toaNha.id,
+                  tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
+                },
+              });
+            }}
           >
-            <thead>
-              <tr>
-                <th>Tên phần mềm</th>
-                <th>Phiên bản</th>
-                <th>Ngày cài đặt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {phanMemCaiDat?.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.phanMem.tenPhamMem}</td>
-                  <td>{item.phanMem.phienBan}</td>
-                  <td>{moment(item.ngayCaiDat).format("DD-MM-YYYY")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Sheet>
-        <Sheet id={"scroll-style-01"} className={clsx(Style.tableThietBi)}>
-          <Table
-            aria-label="table with sticky header"
-            stickyHeader
-            stickyFooter
-            stripe="odd"
-            hoverRow
+            {mayTinh.phongMay.toaNha.tenToaNha}
+          </Button>
+          <Button
+            onClick={() => {
+              navigate("/quan-ly-phong-may/danhsachmaytinh", {
+                state: {
+                  phongMay_id: mayTinh.phongMay.id,
+                  soPhong: mayTinh.phongMay.soPhong,
+                  toaNha: mayTinh.phongMay.toaNha.tenToaNha,
+                  toaNha_id: mayTinh.phongMay.toaNha.id,
+                  tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
+                },
+              });
+            }}
           >
-            <thead>
-              <tr>
-                <th>Tên thiết bị</th>
-                <th>Ngày cài đặt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {thietBiLapDat?.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.thietBi.tenThietBi}</td>
-                  <td>{moment(item.ngayLapDat).format("DD-MM-YYYY")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Sheet>
+            {mayTinh.phongMay.soPhong}
+          </Button>
+          <Typography color="text.primary">{mayTinh.soMay}</Typography>
+        </Breadcrumbs>
+        <Paper
+          className={clsx(style.mayTinhInfo)}
+          sx={{ width: "50%" }}
+          square={false}
+        >
+          <b>Tên máy:</b> {mayTinh.soMay}
+        </Paper>
+        <Paper
+          className={clsx(style.mayTinhInfo)}
+          sx={{ width: "50%" }}
+          square={false}
+        >
+          <b>Phòng máy:</b> {mayTinh.phongMay.soPhong}
+        </Paper>
+        <Paper
+          className={clsx(style.mayTinhInfo)}
+          sx={{ width: "50%" }}
+          square={false}
+        >
+          <b>Trạng thái:</b>{" "}
+          <span
+            className={clsx(
+              mayTinh.trangThai === 1 && style.hoatDong,
+              mayTinh.trangThai === 2 && style.baoTri,
+              mayTinh.trangThai === 3 && style.Hong
+            )}
+          >
+            {ghiTrangThai(mayTinh)}{" "}
+          </span>
+          {loiGapPhai ? `(${loiGapPhai.loiGapPhai})` : ""}
+        </Paper>
+        <div className={clsx(style.button)}>
+          <Button
+            color="error"
+            disabled={
+              mayTinh.trangThai === 2 || mayTinh.trangThai === 3
+                ? "disabled"
+                : ""
+            }
+            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+          >
+            Báo lỗi
+          </Button>
+          {user.role === "giangvien" ? null : (
+            <>
+              <Button
+                onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
+                variant="contained"
+                sx={{ textTransform: "capitalize" }}
+                color="warning"
+              >
+                Cập nhật cấu hình
+              </Button>
+            </>
+          )}
+        </div>
+        <div className={clsx(style.rightWrap)}>
+          <TableContainer
+            component={Paper}
+            className={clsx(style.tablePhanMem)}
+          >
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Tên phần mềm</StyledTableCell>
+                  <StyledTableCell align="right">Phiên bản</StyledTableCell>
+                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {phanMemCaiDat.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.phanMem.tenPhamMem}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.phanMem.phienBan}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {moment(row.ngayCaiDat).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer
+            component={Paper}
+            className={clsx(style.tablePhanMem)}
+          >
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Tên thiết bị</StyledTableCell>
+                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {thietBiLapDat.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.thietBi.tenThietBi}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {moment(row.ngayLapDat).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+
+        <LichSuaChua
+          open={openLichSuaChua}
+          phongMay={mayTinh.phongMay}
+          mayTinh={mayTinh}
+          setOpen={setOpenLichSuaChua}
+        />
+        <CapNhatCauHinh
+          open={openCapNhatCauHinh}
+          setOpen={setOpenCapNhatCauHinh}
+          phanMemCaiDat={phanMemCaiDat}
+          thietBiLapDat={thietBiLapDat}
+          mayTinhId={mayTinh.id}
+          handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
+        />
       </div>
-      <LichSuaChua
-        open={openLichSuaChua}
-        phongMay={mayTinh.phongMay}
-        mayTinh={mayTinh}
-        setOpen={setOpenLichSuaChua}
-      />
-      <CapNhatCauHinh
-        open={openCapNhatCauHinh}
-        setOpen={setOpenCapNhatCauHinh}
-        phanMemCaiDat={phanMemCaiDat}
-        thietBiLapDat={thietBiLapDat}
-        mayTinhId={mayTinh.id}
-        handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
-      />
     </div>
   );
 };
