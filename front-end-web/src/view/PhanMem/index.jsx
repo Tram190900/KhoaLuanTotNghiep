@@ -150,7 +150,7 @@ export default function PhanMem() {
       <PrimarySearchAppBar/>
     
     <div className={clsx(style.phanMem, "p-3")}>
-      <h1>QUẢN LÝ PHẦN MỀM</h1>
+      <h1>Quản lý phần mềm</h1>
       <div className={clsx(style.info)}>
         <FormControl>
           <FormLabel>Tên phần mềm</FormLabel>

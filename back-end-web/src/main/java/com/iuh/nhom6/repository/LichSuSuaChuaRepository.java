@@ -78,11 +78,16 @@ public interface LichSuSuaChuaRepository extends JpaRepository<LichSuSuaChua, Lo
                         "and lich_su_sua_chua.trang_thai = 0", nativeQuery = true)
         List<Map<String, Object>> findLoiChuaSuaByNhanVienAndNgayDuKien(Long nhanVien, Date ngayGapLoi);
 
-        @Query(value = "SELECT * " + 
-                        "FROM computerlab.lich_su_sua_chua " + 
-                        "WHERE lich_su_sua_chua.may_tinh_id = ?1 " + 
-                        "AND lich_su_sua_chua.trang_thai = FALSE " + 
-                        "ORDER BY lich_su_sua_chua.ngay_gap_loi DESC " + 
+        @Query(value = "SELECT * " +
+                        "FROM computerlab.lich_su_sua_chua " +
+                        "WHERE lich_su_sua_chua.may_tinh_id = ?1 " +
+                        "AND lich_su_sua_chua.trang_thai = FALSE " +
+                        "ORDER BY lich_su_sua_chua.ngay_gap_loi DESC " +
                         "LIMIT 1", nativeQuery = true)
         LichSuSuaChua findLoiChuaSuaTheoMayTinhGanNhat(Long mayTinh);
+
+        @Query(value = "select may_tinh.so_may, lich_su_sua_chua.loi_gap_phai, lich_su_sua_chua.ngay_du_kien_sua from computerlab.lich_su_sua_chua "+ 
+                        "Left join computerlab.may_tinh on may_tinh.may_tinh_id = lich_su_sua_chua.may_tinh_id " +
+                        "where lich_su_sua_chua.nhan_vien_id = ?1 and lich_su_sua_chua.trang_thai = 0", nativeQuery = true)
+        List<Map<String, Object>> findLoiChuSuaTheoNhanVien(Long id);
 }

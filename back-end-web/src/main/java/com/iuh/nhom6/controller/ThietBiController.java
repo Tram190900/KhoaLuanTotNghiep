@@ -28,6 +28,7 @@ public class ThietBiController {
                 thietBi -> {
                     thietBi.setTenThietBi(newThietBi.getTenThietBi());
                     thietBi.setSoLuong(newThietBi.getSoLuong());
+                    thietBi.setDonVi(newThietBi.getDonVi());
                     return thietBiRepository.save(thietBi);
                 }
         ).orElseThrow();

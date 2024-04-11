@@ -18,4 +18,5 @@ public class ThietBi implements Serializable {
   private Long id;
   private String tenThietBi;
   private int soLuong;
+  private String donVi;
 }

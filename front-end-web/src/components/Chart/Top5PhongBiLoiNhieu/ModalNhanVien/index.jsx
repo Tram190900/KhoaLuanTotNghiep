@@ -31,23 +31,32 @@ export default function ModalNhanVien(props) {
     }
   };
 
-  const handleCapNhatNhanVienSua = async ()=>{
+  const handleCapNhatNhanVienSua = async () => {
     try {
-        const dt = new FormData()
-        dt.append('nhanVienId', selectNhanVien)
-        const result = await putAPI(`/lichSuSuaChua/updateNhanVienSua/${props.lichSuId}`,dt)
-        if(result.status===200){
-            props.setOpen(false)
-            props.setOpenDetail(false)
-            Swal.fire({
-                icon:'success',
-                text:'Chỉ định nhân viên sửa thành công!!!'
-            })
+      const dt = new FormData();
+      dt.append("nhanVienId", selectNhanVien);
+      const result = await putAPI(
+        `/lichSuSuaChua/updateNhanVienSua/${props.lichSuId}`,
+        dt
+      );
+      if (result.status === 200) {
+        props.setOpen(false);
+        if (props && typeof props.setOpenDetail === "function") {
+          await props.setOpenDetail(false);
         }
+        if (props && typeof props.handleFilterLichSu === "function") {
+          await props.handleFilterLichSu();
+          await props.getNhanVienById(selectNhanVien)
+        }
+        Swal.fire({
+          icon: "success",
+          text: "Chỉ định nhân viên sửa thành công!!!",
+        });
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     getAllNhanVien();
@@ -118,13 +127,13 @@ export default function ModalNhanVien(props) {
             ))}
           </RadioGroup>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button onClick={()=>handleCapNhatNhanVienSua()}>Cập nhật</Button>
+            <Button onClick={() => handleCapNhatNhanVienSua()}>Cập nhật</Button>
             <Button
               color="neutral"
               style={{ marginLeft: "2%" }}
               onClick={() => {
                 setSelectNhanVien(null);
-                props.setOpen(false)
+                props.setOpen(false);
               }}
             >
               Cancel

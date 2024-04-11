@@ -21,9 +21,12 @@ export const MenuContext = createContext(null);
 
 function App() {
   const [menuActive, setMenuActive] = useState("phong-may");
+  const [thongBao, setThongBao] = useState()
   const valueContext = {
     menuActive,
     setMenuActive,
+    thongBao,
+    setThongBao
   };
   return (
     <MenuContext.Provider value={valueContext}>

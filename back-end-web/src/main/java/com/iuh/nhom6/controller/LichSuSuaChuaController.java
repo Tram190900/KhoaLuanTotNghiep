@@ -114,5 +114,14 @@ public class LichSuSuaChuaController {
       }
   }
   
-
+  @GetMapping("/getLoiChuaSuaTheoNhanVien/{id}")
+  public List<Map<String, Object>> getLoiChuaSuaTheoNhanVien(@PathVariable Long id) {
+      try {
+        return lichSuSuaChuaRepository.findLoiChuSuaTheoNhanVien(id);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;// TODO: handle exception
+      }
+  }
+  
 }

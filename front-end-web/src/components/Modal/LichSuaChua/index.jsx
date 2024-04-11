@@ -142,11 +142,25 @@ export default function LichSuaChua(props) {
               </span>
               <FormControl>
                 <FormLabel>Lỗi mắc phải</FormLabel>
-                <Input
+                {/* <Input
                   name="loiGapPhai"
                   onChange={(e) => inputOnChange(e)}
                   placeholder="Lỗi mắc phải..."
-                />
+                /> */}
+                <Select
+                placeholder="Lỗi gặp phải..."
+                onChange={(e, v) =>
+                  setDuLieuInput({ ...duLieuInput, loiGapPhai: v })
+                }
+              >
+                <Option value={"CPU"}>CPU</Option>
+                <Option value={"Chuột"}>Chuột</Option>
+                <Option value={"Bàn phím"}>Bàn phím</Option>
+                <Option value={"Màn hình"}>Màn hình</Option>
+                <Option value={"Điện"}>Điện</Option>
+                <Option value={"Mạng"}>Mạng</Option>
+                <Option value={"Khác..."}>Khác...</Option>
+              </Select>
               </FormControl>
               <FormLabel>Mức độ lỗi</FormLabel>
               <Select

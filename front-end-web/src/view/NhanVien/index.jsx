@@ -118,7 +118,7 @@ export default function NhanVien() {
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/\W/g, ""),
           role: "nhanvien",
-          matKhau: "123456",
+          matKhau: "1111",
           nhanVien: result.data,
         };
         const result2 = await postAPI("/taikhoan/dangKy", tk);
@@ -203,7 +203,7 @@ export default function NhanVien() {
     <>
       <PrimarySearchAppBar/>
       <div className={clsx(style.nhanVien)}>
-        <h1>QUẢN LÝ NHÂN VIÊN</h1>
+        <h1>Quản lý nhân viên</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
             <div className={clsx(style.left_image_wrap)}>

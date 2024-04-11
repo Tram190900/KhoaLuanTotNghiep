@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./monHoc.module.scss";
-import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Sheet,
+  Table,
+  Select,
+  Option,
+} from "@mui/joy";
 import PhanMemSuDung from "../../components/Modal/PhanMemSuDung";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
@@ -15,6 +24,7 @@ export default function MonHoc() {
   const [softwares, setSoftwares] = useState([]);
 
   const [monHoc, setMonHoc] = useState({
+    id:"",
     tenMonHoc: "",
     khoa: "",
   });
@@ -35,7 +45,7 @@ export default function MonHoc() {
   };
 
   const checkData = () => {
-    if (monHoc.tenMonHoc.trim().length > 0 && monHoc.khoa.trim().length > 0) {
+    if (monHoc.tenMonHoc.trim().length > 0) {
       return true;
     } else {
       Swal.fire({
@@ -48,8 +58,12 @@ export default function MonHoc() {
   const addMonHoc = async () => {
     const check = checkData();
     if (check) {
+      const dt = {
+        tenMonHoc: monHoc.tenMonHoc,
+        khoa: monHoc.khoa
+      }
       try {
-        const result = await postAPI("/monHocs", monHoc);
+        const result = await postAPI("/monHocs", dt);
         if (result.status === 200) {
           Swal.fire({
             text: "Thêm mới môn học thành công",
@@ -130,9 +144,9 @@ export default function MonHoc() {
 
   return (
     <div className={clsx(style.wrap)}>
-      <PrimarySearchAppBar/>
+      <PrimarySearchAppBar />
       <div className={clsx(style.monHoc, "p-3")}>
-        <h1>QUẢN LÝ MÔN HỌC</h1>
+        <h1>Quản lý môn học</h1>
         <div className={clsx(style.infoWrap)}>
           <div className={clsx(style.left)}>
             <FormControl>
@@ -146,12 +160,21 @@ export default function MonHoc() {
             </FormControl>
             <FormControl>
               <FormLabel>Khoa</FormLabel>
-              <Input
-                name="khoa"
+              <Select
                 value={monHoc.khoa}
-                onChange={(e) => onInputChange(e)}
-                placeholder="Khoa"
-              />
+                onChange={(e,v)=>{
+                  setMonHoc({...monHoc, khoa: v})
+                }}
+              >
+                <Option value={"Công nghệ thông tin"}>
+                  Công nghệ thông tin
+                </Option>
+                <Option value={"Ngôn ngữ anh"}>Ngôn ngữ anh</Option>
+                <Option value={"Quản trị kinh doanh"}>
+                  Quản trị kinh doanh
+                </Option>
+                <Option value={"Khoa điện, cơ khí"}>Khoa điện, cơ khí</Option>
+              </Select>
             </FormControl>
             <div className={clsx(style.buttonWrap)}>
               <Button onClick={() => addMonHoc()}>Thêm mới</Button>
@@ -203,11 +226,12 @@ export default function MonHoc() {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colSpan={2} style={{ textAlign: "center" }}>
+                    <td colSpan={2} style={{ textAlign: "center"}}>
                       <Button
                         onClick={() => setOpenCapNhatMonHoc(!openCapNhatMonHoc)}
+                        style={{margin:'0px'}}
                       >
-                        Cập nhật
+                        Cập nhật môn học
                       </Button>
                     </td>
                   </tr>
@@ -230,7 +254,11 @@ export default function MonHoc() {
               {monHocs?.map((item, index) => (
                 <tr
                   onClick={() => {
-                    setMonHoc(item);
+                    setMonHoc({
+                      id: item.id,
+                      tenMonHoc: item.tenMonHoc,
+                      khoa: item.khoa
+                    });
                     setSoftwares(item.phanMems);
                   }}
                   key={index}

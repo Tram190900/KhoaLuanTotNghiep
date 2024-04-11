@@ -64,7 +64,7 @@ export default function LichSuSuaChua() {
       dt.append("trangThai", duLieuVao.trangThai);
       const result = await postAPI("/chiTietLichSuSuaChua/filterLichSuLoi", dt);
       if (result.status === 200) {
-        setChiTietLichSuSuaChuas(result.data);
+        await setChiTietLichSuSuaChuas(result.data);
       }
     } catch (error) {
       console.log(error);
@@ -277,23 +277,10 @@ export default function LichSuSuaChua() {
     }
   };
 
-  useEffect(() => {
-    if (openCapNhapNhanVien === false) {
-      if (selectMayTinh) {
-        xemDanhSachChiTietLichSuSuaChua(selectMayTinh.soMay);
-      } else if (selectPhongMay) {
-        xemDanhSachChiTietLichSuSuaChuTheoPhong(selectPhongMay.id);
-      }
-    }
-  }, [openCapNhapNhanVien]);
-
-  console.log(chiTietLichSuSuaChua);
-
-  console.log(giangVien);
 
   return (
     <>
-      <PrimarySearchAppBar/>
+      <PrimarySearchAppBar />
       <div className={clsx(style.lichSuSuaChua, "p-3")}>
         <h1>Lịch sửa báo lỗi</h1>
         <div className={clsx(style.infoWrap)}>
@@ -536,16 +523,18 @@ export default function LichSuSuaChua() {
           </Table>
         </Sheet>
       </div>
-      <CapNhapNhanVienCTLSSC
+      {/* <CapNhapNhanVienCTLSSC
         open={openCapNhapNhanVien}
         setOpen={setOpenCapNhapNhanVien}
         chiTietLichSuSuaChua={chiTietLichSuSuaChua}
-      />
+      /> */}
       <ModalNhanVien
         open={openCapNhapNhanVien}
         setOpen={setOpenCapNhapNhanVien}
         lichSuId={chiTietLichSuSuaChua.id}
         soMay={chiTietLichSuSuaChua.so_may}
+        handleFilterLichSu={handleFilterLichSu}
+        getNhanVienById={getNhanVienById}
       />
     </>
   );
