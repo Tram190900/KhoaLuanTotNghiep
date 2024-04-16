@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.LoaiPhong;
-import com.iuh.nhom6.model.MayTinh;
+import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.model.PhongMay;
 import com.iuh.nhom6.model.ToaNha;
 import com.iuh.nhom6.repository.LoaiPhongRepository;
+import com.iuh.nhom6.repository.NhanVienRepository;
 import com.iuh.nhom6.repository.PhongMayRepository;
 import com.iuh.nhom6.repository.ToaNhaRepository;
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
@@ -36,9 +35,13 @@ public class PhongMayController {
   @Autowired
   private ToaNhaRepository toaNhaRepository;
 
+  @Autowired
+  private NhanVienRepository nhanVienRepository;
+
   @PostMapping("/savePhongMay")
   public PhongMay savePhongMay(@RequestBody PhongMay phongMay) {
     LoaiPhong loaiPhong = phongMay.getLoaiPhong();
+    NhanVien nhanVien = nhanVienRepository.findById(phongMay.getNhanVien().getId()).get();
     try {
       loaiPhongRepository.save(loaiPhong);
       return phongMayRepository.save(phongMay);
@@ -47,6 +50,7 @@ public class PhongMayController {
           .findByTenLoaiPhongAndSoLuongMay(loaiPhong.getTenLoaiPhong(),
               loaiPhong.getSoLuongMay());
       phongMay.setLoaiPhong(loaiPhong);
+      phongMay.setNhanVien(nhanVien);
       return phongMayRepository.save(phongMay);
     }
   }
@@ -68,6 +72,7 @@ public class PhongMayController {
           phongMay.setSoPhong(newPhongMay.getSoPhong());
           phongMay.setToaNha(newPhongMay.getToaNha());
           phongMay.setLoaiPhong(newPhongMay.getLoaiPhong());
+          phongMay.setNhanVien(newPhongMay.getNhanVien());
           try {
             loaiPhongRepository.save(newPhongMay.getLoaiPhong());
             return phongMayRepository.save(phongMay);

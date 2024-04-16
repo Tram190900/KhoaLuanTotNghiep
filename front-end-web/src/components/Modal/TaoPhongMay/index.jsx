@@ -32,13 +32,15 @@ const TaoPhongMay = (props) => {
   const [dsPhanMemChon, setDsPhanMemChon] = useState([]);
   const [dsThietBiChon, setDsThietBiChon] = useState([]);
   const [toaNha, setToaNha] = useState([]);
+  const [dsNhanVien, setdsNhanVien] = useState([])
   // const [dsMayTinhCapNhap, setDanhSachMayTinhCapNhap] = useState([]);
   const [duLieuVao, setDuLieuVao] = useState({
     soPhong: "",
     tenLoaiPhong: "",
     soLuongMay: "",
+    nhanVien: {}
   });
-
+console.log(duLieuVao);
   const layThongTinToaNha = async () => {
     const result = await getAPI(`/toanha/${props.toaNha_id}`);
     if (result.status === 200) {
@@ -60,9 +62,17 @@ const TaoPhongMay = (props) => {
     }
   };
 
+  const xemDanhSachNhanVien = async () =>{
+    const result = await getAPI('getAllNhanVien')
+    if(result.status===200){
+      setdsNhanVien(result.data)
+    }
+  }
+
   useEffect(() => {
     xemDanhSachPhanMem();
     xemDanhSachThietBi();
+    xemDanhSachNhanVien();
     layThongTinToaNha();
   }, []);
 
@@ -126,6 +136,7 @@ const TaoPhongMay = (props) => {
           tenLoaiPhong: duLieuVao.tenLoaiPhong,
           soLuongMay: duLieuVao.soLuongMay,
         },
+        nhanVien: duLieuVao.nhanVien
       };
       await postAPI("/savePhongMay", phongMay);
       await luuMayTinh().then((comment) => {
@@ -219,6 +230,7 @@ const TaoPhongMay = (props) => {
         tenLoaiPhong: duLieuVao.tenLoaiPhong,
         soLuongMay: duLieuVao.soLuongMay,
       },
+      nhanVien: duLieuVao.nhanVien
     };
     try {
       const result = await putAPI(
@@ -290,6 +302,7 @@ const TaoPhongMay = (props) => {
     props.setOpen(false);
   };
 
+
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
       <ModalDialog sx={{ padding: "20px" }}>
@@ -338,6 +351,28 @@ const TaoPhongMay = (props) => {
                   id="outlined-required"
                   label="Số lượng máy"
                 />
+              </FormControl>
+            </Grid>
+            <Grid xs={12}>
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Nhân viên phụ trách
+                </InputLabel>
+                <Select
+                  defaultValue=""
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="NhanVien"
+                  onChange={(e,v)=>{
+                    setDuLieuVao({...duLieuVao, nhanVien:{id: v.props.value}})
+                  }}
+                >
+                  {
+                    dsNhanVien?.map((item,index)=>(
+                      <MenuItem value={item.id} key={index}>{item.hoTenNhanVien}</MenuItem>
+                    ))
+                  }
+                </Select>
               </FormControl>
             </Grid>
             <Grid xs={12}>

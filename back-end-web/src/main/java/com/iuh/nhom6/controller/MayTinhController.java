@@ -3,12 +3,10 @@ package com.iuh.nhom6.controller;
 import java.util.List;
 
 import com.iuh.nhom6.model.PhongMay;
-import com.iuh.nhom6.model.ToaNha;
 import com.iuh.nhom6.repository.PhongMayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,13 +31,6 @@ public class MayTinhController {
   @PostMapping("/saveMayTinh")
   public ResponseEntity<?> saveMayTinh(@RequestBody MayTinh mayTinh) {
     PhongMay phongMay = phongMayRepository.findPhongMayBySoPhong(mayTinh.getPhongMay().getSoPhong());
-    /* if(phongMay==null){
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Phòng này không tồn tại !");
-    }
-    MayTinh checkExitSoMay = mayTinhRepository.findMayTinhBySoMayContainingIgnoreCase(mayTinh.getSoMay());
-    if(checkExitSoMay!=null){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số máy này đã tồn tại");
-    } */
 
     mayTinh.setPhongMay(phongMay);
     MayTinh savedMayTinh = mayTinhRepository.save(mayTinh);

@@ -31,6 +31,7 @@ export default function LichSuaChua(props) {
   const [selectNhanVien, setSelectNhanVien] = useState();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
+
   const inputOnChange = (e) => {
     setDuLieuInput({ ...duLieuInput, [e.target.name]: e.target.value });
   };
@@ -81,35 +82,12 @@ export default function LichSuaChua(props) {
     }
   };
 
-  const getNhanVienTruc = async () => {
-    try {
-      const dt = new FormData();
-      dt.append(
-        "ngayTruc",
-        moment(duLieuInput.ngayDuKienSua).format("YYYY-MM-DD")
-      );
-      dt.append("phongTruc", props.phongMay?.id);
-      const result = await postAPI("/getNhanVienTheoCaTruc", dt);
-      if (result.status === 200 && result.data) {
-        setSelectNhanVien(result.data.id);
-      } else {
-        setSelectNhanVien(null);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     if (props.open) {
       getAllNhanVien();
-      getNhanVienTruc();
+      setSelectNhanVien(props.phongMay?.nhanVien.id)
     }
   }, [props.open]);
-
-  useEffect(() => {
-    getNhanVienTruc();
-  }, [duLieuInput.ngayDuKienSua]);
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>

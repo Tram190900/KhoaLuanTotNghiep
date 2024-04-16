@@ -2,13 +2,9 @@ package com.iuh.nhom6.controller;
 
 import com.iuh.nhom6.model.ChiTietCaiDat;
 import com.iuh.nhom6.model.ChiTietCaiDatPK;
-import com.iuh.nhom6.model.ChiTietLapDatPK;
-import com.iuh.nhom6.model.LoaiPhong;
 import com.iuh.nhom6.model.MayTinh;
-import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.ChiTietCaiDatRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;
-import com.iuh.nhom6.repository.PhanMemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +15,6 @@ import java.util.List;
 public class ChiTietCaiDatController {
     @Autowired
     private ChiTietCaiDatRepository chiTietCaiDatRepository;
-    @Autowired
-    private PhanMemRepository phanMemRepository;
     @Autowired
     private MayTinhRepository mayTinhRepository;
 

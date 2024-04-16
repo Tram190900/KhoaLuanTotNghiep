@@ -1,7 +1,6 @@
 package com.iuh.nhom6.repository;
 
 import com.iuh.nhom6.model.PhongMay;
-import com.iuh.nhom6.model.ToaNha;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

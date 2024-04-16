@@ -30,6 +30,10 @@ public class PhongMay implements Serializable {
   @JoinColumn(name = "loaiPhong_id")
   private LoaiPhong loaiPhong;
 
+  @ManyToOne
+  @JoinColumn(name = "nhanVien_id")
+  private NhanVien nhanVien;
+
   @JsonIgnore
   @OneToMany(mappedBy = "phongMay",cascade = CascadeType.ALL)
   private List<MayTinh> mayTinhs;

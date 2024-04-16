@@ -2,10 +2,8 @@ package com.iuh.nhom6.controller;
 
 import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.repository.NhanVienRepository;
-import com.iuh.nhom6.util.AWSCloudUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

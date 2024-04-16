@@ -10,9 +10,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 @Entity
 @Transactional
 @Data
