@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./thietBi.module.scss";
-import { Button, FormControl, FormLabel, Input, Sheet, Table } from "@mui/joy";
+import { Button, FormControl, FormLabel, Input, Option, Select, Sheet, Table } from "@mui/joy";
 import { getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
 import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
@@ -10,6 +10,7 @@ export default function ThietBi() {
   const [allThietBi, setAllThietBi] = useState([]);
   const [tenThietBi, setTenThietBi] = useState("");
   const [soLuong, setSoLuong] = useState();
+  const [donVi, setDonVi] = useState();
   const [thietBiId, setThietBiId] = useState("");
   useEffect(() => {
     handleGetAllThietBi();
@@ -62,6 +63,7 @@ export default function ThietBi() {
         const data = {
           tenThietBi: tenThietBi,
           soLuong: soLuong,
+          donVi: donVi
         };
         const result = await putAPI(`/updateThietBi/${thietBiId}`, data);
         if (result.status === 200) {
@@ -101,6 +103,23 @@ export default function ThietBi() {
               onChange={(e) => setSoLuong(e.target.value)}
             />
           </FormControl>
+          <FormControl>
+              <FormLabel>Đơn vị</FormLabel>
+              <Select
+                value={donVi}
+                onChange={(e,v)=>{
+                  setSoLuong(v)
+                }}
+              >
+                <Option value={"Cái"}>
+                  Cái
+                </Option>
+                <Option value={"Thùng"}>Thùng</Option>
+                <Option value={"Mét"}>
+                  Mét
+                </Option>
+              </Select>
+            </FormControl>
         </div>
       </div>
       <div className={clsx(style.buttonWrap)}>
@@ -120,6 +139,7 @@ export default function ThietBi() {
               <th>Id</th>
               <th>Tên thiết bị</th>
               <th>Số lượng</th>
+              <th>Đơn vị</th>
             </tr>
           </thead>
           <tbody>
@@ -130,11 +150,13 @@ export default function ThietBi() {
                   setTenThietBi(item.tenThietBi);
                   setSoLuong(item.soLuong);
                   setThietBiId(item.id);
+                  setDonVi(item.donVi);
                 }}
               >
                 <td>{item.id}</td>
                 <td>{item.tenThietBi}</td>
                 <td>{item.soLuong}</td>
+                <td>{item.donVi}</td>
               </tr>
             ))}
           </tbody>
