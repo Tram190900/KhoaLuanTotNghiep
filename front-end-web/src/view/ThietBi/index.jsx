@@ -39,6 +39,7 @@ export default function ThietBi() {
       const data = {
         tenThietBi: tenThietBi,
         soLuong: soLuong,
+        donVi: donVi
       };
       try {
         const result = await postAPI("/saveThietBi", data);
@@ -108,7 +109,7 @@ export default function ThietBi() {
               <Select
                 value={donVi}
                 onChange={(e,v)=>{
-                  setSoLuong(v)
+                  setDonVi(v)
                 }}
               >
                 <Option value={"Cái"}>
