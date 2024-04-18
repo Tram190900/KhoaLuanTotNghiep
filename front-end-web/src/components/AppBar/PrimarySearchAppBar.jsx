@@ -338,6 +338,7 @@ export default function PrimarySearchAppBar() {
                   onClick={() => {
                     if (setting === "Logout") {
                       navigate("/login");
+                      localStorage.removeItem('user')
                     }
                   }}
                 >

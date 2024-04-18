@@ -22,7 +22,7 @@ export default function Login() {
       const result = await getAPI(`/taikhoan/${tenTK}`);
       if (result.status === 200) {
         localStorage.setItem('user', JSON.stringify(result.data));
-        navigate("/quan-ly-phong-may");
+        navigate("/");
       }
     } catch (error) {
       Swal.fire({
@@ -127,7 +127,7 @@ export default function Login() {
     //     <form
     //       onSubmit={(e) => {
     //         e.preventDefault();
-    //         navigate("/quan-ly-phong-may");
+    //         navigate("/");
     //       }}
     //     >
     //       <Input

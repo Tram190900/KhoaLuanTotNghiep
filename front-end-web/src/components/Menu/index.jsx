@@ -7,13 +7,11 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Link } from "@mui/joy";
 
 export default function Menu() {
   const menu = useContext(MenuContext);
@@ -24,7 +22,7 @@ export default function Menu() {
       <div
         onClick={() => {
           menu.setMenuActive("phong-may");
-          navigate("/quan-ly-phong-may");
+          navigate("/");
         }}
         className={clsx(
           style.menuItem,
@@ -148,9 +146,6 @@ export default function Menu() {
           </div>
         </>
       )}
-      <Link className={clsx(style.logout)} href={"/login"}>
-        <LogoutIcon sx={{ fontSize: 40 }} />
-      </Link>
     </div>
   );
 }

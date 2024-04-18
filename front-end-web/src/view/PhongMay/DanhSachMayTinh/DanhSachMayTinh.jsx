@@ -75,15 +75,15 @@ const DanhSachMayTinh = () => {
       <div className="p-3">
         <h1>Quản lý phòng máy</h1>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+          <Link underline="hover" color="inherit" href="/">
             Quản lý phòng máy
           </Link>
-          <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+          <Link underline="hover" color="inherit" href="/">
             Tòa nhà
           </Link>
           <Link
             onClick={() => {
-              navigate("/quan-ly-phong-may/danhsachphongmay", {
+              navigate("/danhsachphongmay", {
                 state: {
                   toaNha_id: location.state.toaNha_id,
                   tenToaNha: location.state.toaNha,
@@ -120,7 +120,7 @@ const DanhSachMayTinh = () => {
                   <div className={clsx(style.wrapMayTinh)}>
                     <button
                       onClick={() => {
-                        navigate("/quan-ly-phong-may/thongtinmaytinh", {
+                        navigate("/thongtinmaytinh", {
                           state: {
                             mayTinh: mayTinh,
                           },
@@ -154,7 +154,7 @@ const DanhSachMayTinh = () => {
                   <div className={clsx(style.wrapMayTinh)}>
                     <button
                       onClick={() => {
-                        navigate("/quan-ly-phong-may/thongtinmaytinh", {
+                        navigate("/thongtinmaytinh", {
                           state: {
                             mayTinh: mayTinh,
                           },
@@ -183,7 +183,7 @@ const DanhSachMayTinh = () => {
                   <div className={clsx(style.wrapMayTinh, style.buttonSua)}>
                     <button
                       onClick={() => {
-                        navigate("/quan-ly-phong-may/thongtinmaytinh", {
+                        navigate("/thongtinmaytinh", {
                           state: {
                             mayTinh: mayTinh,
                           },
@@ -212,7 +212,7 @@ const DanhSachMayTinh = () => {
                   <div className={clsx(style.wrapMayTinh)}>
                     <button
                       onClick={() => {
-                        navigate("/quan-ly-phong-may/thongtinmaytinh", {
+                        navigate("/thongtinmaytinh", {
                           state: {
                             mayTinh: mayTinh,
                           },

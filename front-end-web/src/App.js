@@ -16,17 +16,18 @@ import LichSuSuaChua from "./view/LichSuSuaChua";
 import ThongKe from "./view/ThongKe";
 import ThongTinMayTinh from "./view/PhongMay/ThongTinMayTinh/ThongTinMayTinh";
 import LichTruc from "./view/LichTruc";
+import ProtectedRouter from "./layout/ProtectedRouter";
 
 export const MenuContext = createContext(null);
 
 function App() {
   const [menuActive, setMenuActive] = useState("phong-may");
-  const [thongBao, setThongBao] = useState()
+  const [thongBao, setThongBao] = useState();
   const valueContext = {
     menuActive,
     setMenuActive,
     thongBao,
-    setThongBao
+    setThongBao,
   };
   return (
     <MenuContext.Provider value={valueContext}>
@@ -34,7 +35,14 @@ function App() {
         <Routes>
           <Route path="/" element={<LayoutLogin />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/quan-ly-phong-may" element={<LayoutMain />}>
+            <Route
+              path="/"
+              element={
+                <ProtectedRouter>
+                  <LayoutMain />
+                </ProtectedRouter>
+              }
+            >
               <Route index element={<PhongMay />}></Route>
               <Route path="danhsachphongmay" element={<DanhSachPhongMay />} />
               <Route path="danhsachmaytinh" element={<DanhSachMayTinh />} />
@@ -46,7 +54,7 @@ function App() {
               <Route path="nhan-vien" element={<NhanVien />} />
               <Route path="lich-su-sua-chua" element={<LichSuSuaChua />} />
               <Route path="thong-ke" element={<ThongKe />} />
-              <Route path="lich-truc" element={<LichTruc/>}/>
+              <Route path="lich-truc" element={<LichTruc />} />
             </Route>
           </Route>
         </Routes>

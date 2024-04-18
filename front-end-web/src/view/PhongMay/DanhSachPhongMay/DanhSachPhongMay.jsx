@@ -121,10 +121,10 @@ export default function DanhSachPhongMay(props) {
         <div className={clsx(Style.h4)}>
           <h1>Quản lý phòng máy</h1>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+            <Link underline="hover" color="inherit" href="/">
               Quản lý phòng máy
             </Link>
-            <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+            <Link underline="hover" color="inherit" href="/">
               Tòa nhà
             </Link>
             <Typography color="text.primary">
@@ -194,7 +194,7 @@ export default function DanhSachPhongMay(props) {
             <Card variant="outlined">
               <CardContent sx={{ cursor: "pointer" }}
               onDoubleClick={() => {
-                navigate("/quan-ly-phong-may/danhsachmaytinh", {
+                navigate("/danhsachmaytinh", {
                   state: {
                     phongMay_id: phongMay.id,
                     soPhong: phongMay.soPhong,
@@ -323,7 +323,7 @@ export default function DanhSachPhongMay(props) {
 {
   /* <Button
 onDoubleClick={() => {
-  navigate("/quan-ly-phong-may/danhsachmaytinh", {
+  navigate("/danhsachmaytinh", {
     state: {
       phongMay_id: phongMay.id,
       soPhong: phongMay.soPhong,

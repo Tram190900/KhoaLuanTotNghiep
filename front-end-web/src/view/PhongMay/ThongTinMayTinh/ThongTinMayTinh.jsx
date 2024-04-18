@@ -132,14 +132,14 @@ const ThongTinMayTinh = () => {
       <div className={clsx(style.wrap)}>
         <h1>Thông tin máy tính</h1>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
+          <Link underline="hover" color="inherit" to="/">
             Quản lý phòng máy
           </Link>
-          <Link underline="hover" color="inherit" to="/quan-ly-phong-may">
+          <Link underline="hover" color="inherit" to="/">
             Tòa nhà
           </Link>
           {/*         <Link onClick={() => {
-            navigate("/quan-ly-phong-may/danhsachphongmay", {
+            navigate("/danhsachphongmay", {
               state: {
                 toaNha_id: mayTinh.phongMay.toaNha.id,
                 tenToaNha: mayTinh.phongMay.toaNha,
@@ -150,7 +150,7 @@ const ThongTinMayTinh = () => {
         </Link> */}
           <Button
             onClick={() => {
-              navigate("/quan-ly-phong-may/danhsachphongmay", {
+              navigate("/danhsachphongmay", {
                 state: {
                   toaNha_id: mayTinh.phongMay.toaNha.id,
                   tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
@@ -162,7 +162,7 @@ const ThongTinMayTinh = () => {
           </Button>
           <Button
             onClick={() => {
-              navigate("/quan-ly-phong-may/danhsachmaytinh", {
+              navigate("/danhsachmaytinh", {
                 state: {
                   phongMay_id: mayTinh.phongMay.id,
                   soPhong: mayTinh.phongMay.soPhong,

@@ -43,7 +43,7 @@ export default function PhongMay(props) {
           aria-label="breadcrumb"
           onClick={() => menu.setMenuActive("phong-may")}
         >
-          <Link underline="hover" color="inherit" href="/quan-ly-phong-may">
+          <Link underline="hover" color="inherit" href="/">
             Quản lý phòng máy
           </Link>
           <Typography color="text.primary">Tòa nhà</Typography>
@@ -60,7 +60,7 @@ export default function PhongMay(props) {
                 <Button
                   className={clsx(style.button)}
                   onDoubleClick={() => {
-                    navigate("/quan-ly-phong-may/danhsachphongmay", {
+                    navigate("/danhsachphongmay", {
                       state: {
                         toaNha_id: toaNha.id,
                         tenToaNha: toaNha.tenToaNha,
@@ -98,7 +98,7 @@ export default function PhongMay(props) {
     sx={{fontSize:'20px'}}
       endIcon={<BusinessIcon />}
       onClick={() => {
-        navigate("/quan-ly-phong-may/danhsachphongmay", {
+        navigate("/danhsachphongmay", {
           state: {
             toaNha_id: toaNha.id,
             tenToaNha: toaNha.tenToaNha,

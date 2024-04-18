@@ -198,7 +198,6 @@ export default function NhanVien() {
       handleGetChamCongByNgayTruc();
     }
   }, [startDate, endDate]);
-  console.log(imageURL);
   return (
     <>
       <PrimarySearchAppBar/>
@@ -210,8 +209,8 @@ export default function NhanVien() {
               <Avatar
                 src={
                   imageURL
-                    ? imageURL
-                    : "https://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png"
+                    ? `http://localhost:8080/${imageURL}`
+                    : "logo192.png"
                 }
                 alt="avatar"
                 sx={{
@@ -393,7 +392,7 @@ export default function NhanVien() {
                     setSDT(item.sdt);
                     setTrangThai(item.trangThai);
                     setNhanVienId(item.id);
-                    setImageURL(`http://localhost:8080/${item.image}`);
+                    setImageURL(item.image);
                     handleGetCaTrucByNhanVien(item.id);
                   }}
                 >
