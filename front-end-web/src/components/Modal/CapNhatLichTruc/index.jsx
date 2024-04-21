@@ -12,13 +12,14 @@ import {
   Option,
   Select,
 } from "@mui/joy";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getAPI, postAPI } from "../../../api";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Swal from "sweetalert2";
 import { DateCalendar } from "@mui/x-date-pickers";
+import { MenuContext } from "../../../App";
 
 export default function CapNhatLichTruc(props) {
   const [phongTruc, setPhongTruc] = useState([]);
@@ -26,6 +27,7 @@ export default function CapNhatLichTruc(props) {
   const [allToaNha, setAllToaNha] = useState();
   const [toaNha, setToaNha] = useState("");
   const [ngayTruc, setNgayTruc] = useState(dayjs(Date.now()));
+  const menu = useContext(MenuContext);
 
   useEffect(() => {
     if (props.open) {
@@ -91,18 +93,18 @@ export default function CapNhatLichTruc(props) {
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
-      <ModalDialog className="w-50">
+      <ModalDialog>
         <ModalClose />
         <DialogTitle>Cập nhật lịch trực</DialogTitle>
         <DialogContent>
-          <div className="d-flex justify-content-between">
+          <div className={menu.isPhone ? "d-flex-column":"d-flex justify-content-between"}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 value={ngayTruc}
                 onChange={(newValue) => setNgayTruc(newValue)}
               />
             </LocalizationProvider>
-            <div className="w-50">
+            <div style={{width: menu.isPhone?'100%':'50%'}}>
               <FormControl>
                 <FormLabel>Tòa nhà</FormLabel>
                 <Select

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import style from "./thongKe.module.scss";
 import clsx from "clsx";
 import { Card, CardContent, Option, Select, Typography } from "@mui/joy";
@@ -11,6 +11,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { MenuContext } from "../../App";
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();
@@ -21,6 +22,7 @@ export default function ThongKe() {
   const [allToaNha, setAllToaNha] = useState([]);
   const [selectToaNha, setSelectToaNha] = useState(1);
   const [trangThai, setTrangThai] = useState(false);
+  const menu = useContext(MenuContext);
 
   const [top5PhongBiLoiNhieu, setTop5PhongLoiNhieu] = useState();
   const [phanTramMucDoLoi, setPhanTramMucDoLoi] = useState();
@@ -137,8 +139,8 @@ export default function ThongKe() {
           </CardContent>
         </Card>
       </div>
-      <div className="d-flex w-100">
-        <Card className={clsx(style.barChart)}>
+      <div style={{display:'flex', flexDirection:menu.isPhone?'column':'row'}}>
+        <Card className={clsx(style.barChart, menu.isPhone ? style.isPhone : "")}>
           <CardContent>
             <span className="d-flex-column align-items-center">
               <b>Thống kê số lỗi đang gặp phải &nbsp;</b>
@@ -186,7 +188,7 @@ export default function ThongKe() {
             />
           </CardContent>
         </Card>
-        <Card className={clsx(style.pieChart)}>
+        <Card className={clsx(style.pieChart, menu.isPhone ? style.isPhone : "")}>
           <CardContent>
             <b>Phần trăm mức độ lỗi gặp phải trong năm nay</b>
             <PhanTramMucDoLoi data={phanTramMucDoLoi} />

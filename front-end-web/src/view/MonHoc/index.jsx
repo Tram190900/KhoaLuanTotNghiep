@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./monHoc.module.scss";
 import { FormControl, FormLabel, Input, Sheet, Select, Option } from "@mui/joy";
@@ -14,6 +14,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
+import { MenuContext } from "../../App";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,6 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function MonHoc() {
+  const menu = useContext(MenuContext);
   const [openCapNhatMonHoc, setOpenCapNhatMonHoc] = useState(false);
 
   const [monHocs, setMonHocs] = useState([]);
@@ -164,8 +166,8 @@ export default function MonHoc() {
   return (
     <div className={clsx(style.monHoc, "p-3")}>
       <h1>Quản lý môn học</h1>
-      <div className={clsx(style.infoWrap, "pb-3")}>
-        <div className={clsx(style.left)}>
+      <div className={clsx(style.infoWrap, menu.isPhone ? style.isPhone:'',"pb-3")}>
+        <div className={clsx(style.left, menu.isPhone ? style.isPhone:'')}>
           <FormControl>
             <FormLabel>Tên môn học</FormLabel>
             <Input
@@ -221,54 +223,52 @@ export default function MonHoc() {
             </Button>
           </div>
         </div>
-        <div className={clsx(style.right)}>
-          <Sheet id={"scroll-style-01"}>
+        <div className={clsx(style.right, menu.isPhone ? style.isPhone:'')}>
+          <TableContainer component={Paper} style={{ height: "100%" }}>
             <strong>Phân mềm được sử dụng</strong>
-            <TableContainer
-              component={Paper}
+            <Table
+              stickyHeader
+              aria-label="customized table"
+              className={style.rightTable}
             >
-              <Table aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Tên phần mềm</StyledTableCell>
-                    <StyledTableCell>Phiên bản</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {softwares?.map((row, index) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell component="th" scope="row">
-                        {row.tenPhamMem}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.phienBan}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                  <StyledTableRow>
-                    <StyledTableCell
-                      colSpan={2}
-                      style={{ textAlign: "center" }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ textTransform: "capitalize" }}
-                        color="warning"
-                        onClick={() => setOpenCapNhatMonHoc(!openCapNhatMonHoc)}
-                      >
-                        Cập nhật môn học
-                      </Button>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Tên phần mềm</StyledTableCell>
+                  <StyledTableCell>Phiên bản</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {softwares?.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {row.tenPhamMem}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row.phienBan}
                     </StyledTableCell>
                   </StyledTableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Sheet>
+                ))}
+                <StyledTableRow>
+                  <StyledTableCell colSpan={2} style={{ textAlign: "center" }}>
+                    <Button
+                      variant="contained"
+                      sx={{ textTransform: "capitalize" }}
+                      color="warning"
+                      onClick={() => setOpenCapNhatMonHoc(!openCapNhatMonHoc)}
+                    >
+                      Cập nhật môn học
+                    </Button>
+                  </StyledTableCell>
+                </StyledTableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* </Sheet> */}
         </div>
       </div>
 
       <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
-        <Table aria-label="customized table">
+        <Table stickyHeader aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Id</StyledTableCell>

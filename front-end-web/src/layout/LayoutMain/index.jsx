@@ -2,9 +2,9 @@ import clsx from "clsx";
 import React, { useContext } from "react";
 import style from "./layoutMain.module.scss";
 import Menu from "../../components/Menu";
-import { MenuContext } from "../../App";
 import { Outlet } from "react-router-dom";
 import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { MenuContext } from "../../App";
 
 export default function LayoutMain() {
   const menu = useContext(MenuContext);
@@ -14,10 +14,10 @@ export default function LayoutMain() {
         <PrimarySearchAppBar/>
       </div>
       <div className={clsx(style.wrap)}>
-        <div className={clsx(style.menuContainer)}>
+        <div className={clsx(style.menuContainer, menu.isPhone ? style.none : "" )}>
           <Menu />
         </div>
-        <div className={clsx(style.screenContainer)}>
+        <div className={clsx(style.screenContainer , menu.isPhone ? style.none : "" )}>
           <Outlet></Outlet>
         </div>
       </div>

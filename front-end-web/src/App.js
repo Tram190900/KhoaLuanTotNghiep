@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./view/Login";
 import LayoutLogin from "./layout/LayoutLogin";
 import LayoutMain from "./layout/LayoutMain";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import DanhSachPhongMay from "./view/PhongMay/DanhSachPhongMay/DanhSachPhongMay";
 import DanhSachMayTinh from "./view/PhongMay/DanhSachMayTinh/DanhSachMayTinh";
 import PhongMay from "./view/PhongMay";
@@ -23,12 +23,27 @@ export const MenuContext = createContext(null);
 function App() {
   const [menuActive, setMenuActive] = useState("phong-may");
   const [thongBao, setThongBao] = useState();
+  const [isPhone, setIsPhone] = useState(false)
   const valueContext = {
     menuActive,
     setMenuActive,
     thongBao,
     setThongBao,
+    isPhone,
+    setIsPhone
   };
+  useEffect(() => {
+    const handleResize = () => {
+      setIsPhone(window.innerWidth <= 992);
+    };
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <MenuContext.Provider value={valueContext}>
       <BrowserRouter>

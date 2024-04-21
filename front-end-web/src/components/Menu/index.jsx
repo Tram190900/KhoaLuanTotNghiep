@@ -99,8 +99,21 @@ export default function Menu() {
                 )}
               >
                 <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
-                Quản lý nhân viên - Chấm công
+                Quản lý nhân viên
               </div>
+              {/* <div
+                onClick={() => {
+                  menu.setMenuActive("giang-vien");
+                  navigate("giang-vien");
+                }}
+                className={clsx(
+                  style.menuItem,
+                  menu.menuActive === "giang-vien" ? style.active : ""
+                )}
+              >
+                <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
+                Quản lý giảng viên
+              </div> */}
             </>
           ) : (
             <div

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./lichSuSuaChua.module.scss";
 import {
@@ -24,6 +24,7 @@ import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
+import { MenuContext } from "../../App";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,6 +50,7 @@ export default function LichSuSuaChua() {
   const user = JSON.parse(localStorage.getItem("user"));
   const date = new Date();
   const defaultValue = date.toLocaleDateString("en-CA");
+  const menu = useContext(MenuContext);
 
   const [openCapNhapNhanVien, setOpenCapNhapNhanVien] = useState(false);
   const [chiTietLichSuSuaChuas, setChiTietLichSuSuaChuas] = useState([]);
@@ -306,8 +308,8 @@ export default function LichSuSuaChua() {
   return (
     <div className={clsx(style.lichSuSuaChua, "p-3")}>
       <h1>Lịch sửa báo lỗi</h1>
-      <div className={clsx(style.infoWrap)}>
-        <div className={clsx(style.left)}>
+      <div className={clsx(style.infoWrap, menu.isPhone ? style.isPhone : "")}>
+        <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className="d-flex">
             <FormControl className="w-50">
               <FormLabel>Tòa nhà</FormLabel>
@@ -399,7 +401,7 @@ export default function LichSuSuaChua() {
             />
           </FormControl>
         </div>
-        <div className={clsx(style.right)}>
+        <div className={clsx(style.right, menu.isPhone ? style.isPhone : "")}>
           <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
             <TableContainer>
               <Table aria-label="customized table">
@@ -486,90 +488,83 @@ export default function LichSuSuaChua() {
           Báo hỏng
         </Button>
       </div>
-      <Sheet id={"scroll-style-01"} className={style.tableLSL}>
-        <TableContainer component={Paper}>
-          <Table aria-label="customized table">
-            <TableHead>
-              <StyledTableRow>
-                <StyledTableCell>Máy tính</StyledTableCell>
-                <StyledTableCell>Lỗi gặp phải</StyledTableCell>
-                <StyledTableCell>Ngày gặp lỗi</StyledTableCell>
-                <StyledTableCell>Ngày dự kiến sửa</StyledTableCell>
-                <StyledTableCell>Ngày sửa thực tế</StyledTableCell>
-                <StyledTableCell>Mức độ</StyledTableCell>
-                <StyledTableCell>Trạng thái</StyledTableCell>
-                <StyledTableCell>Ghi chú</StyledTableCell>
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {chiTietLichSuSuaChuas.map((item, index) => {
-                return (
-                  <StyledTableRow
+      <TableContainer component={Paper} className={clsx(style.tableLSL, menu.isPhone ? style.isPhone : '')}>
+        <Table stickyHeader aria-label="customized table">
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell>Máy tính</StyledTableCell>
+              <StyledTableCell>Lỗi gặp phải</StyledTableCell>
+              <StyledTableCell>Ngày gặp lỗi</StyledTableCell>
+              <StyledTableCell>Ngày dự kiến sửa</StyledTableCell>
+              <StyledTableCell>Ngày sửa thực tế</StyledTableCell>
+              <StyledTableCell>Mức độ</StyledTableCell>
+              <StyledTableCell>Trạng thái</StyledTableCell>
+              <StyledTableCell>Ghi chú</StyledTableCell>
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {chiTietLichSuSuaChuas.map((item, index) => {
+              return (
+                <StyledTableRow
+                  className={clsx(
+                    style.checkDate,
+                    moment().diff(moment(item.ngay_du_kien_sua), "days") ===
+                      0 &&
+                      !item.trang_thai &&
+                      style.suaGap
+                  )}
+                  key={index}
+                  onClick={() => {
+                    setChiTietLichSuSuaChua(item);
+                    setDuLieuVao({
+                      mayTinhId: item.may_tinh_id,
+                      loiGapPhai: item.loi_gap_phai,
+                      ngayGapLoi: moment(item.ngay_gap_loi).format(
+                        "YYYY-MM-DD"
+                      ),
+                      ghiChu: item.ghi_chu,
+                      trangThai: item.trang_thai,
+                      lichSuSuaChuaId: item.id,
+                      chiTietLichSuSuaLoiId: item.chi_tiet_sua_chua_id,
+                      ngayDuKienSua: moment(item.ngay_du_kien_sua).format(
+                        "YYYY-MM-DD"
+                      ),
+                    });
+                    getNhanVienById(item.nhan_vien_id);
+                    getGiangVienById(item.giang_vien_id);
+                  }}
+                >
+                  <StyledTableCell>{item.so_may}</StyledTableCell>
+                  <StyledTableCell>{item.loi_gap_phai}</StyledTableCell>
+                  <StyledTableCell>
+                    {moment(item.ngay_gap_loi).format("DD-MM-YYYY")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {moment(item.ngay_sua_loi).format("DD-MM-YYYY")}
+                  </StyledTableCell>
+                  <StyledTableCell
                     className={clsx(
-                      style.checkDate,
-                      moment().diff(moment(item.ngay_du_kien_sua), "days") ===
-                        0 &&
-                        !item.trang_thai &&
-                        style.suaGap
+                      style.mucDo,
+                      item.muc_do_loi === 3 && style.actionCao,
+                      item.muc_do_loi === 2 && style.actionVua,
+                      item.muc_do_loi === 1 && style.actionThap
                     )}
-                    key={index}
-                    onClick={() => {
-                      setChiTietLichSuSuaChua(item);
-                      setDuLieuVao({
-                        mayTinhId: item.may_tinh_id,
-                        loiGapPhai: item.loi_gap_phai,
-                        ngayGapLoi: moment(item.ngay_gap_loi).format(
-                          "YYYY-MM-DD"
-                        ),
-                        ghiChu: item.ghi_chu,
-                        trangThai: item.trang_thai,
-                        lichSuSuaChuaId: item.id,
-                        chiTietLichSuSuaLoiId: item.chi_tiet_sua_chua_id,
-                        ngayDuKienSua: moment(item.ngay_du_kien_sua).format(
-                          "YYYY-MM-DD"
-                        ),
-                      });
-                      getNhanVienById(item.nhan_vien_id);
-                      getGiangVienById(item.giang_vien_id);
-                    }}
                   >
-                    <StyledTableCell>{item.so_may}</StyledTableCell>
-                    <StyledTableCell>{item.loi_gap_phai}</StyledTableCell>
-                    <StyledTableCell>
-                      {moment(item.ngay_gap_loi).format("DD-MM-YYYY")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {moment(item.ngay_sua_loi).format("DD-MM-YYYY")}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      className={clsx(
-                        style.mucDo,
-                        item.muc_do_loi === 3 && style.actionCao,
-                        item.muc_do_loi === 2 && style.actionVua,
-                        item.muc_do_loi === 1 && style.actionThap
-                      )}
-                    >
-                      {item?.muc_do_loi}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {item?.trang_thai ? "Đã sửa" : "Chưa sửa"}
-                    </StyledTableCell>
-                    <StyledTableCell>{item?.ghi_chu}</StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Sheet>
-      {/* <CapNhapNhanVienCTLSSC
-        open={openCapNhapNhanVien}
-        setOpen={setOpenCapNhapNhanVien}
-        chiTietLichSuSuaChua={chiTietLichSuSuaChua}
-      /> */}
+                    {item?.muc_do_loi}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {item?.trang_thai ? "Đã sửa" : "Chưa sửa"}
+                  </StyledTableCell>
+                  <StyledTableCell>{item?.ghi_chu}</StyledTableCell>
+                </StyledTableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <ModalNhanVien
         open={openCapNhapNhanVien}
         setOpen={setOpenCapNhapNhanVien}

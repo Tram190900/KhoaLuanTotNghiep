@@ -1,18 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./nhanVien.module.scss";
 import {
   getAPI,
   postAPI,
   postAPIWithImg,
-  putAPI,
   putApiWithImage,
 } from "./../../api/index";
 import {
   Avatar,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalClose,
+  ModalDialog,
   Option,
   Select,
   Sheet,
@@ -29,10 +33,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TableFooter from '@mui/material/TableFooter';
+import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
+import { MenuContext } from "../../App";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,8 +60,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function NhanVien() {
+  const menu = useContext(MenuContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const [openLichTruc, setOpenLichTruc] = useState(false);
+  const [xemCaTruc, setXemCaTruc] = useState(false);
 
   const [allNhanVien, setAllNhanVien] = useState([]);
   const [caTruc, setCaTruc] = useState([]);
@@ -217,7 +224,7 @@ export default function NhanVien() {
     const selectedFile = inputFileReference.current.files[0];
     setFileImage(selectedFile);
     const url = URL.createObjectURL(selectedFile);
-    await setImageURL(url);
+    setImageURL(url);
   };
 
   useEffect(() => {
@@ -227,18 +234,20 @@ export default function NhanVien() {
   }, [startDate, endDate]);
   return (
     <div className={clsx(style.nhanVien)}>
-      <h1>Quản lý nhân viên</h1>
-      <div className={clsx(style.infoWrap)}>
-        <div className={clsx(style.left)}>
+      <h1>Quản lý nhân viên - Giảng viên</h1>
+      <div className={clsx(style.infoWrap, menu.isPhone ? style.isPhone : "")}>
+        <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className={clsx(style.left_image_wrap)}>
             <Avatar
               src={
-                imageURL ? `http://localhost:8080/${imageURL}` : "logo192.png"
+                imageURL ||
+                `http://103.130.215.37:8080/${imageURL}` ||
+                "logo192.png"
               }
               alt="avatar"
               sx={{
-                width: "14rem",
-                height: "14rem",
+                width: "10rem",
+                height: "10rem",
                 marginBottom: "2rem",
                 boxShadow: "2px 2px 10px gray",
                 border: "5px solid white",
@@ -252,6 +261,7 @@ export default function NhanVien() {
                 inputFileReference.current.click();
               }}
               onChange={() => uploadImage()}
+              disabled={hoTen.trim().length>0?"":"disabled"}
             >
               Thay ảnh đại diện
               <input
@@ -319,7 +329,7 @@ export default function NhanVien() {
             </FormControl>
           </div>
         </div>
-        <div className={clsx(style.right)}>
+        <div className={clsx(style.right, menu.isPhone ? style.isPhone : "")}>
           <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
             <span className={clsx(style.search_ngay_truc)}>
               <strong>Danh sách ca trực trong tuần</strong>
@@ -341,40 +351,45 @@ export default function NhanVien() {
               </LocalizationProvider>
             </span>
             <TableContainer component={Paper}>
-            <Table aria-label="customized table">
-            <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell>Phòng trực</StyledTableCell>
-                  <StyledTableCell>Ngày trực</StyledTableCell>
-                  {/* <th>Ca trực</th> */}
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {caTruc?.map((item, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell>{item.phongMay.soPhong}</StyledTableCell>
-                    <StyledTableCell>{moment(item.ngayTruc).format("DD-MM-YYYY")}</StyledTableCell>
-                    {/* <td>{item.caLam}</td> */}
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-              {user?.role === "admin" ? (
-                <TableFooter>
+              <Table aria-label="customized table">
+                <TableHead>
                   <StyledTableRow>
-                    <StyledTableCell colSpan={2} style={{ textAlign: "center" }}>
-                      <Button
-                        variant="contained"
-                        sx={{ textTransform: "capitalize" }}
-                        color="warning"
-                        onClick={() => setOpenLichTruc(!openLichTruc)}
-                      >
-                        Cập nhật lịch trực
-                      </Button>
-                    </StyledTableCell>
+                    <StyledTableCell>Phòng trực</StyledTableCell>
+                    <StyledTableCell>Ngày trực</StyledTableCell>
+                    {/* <th>Ca trực</th> */}
                   </StyledTableRow>
-                </TableFooter>
-              ) : null}
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {caTruc?.map((item, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>{item.phongMay.soPhong}</StyledTableCell>
+                      <StyledTableCell>
+                        {moment(item.ngayTruc).format("DD-MM-YYYY")}
+                      </StyledTableCell>
+                      {/* <td>{item.caLam}</td> */}
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+                {user?.role === "admin" ? (
+                  <TableFooter>
+                    <StyledTableRow>
+                      <StyledTableCell
+                        colSpan={2}
+                        style={{ textAlign: "center" }}
+                      >
+                        <Button
+                          variant="contained"
+                          sx={{ textTransform: "capitalize" }}
+                          color="warning"
+                          onClick={() => setOpenLichTruc(!openLichTruc)}
+                        >
+                          Cập nhật lịch trực
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableFooter>
+                ) : null}
+              </Table>
             </TableContainer>
           </Sheet>
         </div>
@@ -388,6 +403,7 @@ export default function NhanVien() {
             placeholder="Tên nhân viên"
           />
         </FormControl>
+        <br></br>
         <Button
           variant="contained"
           sx={{ textTransform: "capitalize" }}
@@ -409,9 +425,84 @@ export default function NhanVien() {
           sx={{ textTransform: "capitalize" }}
           color="warning"
           onClick={() => handleCapNhatNhanVien()}
+          disabled={hoTen.trim().length>0?"":"disabled"}
         >
           Cập nhật
         </Button>
+        {menu.isPhone ? (
+          <>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              color="warning"
+              onClick={() => setXemCaTruc(true)}
+              disabled={hoTen.trim().length>0?"":"disabled"}
+            >
+              Xem ca trực
+            </Button>
+            <Modal open={xemCaTruc} onClose={() => setXemCaTruc(false)}>
+              <ModalDialog sx={{ width: "60%", height: "70%" }}>
+                <ModalClose />
+                <DialogTitle>Danh sách ca trực trong tuần</DialogTitle>
+                <DialogContent>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem components={["DatePicker"]}>
+                      <DatePicker
+                        value={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        label="Từ ngày...."
+                      />
+                    </DemoItem>
+                    <DemoItem components={["DatePicker"]}>
+                      <DatePicker
+                        value={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        label="Đến ngày"
+                      />
+                    </DemoItem>
+                  </LocalizationProvider>
+                  <TableContainer component={Paper}>
+                    <Table stickyHeader aria-label="customized table">
+                      <TableHead>
+                        <StyledTableRow>
+                          <StyledTableCell>Phòng trực</StyledTableCell>
+                          <StyledTableCell>Ngày trực</StyledTableCell>
+                          {/* <th>Ca trực</th> */}
+                        </StyledTableRow>
+                      </TableHead>
+                      <TableBody>
+                        {caTruc?.map((item, index) => (
+                          <StyledTableRow key={index}>
+                            <StyledTableCell>
+                              {item.phongMay.soPhong}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {moment(item.ngayTruc).format("DD-MM-YYYY")}
+                            </StyledTableCell>
+                            {/* <td>{item.caLam}</td> */}
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {user?.role === "admin" ? (
+                    <Button
+                      variant="contained"
+                      sx={{ textTransform: "capitalize" }}
+                      color="warning"
+                      onClick={() => {
+                        setOpenLichTruc(!openLichTruc)
+                        setXemCaTruc(false)
+                      }}
+                    >
+                      Cập nhật lịch trực
+                    </Button>
+                  ) : null}
+                </DialogContent>
+              </ModalDialog>
+            </Modal>
+          </>
+        ) : null}
       </div>
       <TableContainer component={Paper}>
         <Table aria-label="customized table">

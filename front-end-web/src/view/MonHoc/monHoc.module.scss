@@ -12,18 +12,26 @@
         }
       }
     }
+    .left.isPhone{
+      width: 100%;
+    }
     .right {
       width: 50%;
-      margin: 0% 1%;
       border: 1px solid black;
       .rightTable {
         overflow: auto;
-        height: 100%;
+        height: 90%;
       }
     }
+    .right.isPhone{
+      width: 100%;
+      margin: 2% 0% !important;
+    }
   }
-  
-  .tableWrap {
+  .infoWrap.isPhone{
+    flex-direction: column;
+  }
+  .tablePhanMem {
     overflow: auto;
     height: 60% !important;
   }

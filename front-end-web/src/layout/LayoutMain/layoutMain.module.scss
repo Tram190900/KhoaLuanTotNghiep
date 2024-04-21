@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   .bar {
-    height: 10.5%;
+    height: 8%;
   }
   .tab {
     height: 4%;
@@ -15,12 +15,16 @@
   }
   .wrap {
     width: 100%;
-    height: 89.5%;
+    height: 92%;
     display: flex;
     .menuContainer {
       width: 17%;
       height: 100%;
       color: white !important;
+    }
+    .menuContainer.none{
+      width: 0;
+      display: none;
     }
     .screenContainer {
       width: 83%;
@@ -28,6 +32,9 @@
       overflow-y: scroll;
       background: white;
       color: black;
+    }
+    .screenContainer.none{
+      width: 100%;
     }
   }
 }
