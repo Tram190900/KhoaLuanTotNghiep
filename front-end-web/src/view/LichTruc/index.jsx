@@ -19,7 +19,6 @@ import {
   Option,
   Select,
 } from "@mui/joy";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function LichTruc() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -129,8 +128,12 @@ export default function LichTruc() {
         return (
           <>
             <span key={index}>
-              <strong>{loi.so_may}</strong>: {loi.loi_gap_phai}<br></br>
-              <span>Chú thích: Dự kiến sửa đến ngày <strong>{format(loi.ngay_du_kien_sua, 'dd-MM-yyyy')}</strong></span>
+              <strong>{loi.so_may}</strong>: {loi.loi_gap_phai}
+              <br></br>
+              <span>
+                Chú thích: Dự kiến sửa đến ngày{" "}
+                <strong>{format(loi.ngay_du_kien_sua, "dd-MM-yyyy")}</strong>
+              </span>
             </span>
             <br></br>
           </>
@@ -186,9 +189,6 @@ export default function LichTruc() {
   };
 
   return (
-    <div className={clsx(style.wrap)}>
-      <PrimarySearchAppBar/>
-
     <div className={clsx(style.calendar)}>
       <div className={style.profile}>
         <div className={style.image_wrap}>
@@ -270,7 +270,6 @@ export default function LichTruc() {
         {renderCells()}
         {renderFooter()}
       </div>
-    </div>
     </div>
   );
 }

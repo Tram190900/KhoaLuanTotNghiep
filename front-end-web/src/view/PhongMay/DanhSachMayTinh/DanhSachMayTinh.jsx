@@ -12,7 +12,6 @@ import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAPI } from "../../../api";
 import style from "./danhSachMayTinh.module.scss";
-import PrimarySearchAppBar from "../../../components/AppBar/PrimarySearchAppBar";
 
 const DanhSachMayTinh = () => {
   const navigate = useNavigate();
@@ -70,186 +69,184 @@ const DanhSachMayTinh = () => {
   const dsHong = dsMayTinh.filter(checkHong);
 
   return (
-    <div>
-      <PrimarySearchAppBar />
-      <div className="p-3">
-        <h1>Quản lý phòng máy</h1>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href="/">
-            Quản lý phòng máy
-          </Link>
-          <Link underline="hover" color="inherit" href="/">
-            Tòa nhà
-          </Link>
-          <Link
-            onClick={() => {
-              navigate("/danhsachphongmay", {
-                state: {
-                  toaNha_id: location.state.toaNha_id,
-                  tenToaNha: location.state.toaNha,
-                },
-              });
-            }}
-            underline="hover"
-            color="inherit"
-          >
-            {location.state.toaNha}
-          </Link>
-          <Typography color="text.primary">{location.state.soPhong}</Typography>
-        </Breadcrumbs>
-        <Box sx={{ width: "100%", typography: "body1" }}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="Tất cả" value="1" />
-                <Tab label="Đang hoạt động" value="2" />
-                <Tab label="Đang sửa" value="3" />
-                <Tab label="Hỏng" value="4" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                {dsMayTinh.map((mayTinh) => (
-                  <div className={clsx(style.wrapMayTinh)}>
-                    <button
-                      onClick={() => {
-                        navigate("/thongtinmaytinh", {
-                          state: {
-                            mayTinh: mayTinh,
-                          },
-                        });
-                      }}
-                      className={clsx(
-                        style.button,
-                        mayTinh.trangThai === 1 && style.buttonHoatDong,
-                        mayTinh.trangThai === 2 && style.buttonSua,
-                        mayTinh.trangThai === 3 && style.buttonHong
-                      )}
-                    >
-                      {mayTinh.soMay}
-                    </button>
-                    <div className={clsx(style.mayTinhInfo)}>
-                      <p>Tên máy: {mayTinh.soMay}</p>
-                      <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                      <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    </div>
-                  </div>
-                ))}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="2">
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                {dsHoatDong.map((mayTinh) => (
-                  <div className={clsx(style.wrapMayTinh)}>
-                    <button
-                      onClick={() => {
-                        navigate("/thongtinmaytinh", {
-                          state: {
-                            mayTinh: mayTinh,
-                          },
-                        });
-                      }}
-                      className={clsx(style.button, style.buttonHoatDong)}
-                    >
-                      {mayTinh.soMay}
-                    </button>
-                    <div className={clsx(style.mayTinhInfo)}>
-                      <p>Tên máy: {mayTinh.soMay}</p>
-                      <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                      <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    </div>
-                  </div>
-                ))}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="3">
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                {dsSua.map((mayTinh) => (
-                  <div className={clsx(style.wrapMayTinh, style.buttonSua)}>
-                    <button
-                      onClick={() => {
-                        navigate("/thongtinmaytinh", {
-                          state: {
-                            mayTinh: mayTinh,
-                          },
-                        });
-                      }}
-                      className={clsx(style.button, style.buttonSua)}
-                    >
-                      {mayTinh.soMay}
-                    </button>
-                    <div className={clsx(style.mayTinhInfo)}>
-                      <p>Tên máy: {mayTinh.soMay}</p>
-                      <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                      <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    </div>
-                  </div>
-                ))}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="4">
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                {dsHong.map((mayTinh) => (
-                  <div className={clsx(style.wrapMayTinh)}>
-                    <button
-                      onClick={() => {
-                        navigate("/thongtinmaytinh", {
-                          state: {
-                            mayTinh: mayTinh,
-                          },
-                        });
-                      }}
-                      className={clsx(style.button, style.buttonHong)}
-                    >
-                      {mayTinh.soMay}
-                    </button>
-                    <div className={clsx(style.mayTinhInfo)}>
-                      <p>Tên máy: {mayTinh.soMay}</p>
-                      <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                      <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    </div>
-                  </div>
-                ))}
-              </Grid>
-            </TabPanel>
-          </TabContext>
-          <Box
-            sx={{ border: "2px solid grey", padding: "10px" }}
-            className={clsx(style.chuThich)}
-          >
-            <div>
-              <div className={clsx(style.item, style.hoatDong)}></div> Máy hoạt
-              động
-            </div>
-            <div>
-              <div className={clsx(style.item, style.dangSua)}></div> Máy đang
-              bảo trì
-            </div>
-            <div>
-              <div className={clsx(style.item, style.hong)}></div> Máy hỏng
-            </div>
+    <div className="p-3">
+      <h1>Quản lý phòng máy</h1>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link underline="hover" color="inherit" href="/">
+          Quản lý phòng máy
+        </Link>
+        <Link underline="hover" color="inherit" href="/">
+          Tòa nhà
+        </Link>
+        <Link
+          onClick={() => {
+            navigate("/danhsachphongmay", {
+              state: {
+                toaNha_id: location.state.toaNha_id,
+                tenToaNha: location.state.toaNha,
+              },
+            });
+          }}
+          underline="hover"
+          color="inherit"
+        >
+          {location.state.toaNha}
+        </Link>
+        <Typography color="text.primary">{location.state.soPhong}</Typography>
+      </Breadcrumbs>
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Tất cả" value="1" />
+              <Tab label="Đang hoạt động" value="2" />
+              <Tab label="Đang sửa" value="3" />
+              <Tab label="Hỏng" value="4" />
+            </TabList>
           </Box>
+          <TabPanel value="1">
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              {dsMayTinh.map((mayTinh) => (
+                <div className={clsx(style.wrapMayTinh)}>
+                  <button
+                    onDoubleClick={() => {
+                      navigate("/thongtinmaytinh", {
+                        state: {
+                          mayTinh: mayTinh,
+                        },
+                      });
+                    }}
+                    className={clsx(
+                      style.button,
+                      mayTinh.trangThai === 1 && style.buttonHoatDong,
+                      mayTinh.trangThai === 2 && style.buttonSua,
+                      mayTinh.trangThai === 3 && style.buttonHong
+                    )}
+                  >
+                    {mayTinh.soMay}
+                  </button>
+                  <div className={clsx(style.mayTinhInfo)}>
+                    <p>Tên máy: {mayTinh.soMay}</p>
+                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
+                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
+                    <p className="pt-1">Double click để xem chi tiết</p>
+                  </div>
+                </div>
+              ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel value="2">
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              {dsHoatDong.map((mayTinh) => (
+                <div className={clsx(style.wrapMayTinh)}>
+                  <button
+                    onDoubleClick={() => {
+                      navigate("/thongtinmaytinh", {
+                        state: {
+                          mayTinh: mayTinh,
+                        },
+                      });
+                    }}
+                    className={clsx(style.button, style.buttonHoatDong)}
+                  >
+                    {mayTinh.soMay}
+                  </button>
+                  <div className={clsx(style.mayTinhInfo)}>
+                    <p>Tên máy: {mayTinh.soMay}</p>
+                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
+                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
+                    <p className="pt-1">Double click để xem chi tiết</p>
+                  </div>
+                </div>
+              ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel value="3">
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              {dsSua.map((mayTinh) => (
+                <div className={clsx(style.wrapMayTinh, style.buttonSua)}>
+                  <button
+                    onDoubleClick={() => {
+                      navigate("/thongtinmaytinh", {
+                        state: {
+                          mayTinh: mayTinh,
+                        },
+                      });
+                    }}
+                    className={clsx(style.button, style.buttonSua)}
+                  >
+                    {mayTinh.soMay}
+                  </button>
+                  <div className={clsx(style.mayTinhInfo)}>
+                    <p>Tên máy: {mayTinh.soMay}</p>
+                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
+                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
+                    <p className="pt-1">Double click để xem chi tiết</p>
+                  </div>
+                </div>
+              ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel value="4">
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              {dsHong.map((mayTinh) => (
+                <div className={clsx(style.wrapMayTinh)}>
+                  <button
+                    onDoubleClick={() => {
+                      navigate("/thongtinmaytinh", {
+                        state: {
+                          mayTinh: mayTinh,
+                        },
+                      });
+                    }}
+                    className={clsx(style.button, style.buttonHong)}
+                  >
+                    {mayTinh.soMay}
+                  </button>
+                  <div className={clsx(style.mayTinhInfo)}>
+                    <p>Tên máy: {mayTinh.soMay}</p>
+                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
+                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
+                    <p className="pt-1">Double click để xem chi tiết</p>
+                  </div>
+                </div>
+              ))}
+            </Grid>
+          </TabPanel>
+        </TabContext>
+        <Box
+          sx={{ border: "2px solid grey", padding: "10px" }}
+          className={clsx(style.chuThich)}
+        >
+          <div>
+            <div className={clsx(style.item, style.hoatDong)}></div> Máy hoạt
+            động
+          </div>
+          <div>
+            <div className={clsx(style.item, style.dangSua)}></div> Máy đang bảo
+            trì
+          </div>
+          <div>
+            <div className={clsx(style.item, style.hong)}></div> Máy hỏng
+          </div>
         </Box>
-      </div>
+      </Box>
     </div>
   );
 };

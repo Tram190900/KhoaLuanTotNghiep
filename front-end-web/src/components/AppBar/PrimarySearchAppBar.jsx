@@ -1,4 +1,6 @@
 import * as React from "react";
+import clsx from "clsx";
+import style from "./primarySearchAppBar.module.scss"
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -9,7 +11,6 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -202,7 +203,7 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1, position: "sticky", top: "0", zIndex: "1" }}>
+    <Box sx={{ flexGrow: 1, position: "sticky", top: "0", zIndex: "1", marginBottom: "5px"}}>
       <AppBar position="static">
         <Toolbar>
           {/*           <IconButton
@@ -231,6 +232,9 @@ export default function PrimarySearchAppBar() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search> */}
+          <div className={clsx(style.logo__image)}>
+            <img src={require("../../assets/logo/logoIUH.svg").default} alt="" />
+          </div>
           <Box sx={{ flexGrow: 1 }} />
            <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* <IconButton

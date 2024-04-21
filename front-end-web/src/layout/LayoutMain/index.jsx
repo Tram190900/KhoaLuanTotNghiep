@@ -4,11 +4,15 @@ import style from "./layoutMain.module.scss";
 import Menu from "../../components/Menu";
 import { MenuContext } from "../../App";
 import { Outlet } from "react-router-dom";
+import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function LayoutMain() {
   const menu = useContext(MenuContext);
   return (
     <div className={clsx(style.LayoutMain)}>
+      <div className={clsx(style.bar)}>
+        <PrimarySearchAppBar/>
+      </div>
       <div className={clsx(style.wrap)}>
         <div className={clsx(style.menuContainer)}>
           <Menu />

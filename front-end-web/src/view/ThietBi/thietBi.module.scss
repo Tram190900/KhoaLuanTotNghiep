@@ -3,10 +3,8 @@
   height: 95%;
   .infoWrap {
     display: flex;
-    height: 20%;
     .left {
       width: 50%;
-      margin: 0% 1%;
       overflow: auto;
     }
     .right {
@@ -24,8 +22,6 @@
   }
   .buttonWrap {
     * {
-      margin-top: 20px;
-      margin-left: 1%;
       margin-right: 2%;
     }
   }

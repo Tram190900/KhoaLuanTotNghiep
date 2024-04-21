@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import style from "./mayTinh.module.scss";
 import { FormControl, FormLabel, Option, Select } from "@mui/joy";
-import {  Button } from "@mui/material";
+import { Button } from "@mui/material";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
 import { getAPI } from "../../api";
 import moment from "moment";
@@ -151,154 +151,143 @@ export default function MayTinh() {
   };
 
   return (
-    <div className={clsx(style.wrap)}>
-      <PrimarySearchAppBar />
-      <div className={clsx(style.maytinh, "p-3")}>
-        <h1>Quản lý máy tính</h1>
-        <div className={clsx(style.infoWrap)}>
-          <div className={clsx(style.content)}>
-            <div className={clsx(style.leftWrap)}>
-              <span className="d-flex justify-content-between">
-                <FormControl className="w-50">
-                  <FormLabel>Tòa nhà</FormLabel>
-                  <Select
-                    placeholder="Tòa nhà..."
-                    value={selectToaNha}
-                    onChange={handleToaNha}
-                  >
-                    {allToaNha?.map((item, index) => (
-                      <Option value={item} key={index}>
-                        {item.tenToaNha}
-                      </Option>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl className="w-50">
-                  <FormLabel>Số phòng</FormLabel>
-                  <Select
-                    value={selectPhongMay}
-                    onChange={handlePhongMay}
-                    placeholder="Số phòng..."
-                  >
-                    {phongMay?.map((item, index) => (
-                      <Option value={item} key={index}>
-                        {item.soPhong}
-                      </Option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </span>
-              <FormControl>
-                <FormLabel>Số máy</FormLabel>
+    <div className={clsx(style.maytinh, "p-3")}>
+      <h1>Quản lý máy tính</h1>
+      <div className={clsx(style.infoWrap)}>
+        <div className={clsx(style.content)}>
+          <div className={clsx(style.leftWrap)}>
+            <span className="d-flex justify-content-between">
+              <FormControl className="w-50">
+                <FormLabel>Tòa nhà</FormLabel>
                 <Select
-                  placeholder="Số máy..."
-                  value={selectMayTinh}
-                  onChange={handleMayTinh}
+                  placeholder="Tòa nhà..."
+                  value={selectToaNha}
+                  onChange={handleToaNha}
                 >
-                  {mayTinh?.map((item, index) => (
-                    <Option key={index} value={item}>
-                      {item.soMay}
+                  {allToaNha?.map((item, index) => (
+                    <Option value={item} key={index}>
+                      {item.tenToaNha}
                     </Option>
                   ))}
                 </Select>
               </FormControl>
-              <FormControl>
-                <FormLabel>Trạng thái</FormLabel>
+              <FormControl className="w-50">
+                <FormLabel>Số phòng</FormLabel>
                 <Select
-                  placeholder="Trạng thái ..."
-                  value={trangThai}
-                  onChange={handleChange}
+                  value={selectPhongMay}
+                  onChange={handlePhongMay}
+                  placeholder="Số phòng..."
                 >
-                  <Option value={true}>Bình thường</Option>
-                  <Option value={false}>Bảo trì</Option>
+                  {phongMay?.map((item, index) => (
+                    <Option value={item} key={index}>
+                      {item.soPhong}
+                    </Option>
+                  ))}
                 </Select>
               </FormControl>
-            </div>
+            </span>
+            <FormControl>
+              <FormLabel>Số máy</FormLabel>
+              <Select
+                placeholder="Số máy..."
+                value={selectMayTinh}
+                onChange={handleMayTinh}
+              >
+                {mayTinh?.map((item, index) => (
+                  <Option key={index} value={item}>
+                    {item.soMay}
+                  </Option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Trạng thái</FormLabel>
+              <Select
+                placeholder="Trạng thái ..."
+                value={trangThai}
+                onChange={handleChange}
+              >
+                <Option value={true}>Bình thường</Option>
+                <Option value={false}>Bảo trì</Option>
+              </Select>
+            </FormControl>
           </div>
         </div>
-        <div className={clsx(style.button)}>
-          <Button
-            color="error"
-            disabled={
-              mayTinh.trangThai === 2 || mayTinh.trangThai === 3
-                ? "disabled"
-                : ""
-            }
-            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-            variant="contained"
-            sx={{ textTransform: "capitalize" }}
-          >
-            Báo lỗi
-          </Button>
-          {user.role === "giangvien" ? null : (
-            <>
-              <Button
-                onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
-                variant="contained"
-                sx={{ textTransform: "capitalize" }}
-                color="warning"
-              >
-                Cập nhật cấu hình
-              </Button>
-            </>
-          )}
-        </div>
-        <div className={clsx(style.rightWrap)}>
-          <TableContainer
-            component={Paper}
-            className={clsx(style.tablePhanMem)}
-          >
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Tên phần mềm</StyledTableCell>
-                  <StyledTableCell align="right">Phiên bản</StyledTableCell>
-                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {phanMemCaiDat.map((row, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.phanMem.tenPhamMem}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.phanMem.phienBan}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {moment(row.ngayCaiDat).format("DD-MM-YYYY")}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TableContainer
-            component={Paper}
-            className={clsx(style.tablePhanMem)}
-          >
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Tên thiết bị</StyledTableCell>
-                  <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {thietBiLapDat.map((row, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.thietBi.tenThietBi}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {moment(row.ngayLapDat).format("DD-MM-YYYY")}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+      </div>
+      <div className={clsx(style.button, "py-3")}>
+        <Button
+          color="error"
+          disabled={
+            mayTinh.trangThai === 2 || mayTinh.trangThai === 3 ? "disabled" : ""
+          }
+          onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+        >
+          Báo lỗi
+        </Button>
+        {user.role === "giangvien" ? null : (
+          <>
+            <Button
+              onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              color="warning"
+            >
+              Cập nhật cấu hình
+            </Button>
+          </>
+        )}
+      </div>
+      <div className={clsx(style.rightWrap)}>
+        <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Tên phần mềm</StyledTableCell>
+                <StyledTableCell align="right">Phiên bản</StyledTableCell>
+                <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {phanMemCaiDat.map((row, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCell component="th" scope="row">
+                    {row.phanMem.tenPhamMem}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.phanMem.phienBan}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {moment(row.ngayCaiDat).format("DD-MM-YYYY")}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Tên thiết bị</StyledTableCell>
+                <StyledTableCell align="right">Ngày cài đặt</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {thietBiLapDat.map((row, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCell component="th" scope="row">
+                    {row.thietBi.tenThietBi}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {moment(row.ngayLapDat).format("DD-MM-YYYY")}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
       <LichSuaChua
         open={openLichSuaChua}
@@ -315,6 +304,5 @@ export default function MayTinh() {
         handleGetPhanMemCaiDat={handleGetPhanMemCaiDat}
       />
     </div>
-    
   );
 }

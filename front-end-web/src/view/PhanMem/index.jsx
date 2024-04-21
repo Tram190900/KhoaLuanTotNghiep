@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./phenMem.module.scss";
 import {
-  Button,
   Checkbox,
   FormControl,
   FormLabel,
@@ -10,12 +9,38 @@ import {
   Option,
   Select,
   Sheet,
-  Table,
 } from "@mui/joy";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
-import { PanoramaPhotosphereSelectOutlined } from "@mui/icons-material";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function PhanMem() {
   const [phanMems, setPhanMems] = useState();
@@ -53,14 +78,14 @@ export default function PhanMem() {
       return true;
     } else {
       Swal.fire({
-        icon:'error',
-        title:'Điền đầy đủ thông tin của phần mềm'
-      })
+        icon: "error",
+        title: "Điền đầy đủ thông tin của phần mềm",
+      });
     }
   };
 
   const addPhanMem = async () => {
-    const check = checkData()
+    const check = checkData();
     if (check) {
       try {
         const result = await postAPI("/savePhanMem", phanMem);
@@ -146,9 +171,6 @@ export default function PhanMem() {
   };
 
   return (
-    <div className={clsx(style.wrap)}>
-      <PrimarySearchAppBar/>
-    
     <div className={clsx(style.phanMem, "p-3")}>
       <h1>Quản lý phần mềm</h1>
       <div className={clsx(style.info)}>
@@ -197,42 +219,69 @@ export default function PhanMem() {
           </Select>
         </FormControl>
       </div>
-      <div className={clsx(style.searchWrap)}>
+      <div className={clsx(style.searchWrap, "py-3")}>
         <FormControl>
           <FormLabel>Tìm kiếm</FormLabel>
           <Input placeholder="Từ khóa" />
         </FormControl>
         <Checkbox label="Môn học" defaultChecked />
-        <Button>Tìm kiếm</Button>
-        <Button onClick={() => addPhanMem()}>Thêm mới</Button>
-        <Button onClick={() => updatePhanMem()}>Cập nhật</Button>
-        <Button onClick={() => xoaPhanMem()}>Xóa</Button>
+        <Button variant="contained" sx={{ textTransform: "capitalize" }}>
+          Tìm kiếm
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          onClick={() => addPhanMem()}
+        >
+          Thêm mới
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="warning"
+          onClick={() => updatePhanMem()}
+        >
+          Cập nhật
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="error"
+          onClick={() => xoaPhanMem()}
+        >
+          Xóa
+        </Button>
       </div>
-      <Sheet id={"scroll-style-01"} className={clsx(style.tablePhanMem)}>
-        <Table stickyHeader hoverRow aria-label="striped table">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Tên phần mềm</th>
-              <th>Phiên bản</th>
-              <th>Loại</th>
-              <th>Nhà phát triển</th>
-            </tr>
-          </thead>
-          <tbody>
-            {phanMems?.map((phanMem, index) => (
-              <tr key={index} onClick={() => setPhanMem(phanMem)}>
-                <td>{phanMem.id}</td>
-                <td>{phanMem.tenPhamMem}</td>
-                <td>{phanMem.phienBan}</td>
-                <td>{phanMem.theLoai}</td>
-                <td>{phanMem.phatTrienBoi}</td>
-              </tr>
+      <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
+        <Table aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Id</StyledTableCell>
+              <StyledTableCell>Tên phần mềm</StyledTableCell>
+              <StyledTableCell align="left">Phiên bản</StyledTableCell>
+              <StyledTableCell align="left">Loại</StyledTableCell>
+              <StyledTableCell align="left">Nhà phát triển</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {phanMems?.map((row, index) => (
+              <StyledTableRow onClick={() => setPhanMem(row)} key={index}>
+                <StyledTableCell component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.tenPhamMem}
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.phienBan}</StyledTableCell>
+                <StyledTableCell align="left">{row.theLoai}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.phatTrienBoi}
+                </StyledTableCell>
+              </StyledTableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
-      </Sheet>
-    </div>
+      </TableContainer>
     </div>
   );
 }

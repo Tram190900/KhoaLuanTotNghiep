@@ -1,10 +1,38 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./thietBi.module.scss";
-import { Button, FormControl, FormLabel, Input, Option, Select, Sheet, Table } from "@mui/joy";
+import { FormControl, FormLabel, Input, Option, Select } from "@mui/joy";
 import { getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function ThietBi() {
   const [allThietBi, setAllThietBi] = useState([]);
@@ -39,7 +67,7 @@ export default function ThietBi() {
       const data = {
         tenThietBi: tenThietBi,
         soLuong: soLuong,
-        donVi: donVi
+        donVi: donVi,
       };
       try {
         const result = await postAPI("/saveThietBi", data);
@@ -64,7 +92,7 @@ export default function ThietBi() {
         const data = {
           tenThietBi: tenThietBi,
           soLuong: soLuong,
-          donVi: donVi
+          donVi: donVi,
         };
         const result = await putAPI(`/updateThietBi/${thietBiId}`, data);
         if (result.status === 200) {
@@ -81,10 +109,8 @@ export default function ThietBi() {
     }
   };
   return (
-    <div>
-      <PrimarySearchAppBar/>
-      <div className={clsx(style.thietBi, "p-3")}>
-      <h1>QUẢN LÝ THIẾT BỊ</h1>
+    <div className={clsx(style.thietBi, "p-3")}>
+      <h1>Quản lý thiết bị</h1>
       <div className={clsx(style.infoWrap)}>
         <div className={clsx(style.left)}>
           <FormControl>
@@ -105,65 +131,71 @@ export default function ThietBi() {
             />
           </FormControl>
           <FormControl>
-              <FormLabel>Đơn vị</FormLabel>
-              <Select
-                value={donVi}
-                onChange={(e,v)=>{
-                  setDonVi(v)
-                }}
-              >
-                <Option value={"Cái"}>
-                  Cái
-                </Option>
-                <Option value={"Thùng"}>Thùng</Option>
-                <Option value={"Mét"}>
-                  Mét
-                </Option>
-              </Select>
-            </FormControl>
+            <FormLabel>Đơn vị</FormLabel>
+            <Select
+              value={donVi}
+              onChange={(e, v) => {
+                setDonVi(v);
+              }}
+            >
+              <Option value={"Cái"}>Cái</Option>
+              <Option value={"Thùng"}>Thùng</Option>
+              <Option value={"Mét"}>Mét</Option>
+            </Select>
+          </FormControl>
         </div>
       </div>
-      <div className={clsx(style.buttonWrap)}>
+      <div className={clsx(style.buttonWrap, "py-3")}>
         <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             handleSaveThietBi();
           }}
         >
           Thêm mới
         </Button>
-        <Button onClick={() => handleUpdateThietBi()}>Cập nhật</Button>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="warning"
+          onClick={() => handleUpdateThietBi()}
+        >
+          Cập nhật
+        </Button>
       </div>
-      <Sheet id={"scroll-style-01"} className={clsx(style.tableWrap)}>
-        <Table stickyHeader hoverRow aria-label="striped table">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Tên thiết bị</th>
-              <th>Số lượng</th>
-              <th>Đơn vị</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allThietBi?.map((item, index) => (
-              <tr
-                key={index}
+      <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
+        <Table aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Id</StyledTableCell>
+              <StyledTableCell>Tên thiết bị</StyledTableCell>
+              <StyledTableCell>Số lượng</StyledTableCell>
+              <StyledTableCell>Đơn vị</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allThietBi.map((row, index) => (
+              <StyledTableRow
                 onClick={() => {
-                  setTenThietBi(item.tenThietBi);
-                  setSoLuong(item.soLuong);
-                  setThietBiId(item.id);
-                  setDonVi(item.donVi);
+                  setTenThietBi(row.tenThietBi);
+                  setSoLuong(row.soLuong);
+                  setThietBiId(row.id);
+                  setDonVi(row.donVi);
                 }}
+                key={index}
               >
-                <td>{item.id}</td>
-                <td>{item.tenThietBi}</td>
-                <td>{item.soLuong}</td>
-                <td>{item.donVi}</td>
-              </tr>
+                <StyledTableCell component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell>{row.tenThietBi}</StyledTableCell>
+                <StyledTableCell>{row.soLuong}</StyledTableCell>
+                <StyledTableCell>{row.donVi}</StyledTableCell>
+              </StyledTableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
-      </Sheet>
-    </div>
+      </TableContainer>
     </div>
   );
 }

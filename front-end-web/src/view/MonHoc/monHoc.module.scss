@@ -1,20 +1,13 @@
-.wrap{
-  height: 100%;
-  overflow-y: scroll;
-}
 .monHoc {
   padding: 0 1% ;
   height: 92%;
   .infoWrap {
     display: flex;
-    height: 30%;
     .left {
       width: 50%;
-      margin: 0% 1%;
       .buttonWrap {
         margin-top: 4%;
         * {
-          margin-left: 1%;
           margin-right: 2%;
         }
       }
@@ -26,9 +19,6 @@
       .rightTable {
         overflow: auto;
         height: 100%;
-      }
-      button {
-        margin: 3%;
       }
     }
   }

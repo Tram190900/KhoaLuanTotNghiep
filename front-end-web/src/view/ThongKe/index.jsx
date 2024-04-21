@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./thongKe.module.scss";
 import clsx from "clsx";
 import { Card, CardContent, Option, Select, Typography } from "@mui/joy";
@@ -11,7 +11,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 
 export default function ThongKe() {
   const [soLuongPhong, setSoLuongPhong] = useState();
@@ -21,27 +20,25 @@ export default function ThongKe() {
   const [endDate, setEndDate] = useState(dayjs(Date().now));
   const [allToaNha, setAllToaNha] = useState([]);
   const [selectToaNha, setSelectToaNha] = useState(1);
-  const [trangThai, setTrangThai] = useState(false)
+  const [trangThai, setTrangThai] = useState(false);
 
   const [top5PhongBiLoiNhieu, setTop5PhongLoiNhieu] = useState();
   const [phanTramMucDoLoi, setPhanTramMucDoLoi] = useState();
 
-
   const handleTop5PhongBaoLoiNhieu = async () => {
     try {
-      const dt = new FormData()
-      dt.append("startDate", startDate.format('YYYY-MM-DD'))
-      dt.append("endDate", endDate.format('YYYY-MM-DD'))
-      dt.append("toaNha", selectToaNha)
-      dt.append("trangThai", trangThai)
-     const result = await postAPI('/lichSuSuaChua/top5Phong', dt)
-     if(result.status===200){
-      setTop5PhongLoiNhieu(result.data)
-     }
+      const dt = new FormData();
+      dt.append("startDate", startDate.format("YYYY-MM-DD"));
+      dt.append("endDate", endDate.format("YYYY-MM-DD"));
+      dt.append("toaNha", selectToaNha);
+      dt.append("trangThai", trangThai);
+      const result = await postAPI("/lichSuSuaChua/top5Phong", dt);
+      if (result.status === 200) {
+        setTop5PhongLoiNhieu(result.data);
+      }
     } catch (error) {
       console.log(error);
     }
-
   };
 
   const handleMucDoloiGapPhai = async () => {
@@ -59,9 +56,9 @@ export default function ThongKe() {
     setSelectToaNha(newValue);
   };
 
-  const handleTrangThai = (event, newValue) =>{
-    setTrangThai(newValue)
-  }
+  const handleTrangThai = (event, newValue) => {
+    setTrangThai(newValue);
+  };
 
   const handleGetAllToaNha = async () => {
     try {
@@ -84,7 +81,7 @@ export default function ThongKe() {
   useEffect(() => {
     handleTop5PhongBaoLoiNhieu();
   }, [startDate, endDate, selectToaNha, trangThai]);
-  
+
   const handleSoLuongPhong = async () => {
     try {
       const result = await getAPI("getAllPhongMay");
@@ -101,7 +98,7 @@ export default function ThongKe() {
       if (result.status === 200) {
         setSoLuongMayTinh(result.data.length);
         const mayBaoTri = result.data?.filter((item) => {
-          return item.trangThai===2;
+          return item.trangThai === 2;
         });
         setSoMayBaoTri(mayBaoTri.length);
       }
@@ -110,8 +107,6 @@ export default function ThongKe() {
     }
   };
   return (
-    <>
-    <PrimarySearchAppBar/>
     <div className={clsx(style.thongKe)}>
       <div className={clsx(style.card_wrap)}>
         <Card variant="soft" className={clsx(style.card)}>
@@ -138,9 +133,7 @@ export default function ThongKe() {
             <Typography className={clsx(style.soLuong)} level="title-md">
               {soMayBaoTri}
             </Typography>
-            <Typography>
-              Máy đang bảo trì
-            </Typography>
+            <Typography>Máy đang bảo trì</Typography>
           </CardContent>
         </Card>
       </div>
@@ -186,7 +179,11 @@ export default function ThongKe() {
                 </Select> */}
               </div>
             </span>
-            <Top5PhongBiLoiNhieu data={top5PhongBiLoiNhieu} startDate={startDate} endDate={endDate}/>
+            <Top5PhongBiLoiNhieu
+              data={top5PhongBiLoiNhieu}
+              startDate={startDate}
+              endDate={endDate}
+            />
           </CardContent>
         </Card>
         <Card className={clsx(style.pieChart)}>
@@ -197,6 +194,5 @@ export default function ThongKe() {
         </Card>
       </div>
     </div>
-    </>
   );
 }

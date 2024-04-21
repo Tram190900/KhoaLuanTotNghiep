@@ -2,22 +2,48 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./lichSuSuaChua.module.scss";
 import {
-  Button,
   FormControl,
   FormLabel,
   Input,
   Option,
   Select,
   Sheet,
-  Table,
   Textarea,
 } from "@mui/joy";
 import { getAPI, postAPI } from "../../api";
 import moment from "moment";
-import CapNhapNhanVienCTLSSC from "../../components/Modal/CapNhapNhanVienCTLSSC";
 import Swal from "sweetalert2";
 import ModalNhanVien from "../../components/Chart/Top5PhongBiLoiNhieu/ModalNhanVien";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableFooter from "@mui/material/TableFooter";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function LichSuSuaChua() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -277,198 +303,208 @@ export default function LichSuSuaChua() {
     }
   };
 
-
   return (
-    <>
-      <PrimarySearchAppBar />
-      <div className={clsx(style.lichSuSuaChua, "p-3")}>
-        <h1>Lịch sửa báo lỗi</h1>
-        <div className={clsx(style.infoWrap)}>
-          <div className={clsx(style.left)}>
-            <div className="d-flex">
-              <FormControl className="w-50">
-                <FormLabel>Tòa nhà</FormLabel>
-                <Select
-                  value={selectToaNha}
-                  onChange={handleToaNha}
-                  placeholder="Tòa nhà..."
-                >
-                  {allToaNha?.map((item, index) => (
-                    <Option value={item.id} key={index}>
-                      {item.tenToaNha}
-                    </Option>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl className="w-50">
-                <FormLabel>Số phòng</FormLabel>
-                <Select
-                  key={selectPhongMay}
-                  value={selectPhongMay}
-                  onChange={handlePhongMay}
-                  placeholder="Số phòng..."
-                >
-                  {phongMay?.map((item, index) => (
-                    <Option key={index.id} value={item}>
-                      {item.soPhong}
-                    </Option>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-
-            <div style={{ flexDirection: "row", display: "flex" }}>
-              <FormControl style={{ width: "50%" }}>
-                <FormLabel>Ngày gặp lỗi</FormLabel>
-                <Input
-                  id="ngayGapLoi"
-                  onChange={(e) => onInputChange(e)}
-                  name="ngayGapLoi"
-                  type="date"
-                  placeholder="Ngày gặp lỗi"
-                  value={duLieuVao.ngayGapLoi}
-                />
-              </FormControl>
-              <FormControl style={{ width: "50%" }}>
-                <FormLabel>Ngày dự kiến sửa</FormLabel>
-                <Input
-                  id="ngayDuKienSua"
-                  onChange={(e) => onInputChange(e)}
-                  name="ngayDuKienSua"
-                  type="date"
-                  placeholder="Ngày dự kiến sửa"
-                  value={duLieuVao.ngayDuKienSua}
-                />
-              </FormControl>
-            </div>
-
-            <FormControl>
-              <FormLabel>Trạng thái</FormLabel>
+    <div className={clsx(style.lichSuSuaChua, "p-3")}>
+      <h1>Lịch sửa báo lỗi</h1>
+      <div className={clsx(style.infoWrap)}>
+        <div className={clsx(style.left)}>
+          <div className="d-flex">
+            <FormControl className="w-50">
+              <FormLabel>Tòa nhà</FormLabel>
               <Select
-                value={duLieuVao.trangThai}
-                onChange={handleTrangThai}
-                name="trangThai"
+                value={selectToaNha}
+                onChange={handleToaNha}
+                placeholder="Tòa nhà..."
               >
-                <Option value={true}>Đã sửa</Option>
-                <Option value={false}>Chưa sửa</Option>
+                {allToaNha?.map((item, index) => (
+                  <Option value={item.id} key={index}>
+                    {item.tenToaNha}
+                  </Option>
+                ))}
               </Select>
             </FormControl>
-            <FormControl>
-              <FormLabel>Lỗi gặp phải</FormLabel>
+            <FormControl className="w-50">
+              <FormLabel>Số phòng</FormLabel>
+              <Select
+                key={selectPhongMay}
+                value={selectPhongMay}
+                onChange={handlePhongMay}
+                placeholder="Số phòng..."
+              >
+                {phongMay?.map((item, index) => (
+                  <Option key={index.id} value={item}>
+                    {item.soPhong}
+                  </Option>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
+          <div style={{ flexDirection: "row", display: "flex" }}>
+            <FormControl style={{ width: "50%" }}>
+              <FormLabel>Ngày gặp lỗi</FormLabel>
               <Input
-                id="loiGapPhai"
+                id="ngayGapLoi"
                 onChange={(e) => onInputChange(e)}
-                name="loiGapPhai"
-                placeholder="Lỗi gặp phải"
-                value={duLieuVao.loiGapPhai}
-                disabled
+                name="ngayGapLoi"
+                type="date"
+                placeholder="Ngày gặp lỗi"
+                value={duLieuVao.ngayGapLoi}
               />
             </FormControl>
-            <FormControl>
-              <FormLabel>Ghi chú</FormLabel>
-              <Textarea
+            <FormControl style={{ width: "50%" }}>
+              <FormLabel>Ngày dự kiến sửa</FormLabel>
+              <Input
+                id="ngayDuKienSua"
                 onChange={(e) => onInputChange(e)}
-                name="ghiChu"
-                minRows={3}
-                placeholder="Ghi chú…"
-                value={duLieuVao.ghiChu}
-                disabled={duLieuVao.trangThai ? "disabled" : ""}
+                name="ngayDuKienSua"
+                type="date"
+                placeholder="Ngày dự kiến sửa"
+                value={duLieuVao.ngayDuKienSua}
               />
             </FormControl>
           </div>
-          <div className={clsx(style.right)}>
-            <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
-              <Table
-                aria-label="table with sticky header"
-                stickyHeader
-                stickyFooter
-                stripe="odd"
-                hoverRow
-              >
-                <thead>
-                  <tr>
-                    <th>Nhân viên phụ trách</th>
-                    <th>Giảng viên báo lỗi</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+          <FormControl>
+            <FormLabel>Trạng thái</FormLabel>
+            <Select
+              value={duLieuVao.trangThai}
+              onChange={handleTrangThai}
+              name="trangThai"
+            >
+              <Option value={true}>Đã sửa</Option>
+              <Option value={false}>Chưa sửa</Option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Lỗi gặp phải</FormLabel>
+            <Input
+              id="loiGapPhai"
+              onChange={(e) => onInputChange(e)}
+              name="loiGapPhai"
+              placeholder="Lỗi gặp phải"
+              value={duLieuVao.loiGapPhai}
+              disabled
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Ghi chú</FormLabel>
+            <Textarea
+              onChange={(e) => onInputChange(e)}
+              name="ghiChu"
+              minRows={3}
+              placeholder="Ghi chú…"
+              value={duLieuVao.ghiChu}
+              disabled={duLieuVao.trangThai ? "disabled" : ""}
+            />
+          </FormControl>
+        </div>
+        <div className={clsx(style.right)}>
+          <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
+            <TableContainer>
+              <Table aria-label="customized table">
+                <TableHead>
+                  <StyledTableRow>
+                    <StyledTableCell>Nhân viên phụ trách</StyledTableCell>
+                    <StyledTableCell>Giảng viên báo lỗi</StyledTableCell>
+                  </StyledTableRow>
+                </TableHead>
+                <TableBody>
                   {chiTietLichSuSuaChua?.nhan_vien_id != null ? (
-                    <td>{nhanVien.hoTenNhanVien}</td>
-                  ) : (
-                    <td></td>
-                  )}
+                    <StyledTableCell>{nhanVien.hoTenNhanVien}</StyledTableCell>
+                  ) : null}
                   {chiTietLichSuSuaChua?.giang_vien_id != null ? (
-                    <td>{giangVien.tenGiangVien}</td>
-                  ) : (
-                    <td></td>
-                  )}
-                </tbody>
+                    <StyledTableCell>{giangVien.tenGiangVien}</StyledTableCell>
+                  ) : null}
+                </TableBody>
                 {user?.role === "admin" &&
                 chiTietLichSuSuaChua !== null &&
                 !chiTietLichSuSuaChua.trang_thai ? (
-                  <tfoot>
-                    <tr>
-                      <td colSpan={2} style={{ textAlign: "center" }}>
-                        <Button onClick={() => setOpenCapNhapNhanVien(true)}>
+                  <TableFooter>
+                    <StyledTableRow>
+                      <StyledTableCell
+                        colSpan={2}
+                        style={{ textAlign: "center" }}
+                      >
+                        <Button
+                          variant="contained"
+                          sx={{ textTransform: "capitalize" }}
+                          color="warning"
+                          onClick={() => setOpenCapNhapNhanVien(true)}
+                        >
                           Chỉ định nhân viên sửa
                         </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableFooter>
                 ) : null}
               </Table>
-            </Sheet>
-            <div className={clsx(style.notes)}>
-              <b>Chú thích thêm:</b>
-              <span className={clsx(style.notes_thap)}>
-                Lỗi phải sửa trong ngày
-              </span>
-              <span className={clsx(style.notes_cao)}>
-                Lỗi không để quá <strong>&nbsp;7 ngày&nbsp;</strong>
-              </span>
-              <span className={clsx(style.notes_khac)}>
-                Lỗi không để quá <strong>&nbsp;30 ngày&nbsp;</strong>
-              </span>
-              <span className={clsx(style.notes_baoDo)}>
-                Lỗi phải sửa trong ngày
-              </span>
-            </div>
+            </TableContainer>
+          </Sheet>
+          <div className={clsx(style.notes)}>
+            <b>Chú thích thêm:</b>
+            <span className={clsx(style.notes_thap)}>
+              Lỗi phải sửa trong ngày
+            </span>
+            <span className={clsx(style.notes_cao)}>
+              Lỗi không để quá <strong>&nbsp;7 ngày&nbsp;</strong>
+            </span>
+            <span className={clsx(style.notes_khac)}>
+              Lỗi không để quá <strong>&nbsp;30 ngày&nbsp;</strong>
+            </span>
+            <span className={clsx(style.notes_baoDo)}>
+              Lỗi phải sửa trong ngày
+            </span>
           </div>
         </div>
-        <div className={clsx(style.searchWrap)}>
-          <Button onClick={() => handleFilterLichSu()}>Tìm kiếm</Button>
-          <Button
-            onClick={() => luuChiTietLichSuSuaChua()}
-            disabled={duLieuVao.trangThai ? "disabled" : ""}
-          >
-            Cập nhật sửa lỗi
-          </Button>
+      </div>
+      <div className={clsx(style.searchWrap)}>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          onClick={() => handleFilterLichSu()}
+        >
+          Tìm kiếm
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="warning"
+          onClick={() => luuChiTietLichSuSuaChua()}
+          disabled={duLieuVao.trangThai ? "disabled" : ""}
+        >
+          Cập nhật sửa lỗi
+        </Button>
 
-          <Button
-            onClick={() => luuChiTietLichSuSuaChuaHong()}
-            disabled={duLieuVao.trangThai ? "disabled" : ""}
-          >
-            Báo hỏng
-          </Button>
-        </div>
-        <Sheet id={"scroll-style-01"} className={style.tableLSL}>
-          <Table stickyHeader hoverRow aria-label="striped table">
-            <thead>
-              <tr>
-                <th>Máy tính</th>
-                <th>Lỗi gặp phải</th>
-                <th>Ngày gặp lỗi</th>
-                <th>Ngày dự kiến sửa</th>
-                <th>Ngày sửa thực tế</th>
-                <th>Mức độ</th>
-                <th>Trạng thái</th>
-                <th>Ghi chú</th>
-              </tr>
-            </thead>
-            <tbody>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="error"
+          onClick={() => luuChiTietLichSuSuaChuaHong()}
+          disabled={duLieuVao.trangThai ? "disabled" : ""}
+        >
+          Báo hỏng
+        </Button>
+      </div>
+      <Sheet id={"scroll-style-01"} className={style.tableLSL}>
+        <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <StyledTableRow>
+                <StyledTableCell>Máy tính</StyledTableCell>
+                <StyledTableCell>Lỗi gặp phải</StyledTableCell>
+                <StyledTableCell>Ngày gặp lỗi</StyledTableCell>
+                <StyledTableCell>Ngày dự kiến sửa</StyledTableCell>
+                <StyledTableCell>Ngày sửa thực tế</StyledTableCell>
+                <StyledTableCell>Mức độ</StyledTableCell>
+                <StyledTableCell>Trạng thái</StyledTableCell>
+                <StyledTableCell>Ghi chú</StyledTableCell>
+              </StyledTableRow>
+            </TableHead>
+            <TableBody>
               {chiTietLichSuSuaChuas.map((item, index) => {
                 return (
-                  <tr
+                  <StyledTableRow
                     className={clsx(
                       style.checkDate,
                       moment().diff(moment(item.ngay_du_kien_sua), "days") ===
@@ -497,14 +533,18 @@ export default function LichSuSuaChua() {
                       getGiangVienById(item.giang_vien_id);
                     }}
                   >
-                    <td>{item.so_may}</td>
-                    <td>{item.loi_gap_phai}</td>
-                    <td>{moment(item.ngay_gap_loi).format("DD-MM-YYYY")}</td>
-                    <td>
+                    <StyledTableCell>{item.so_may}</StyledTableCell>
+                    <StyledTableCell>{item.loi_gap_phai}</StyledTableCell>
+                    <StyledTableCell>
+                      {moment(item.ngay_gap_loi).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                    <StyledTableCell>
                       {moment(item.ngay_du_kien_sua).format("DD-MM-YYYY")}
-                    </td>
-                    <td>{moment(item.ngay_sua_loi).format("DD-MM-YYYY")}</td>
-                    <td
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {moment(item.ngay_sua_loi).format("DD-MM-YYYY")}
+                    </StyledTableCell>
+                    <StyledTableCell
                       className={clsx(
                         style.mucDo,
                         item.muc_do_loi === 3 && style.actionCao,
@@ -513,16 +553,18 @@ export default function LichSuSuaChua() {
                       )}
                     >
                       {item?.muc_do_loi}
-                    </td>
-                    <td>{item?.trang_thai ? "Đã sửa" : "Chưa sửa"}</td>
-                    <td>{item?.ghi_chu}</td>
-                  </tr>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {item?.trang_thai ? "Đã sửa" : "Chưa sửa"}
+                    </StyledTableCell>
+                    <StyledTableCell>{item?.ghi_chu}</StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
-            </tbody>
+            </TableBody>
           </Table>
-        </Sheet>
-      </div>
+        </TableContainer>
+      </Sheet>
       {/* <CapNhapNhanVienCTLSSC
         open={openCapNhapNhanVien}
         setOpen={setOpenCapNhapNhanVien}
@@ -536,6 +578,6 @@ export default function LichSuSuaChua() {
         handleFilterLichSu={handleFilterLichSu}
         getNhanVienById={getNhanVienById}
       />
-    </>
+    </div>
   );
 }

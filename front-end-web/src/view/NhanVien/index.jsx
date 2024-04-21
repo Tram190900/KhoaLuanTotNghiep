@@ -10,14 +10,12 @@ import {
 } from "./../../api/index";
 import {
   Avatar,
-  Button,
   FormControl,
   FormLabel,
   Input,
   Option,
   Select,
   Sheet,
-  Table,
 } from "@mui/joy";
 import CapNhatLichTruc from "../../components/Modal/CapNhatLichTruc";
 import Swal from "sweetalert2";
@@ -25,7 +23,36 @@ import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableFooter from '@mui/material/TableFooter';
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function NhanVien() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -199,222 +226,244 @@ export default function NhanVien() {
     }
   }, [startDate, endDate]);
   return (
-    <>
-      <PrimarySearchAppBar/>
-      <div className={clsx(style.nhanVien)}>
-        <h1>Quản lý nhân viên</h1>
-        <div className={clsx(style.infoWrap)}>
-          <div className={clsx(style.left)}>
-            <div className={clsx(style.left_image_wrap)}>
-              <Avatar
-                src={
-                  imageURL
-                    ? `http://localhost:8080/${imageURL}`
-                    : "logo192.png"
-                }
-                alt="avatar"
-                sx={{
-                  width: "14rem",
-                  height: "14rem",
-                  marginBottom: "2rem",
-                  boxShadow: "2px 2px 10px gray",
-                  border: "5px solid white",
-                }}
-              />
-              <Button
-                onClick={() => {
-                  inputFileReference.current.click();
-                }}
-                onChange={() => uploadImage()}
-              >
-                Thay ảnh đại diện
-                <input
-                  hidden
-                  type="file"
-                  accept="image/*"
-                  ref={inputFileReference}
-                />
-              </Button>
-            </div>
-            <div className={clsx(style.left_infor)}>
-              <FormControl>
-                <FormLabel>Họ tên</FormLabel>
-                <Input
-                  value={hoTen}
-                  onChange={(e) => setHoTen(e.target.value)}
-                  placeholder="Họ tên"
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Số điện thoại</FormLabel>
-                <Input
-                  value={sdt}
-                  onChange={(e) => setSDT(e.target.value)}
-                  placeholder="Số điện thoại"
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Giới tính</FormLabel>
-                <Select
-                  value={gioiTinh}
-                  placeholder="Giới tính ..."
-                  onChange={handleGioiTinh}
-                >
-                  <Option value={true}>Nam</Option>
-                  <Option value={false}>Nữ</Option>
-                </Select>
-              </FormControl>
-              <FormControl>
-                <FormLabel>Địa chỉ</FormLabel>
-                <Input
-                  value={diaChi}
-                  onChange={(e) => setDiaChi(e.target.value)}
-                  placeholder="Địa chỉ"
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Trạng thái</FormLabel>
-                <Select
-                  value={trangThai}
-                  placeholder="Trạng thái ..."
-                  onChange={handleTrangThai}
-                >
-                  <Option value={true}>Đi làm</Option>
-                  <Option value={false}>Nghỉ làm</Option>
-                </Select>
-              </FormControl>
-            </div>
-          </div>
-          <div className={clsx(style.right)}>
-            <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
-              <span className={clsx(style.search_ngay_truc)}>
-                <strong>Danh sách ca trực trong tuần</strong>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoItem components={["DatePicker"]}>
-                    <DatePicker
-                      value={startDate}
-                      onChange={(date) => setStartDate(date)}
-                      label="Từ ngày...."
-                    />
-                  </DemoItem>
-                  <DemoItem components={["DatePicker"]}>
-                    <DatePicker
-                      value={endDate}
-                      onChange={(date) => setEndDate(date)}
-                      label="Đến ngày"
-                    />
-                  </DemoItem>
-                </LocalizationProvider>
-              </span>
-              <Table
-                aria-label="table with sticky header"
-                stickyHeader
-                stickyFooter
-                stripe="odd"
-                hoverRow
-              >
-                <thead>
-                  <tr>
-                    <th>Phòng trực</th>
-                    <th>Ngày trực</th>
-                    {/* <th>Ca trực</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {caTruc?.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.phongMay.soPhong}</td>
-                      <td>{moment(item.ngayTruc).format("DD-MM-YYYY")}</td>
-                      {/* <td>{item.caLam}</td> */}
-                    </tr>
-                  ))}
-                </tbody>
-                {user?.role === "admin" ? (
-                  <tfoot>
-                    <tr>
-                      <td colSpan={2} style={{ textAlign: "center" }}>
-                        <Button onClick={() => setOpenLichTruc(!openLichTruc)}>
-                          Cập nhật lịch trực
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                ) : null}
-              </Table>
-            </Sheet>
-          </div>
-        </div>
-        <div className={clsx(style.buttonWrap)}>
-          <FormControl>
-            <FormLabel>Tìm kiếm</FormLabel>
-            <Input
-              value={timKiem}
-              onChange={(e) => setTimKiem(e.target.value)}
-              placeholder="Tên nhân viên"
+    <div className={clsx(style.nhanVien)}>
+      <h1>Quản lý nhân viên</h1>
+      <div className={clsx(style.infoWrap)}>
+        <div className={clsx(style.left)}>
+          <div className={clsx(style.left_image_wrap)}>
+            <Avatar
+              src={
+                imageURL ? `http://localhost:8080/${imageURL}` : "logo192.png"
+              }
+              alt="avatar"
+              sx={{
+                width: "14rem",
+                height: "14rem",
+                marginBottom: "2rem",
+                boxShadow: "2px 2px 10px gray",
+                border: "5px solid white",
+              }}
             />
-          </FormControl>
-          <Button onClick={() => handleTimKiem()}>Tìm kiếm</Button>
-          {user?.role === "admin" ? (
-            <Button onClick={() => handleSaveNhanVien()}>Thêm mới</Button>
-          ) : null}
-          <Button onClick={() => handleCapNhatNhanVien()}>Cập nhật</Button>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              color="warning"
+              onClick={() => {
+                inputFileReference.current.click();
+              }}
+              onChange={() => uploadImage()}
+            >
+              Thay ảnh đại diện
+              <input
+                hidden
+                type="file"
+                accept="image/*"
+                ref={inputFileReference}
+              />
+            </Button>
+          </div>
+          <div className={clsx(style.left_infor)}>
+            <FormControl>
+              <FormLabel>Họ tên</FormLabel>
+              <Input
+                value={hoTen}
+                onChange={(e) => setHoTen(e.target.value)}
+                placeholder="Họ tên"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Email</FormLabel>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Số điện thoại</FormLabel>
+              <Input
+                value={sdt}
+                onChange={(e) => setSDT(e.target.value)}
+                placeholder="Số điện thoại"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Giới tính</FormLabel>
+              <Select
+                value={gioiTinh}
+                placeholder="Giới tính ..."
+                onChange={handleGioiTinh}
+              >
+                <Option value={true}>Nam</Option>
+                <Option value={false}>Nữ</Option>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Địa chỉ</FormLabel>
+              <Input
+                value={diaChi}
+                onChange={(e) => setDiaChi(e.target.value)}
+                placeholder="Địa chỉ"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Trạng thái</FormLabel>
+              <Select
+                value={trangThai}
+                placeholder="Trạng thái ..."
+                onChange={handleTrangThai}
+              >
+                <Option value={true}>Đi làm</Option>
+                <Option value={false}>Nghỉ làm</Option>
+              </Select>
+            </FormControl>
+          </div>
         </div>
-        <Sheet id={"scroll-style-01"} className={clsx(style.tableWrap)}>
-          <Table stickyHeader hoverRow aria-label="striped table">
-            <thead>
-              <tr>
-                <th style={{ width: "3%" }}>Id</th>
-                <th>Họ tên</th>
-                <th>Email</th>
-                <th>Số điện thoại</th>
-                <th>Giới tính</th>
-                <th>Địa chỉ</th>
-                <th>Trạng thái</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allNhanVien?.map((item, index) => (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    setHoTen(item.hoTenNhanVien);
-                    setEmail(item.email);
-                    setGioiTinh(item.gioiTinh);
-                    setDiaChi(item.diaChi);
-                    setSDT(item.sdt);
-                    setTrangThai(item.trangThai);
-                    setNhanVienId(item.id);
-                    setImageURL(item.image);
-                    handleGetCaTrucByNhanVien(item.id);
-                  }}
-                >
-                  <td>{item.id}</td>
-                  <td>{item.hoTenNhanVien}</td>
-                  <td>{item.email}</td>
-                  <td>{item.sdt}</td>
-                  <td>{item.gioiTinh ? "Nam" : "Nữ"}</td>
-                  <td>{item.diaChi}</td>
-                  <td>{item.trangThai ? "Đi làm" : "Nghỉ làm"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Sheet>
+        <div className={clsx(style.right)}>
+          <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
+            <span className={clsx(style.search_ngay_truc)}>
+              <strong>Danh sách ca trực trong tuần</strong>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoItem components={["DatePicker"]}>
+                  <DatePicker
+                    value={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    label="Từ ngày...."
+                  />
+                </DemoItem>
+                <DemoItem components={["DatePicker"]}>
+                  <DatePicker
+                    value={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    label="Đến ngày"
+                  />
+                </DemoItem>
+              </LocalizationProvider>
+            </span>
+            <TableContainer component={Paper}>
+            <Table aria-label="customized table">
+            <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell>Phòng trực</StyledTableCell>
+                  <StyledTableCell>Ngày trực</StyledTableCell>
+                  {/* <th>Ca trực</th> */}
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {caTruc?.map((item, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell>{item.phongMay.soPhong}</StyledTableCell>
+                    <StyledTableCell>{moment(item.ngayTruc).format("DD-MM-YYYY")}</StyledTableCell>
+                    {/* <td>{item.caLam}</td> */}
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+              {user?.role === "admin" ? (
+                <TableFooter>
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={2} style={{ textAlign: "center" }}>
+                      <Button
+                        variant="contained"
+                        sx={{ textTransform: "capitalize" }}
+                        color="warning"
+                        onClick={() => setOpenLichTruc(!openLichTruc)}
+                      >
+                        Cập nhật lịch trực
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                </TableFooter>
+              ) : null}
+            </Table>
+            </TableContainer>
+          </Sheet>
+        </div>
       </div>
+      <div className={clsx(style.buttonWrap, "pb-3")}>
+        <FormControl>
+          <FormLabel>Tìm kiếm</FormLabel>
+          <Input
+            value={timKiem}
+            onChange={(e) => setTimKiem(e.target.value)}
+            placeholder="Tên nhân viên"
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          onClick={() => handleTimKiem()}
+        >
+          Tìm kiếm
+        </Button>
+        {user?.role === "admin" ? (
+          <Button
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+            onClick={() => handleSaveNhanVien()}
+          >
+            Thêm mới
+          </Button>
+        ) : null}
+        <Button
+          variant="contained"
+          sx={{ textTransform: "capitalize" }}
+          color="warning"
+          onClick={() => handleCapNhatNhanVien()}
+        >
+          Cập nhật
+        </Button>
+      </div>
+      <TableContainer component={Paper}>
+        <Table aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Id</StyledTableCell>
+              <StyledTableCell>Họ tên</StyledTableCell>
+              <StyledTableCell>Email</StyledTableCell>
+              <StyledTableCell>Số điện thoại</StyledTableCell>
+              <StyledTableCell>Giới tính</StyledTableCell>
+              <StyledTableCell>Địa chỉ</StyledTableCell>
+              <StyledTableCell>Trạng thái</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allNhanVien?.map((row, index) => (
+              <StyledTableRow
+                onClick={() => {
+                  setHoTen(row.hoTenNhanVien);
+                  setEmail(row.email);
+                  setGioiTinh(row.gioiTinh);
+                  setDiaChi(row.diaChi);
+                  setSDT(row.sdt);
+                  setTrangThai(row.trangThai);
+                  setNhanVienId(row.id);
+                  setImageURL(row.image);
+                  handleGetCaTrucByNhanVien(row.id);
+                }}
+                key={index}
+              >
+                <StyledTableCell component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell>{row.hoTenNhanVien}</StyledTableCell>
+                <StyledTableCell>{row.email}</StyledTableCell>
+                <StyledTableCell>{row.sdt}</StyledTableCell>
+                <StyledTableCell>{row.gioiTinh ? "Nam" : "Nữ"}</StyledTableCell>
+                <StyledTableCell>{row.diaChi}</StyledTableCell>
+                <StyledTableCell>
+                  {row.trangThai ? "Đi làm" : "Nghỉ làm"}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <CapNhatLichTruc
         open={openLichTruc}
         setOpen={setOpenLichTruc}
         nhanVienId={nhanVienId}
         handleGetCaTrucByNhanVien={handleGetCaTrucByNhanVien}
       />
-    </>
+    </div>
   );
 }

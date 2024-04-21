@@ -1,6 +1,9 @@
 .LayoutMain {
   width: 100%;
   height: 100%;
+  .bar {
+    height: 10.5%;
+  }
   .tab {
     height: 4%;
     background: rgba(132, 167, 211, 0.8);
@@ -12,7 +15,7 @@
   }
   .wrap {
     width: 100%;
-    height: 100%;
+    height: 89.5%;
     display: flex;
     .menuContainer {
       width: 17%;
@@ -22,6 +25,7 @@
     .screenContainer {
       width: 83%;
       height: 100%;
+      overflow-y: scroll;
       background: white;
       color: black;
     }

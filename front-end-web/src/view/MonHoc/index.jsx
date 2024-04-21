@@ -1,20 +1,39 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import style from "./monHoc.module.scss";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Sheet,
-  Table,
-  Select,
-  Option,
-} from "@mui/joy";
+import { FormControl, FormLabel, Input, Sheet, Select, Option } from "@mui/joy";
 import PhanMemSuDung from "../../components/Modal/PhanMemSuDung";
 import { deleteAPI, getAPI, postAPI, putAPI } from "../../api";
 import Swal from "sweetalert2";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#1976D2",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function MonHoc() {
   const [openCapNhatMonHoc, setOpenCapNhatMonHoc] = useState(false);
@@ -24,7 +43,7 @@ export default function MonHoc() {
   const [softwares, setSoftwares] = useState([]);
 
   const [monHoc, setMonHoc] = useState({
-    id:"",
+    id: "",
     tenMonHoc: "",
     khoa: "",
   });
@@ -60,8 +79,8 @@ export default function MonHoc() {
     if (check) {
       const dt = {
         tenMonHoc: monHoc.tenMonHoc,
-        khoa: monHoc.khoa
-      }
+        khoa: monHoc.khoa,
+      };
       try {
         const result = await postAPI("/monHocs", dt);
         if (result.status === 200) {
@@ -143,135 +162,144 @@ export default function MonHoc() {
   };
 
   return (
-    <div className={clsx(style.wrap)}>
-      <PrimarySearchAppBar />
-      <div className={clsx(style.monHoc, "p-3")}>
-        <h1>Quản lý môn học</h1>
-        <div className={clsx(style.infoWrap)}>
-          <div className={clsx(style.left)}>
-            <FormControl>
-              <FormLabel>Tên môn học</FormLabel>
-              <Input
-                name="tenMonHoc"
-                value={monHoc.tenMonHoc}
-                onChange={(e) => onInputChange(e)}
-                placeholder="Tên môn học"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Khoa</FormLabel>
-              <Select
-                value={monHoc.khoa}
-                onChange={(e,v)=>{
-                  setMonHoc({...monHoc, khoa: v})
-                }}
-              >
-                <Option value={"Công nghệ thông tin"}>
-                  Công nghệ thông tin
-                </Option>
-                <Option value={"Ngôn ngữ anh"}>Ngôn ngữ anh</Option>
-                <Option value={"Quản trị kinh doanh"}>
-                  Quản trị kinh doanh
-                </Option>
-                <Option value={"Khoa điện, cơ khí"}>Khoa điện, cơ khí</Option>
-              </Select>
-            </FormControl>
-            <div className={clsx(style.buttonWrap)}>
-              <Button onClick={() => addMonHoc()}>Thêm mới</Button>
-              <Button
-                disabled={
-                  monHoc.tenMonHoc === "" && monHoc.khoa === ""
-                    ? "disabled"
-                    : ""
-                }
-                onClick={() => updateMonHoc()}
-              >
-                Cập nhật
-              </Button>
-              <Button
-                disabled={
-                  monHoc.tenMonHoc === "" && monHoc.khoa === ""
-                    ? "disabled"
-                    : ""
-                }
-                onClick={() => deleteMonHoc()}
-              >
-                Xóa
-              </Button>
-            </div>
+    <div className={clsx(style.monHoc, "p-3")}>
+      <h1>Quản lý môn học</h1>
+      <div className={clsx(style.infoWrap, "pb-3")}>
+        <div className={clsx(style.left)}>
+          <FormControl>
+            <FormLabel>Tên môn học</FormLabel>
+            <Input
+              name="tenMonHoc"
+              value={monHoc.tenMonHoc}
+              onChange={(e) => onInputChange(e)}
+              placeholder="Tên môn học"
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Khoa</FormLabel>
+            <Select
+              value={monHoc.khoa}
+              onChange={(e, v) => {
+                setMonHoc({ ...monHoc, khoa: v });
+              }}
+            >
+              <Option value={"Công nghệ thông tin"}>Công nghệ thông tin</Option>
+              <Option value={"Ngôn ngữ anh"}>Ngôn ngữ anh</Option>
+              <Option value={"Quản trị kinh doanh"}>Quản trị kinh doanh</Option>
+              <Option value={"Khoa điện, cơ khí"}>Khoa điện, cơ khí</Option>
+            </Select>
+          </FormControl>
+          <div className={clsx(style.buttonWrap)}>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              onClick={() => addMonHoc()}
+            >
+              Thêm mới
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              color="warning"
+              disabled={
+                monHoc.tenMonHoc === "" && monHoc.khoa === "" ? "disabled" : ""
+              }
+              onClick={() => updateMonHoc()}
+            >
+              Cập nhật
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              color="error"
+              disabled={
+                monHoc.tenMonHoc === "" && monHoc.khoa === "" ? "disabled" : ""
+              }
+              onClick={() => deleteMonHoc()}
+            >
+              Xóa
+            </Button>
           </div>
-          <div className={clsx(style.right)}>
-            <Sheet className={clsx(style.rightTable)} id={"scroll-style-01"}>
-              <strong>Phân mềm được sử dụng</strong>
-              <Table
-                aria-label="table with sticky header"
-                stickyHeader
-                stickyFooter
-                stripe="odd"
-                hoverRow
-              >
-                <thead>
-                  <tr>
-                    <th>Tên phần mềm</th>
-                    <th>Phiên bản</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {softwares.map((phanMem) => (
-                    <tr>
-                      <td>{phanMem.tenPhamMem}</td>
-                      <td>{phanMem.phienBan}</td>
-                    </tr>
+        </div>
+        <div className={clsx(style.right)}>
+          <Sheet id={"scroll-style-01"}>
+            <strong>Phân mềm được sử dụng</strong>
+            <TableContainer
+              component={Paper}
+            >
+              <Table aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Tên phần mềm</StyledTableCell>
+                    <StyledTableCell>Phiên bản</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {softwares?.map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell component="th" scope="row">
+                        {row.tenPhamMem}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.phienBan}
+                      </StyledTableCell>
+                    </StyledTableRow>
                   ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={2} style={{ textAlign: "center"}}>
+                  <StyledTableRow>
+                    <StyledTableCell
+                      colSpan={2}
+                      style={{ textAlign: "center" }}
+                    >
                       <Button
+                        variant="contained"
+                        sx={{ textTransform: "capitalize" }}
+                        color="warning"
                         onClick={() => setOpenCapNhatMonHoc(!openCapNhatMonHoc)}
-                        style={{margin:'0px'}}
                       >
                         Cập nhật môn học
                       </Button>
-                    </td>
-                  </tr>
-                </tfoot>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                </TableBody>
               </Table>
-            </Sheet>
-          </div>
+            </TableContainer>
+          </Sheet>
         </div>
-
-        <Sheet id={"scroll-style-01"} className={clsx(style.tableWrap)}>
-          <Table stickyHeader hoverRow aria-label="striped table">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Họ môn học</th>
-                <th>Khoa</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monHocs?.map((item, index) => (
-                <tr
-                  onClick={() => {
-                    setMonHoc({
-                      id: item.id,
-                      tenMonHoc: item.tenMonHoc,
-                      khoa: item.khoa
-                    });
-                    setSoftwares(item.phanMems);
-                  }}
-                  key={index}
-                >
-                  <td>{item.id}</td>
-                  <td>{item.tenMonHoc}</td>
-                  <td>{item.khoa}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Sheet>
       </div>
+
+      <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
+        <Table aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Id</StyledTableCell>
+              <StyledTableCell>Họ môn học</StyledTableCell>
+              <StyledTableCell>Khoa</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {monHocs?.map((row, index) => (
+              <StyledTableRow
+                onClick={() => {
+                  setMonHoc({
+                    id: row.id,
+                    tenMonHoc: row.tenMonHoc,
+                    khoa: row.khoa,
+                  });
+                  setSoftwares(row.phanMems);
+                }}
+                key={index}
+              >
+                <StyledTableCell component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.tenMonHoc}</StyledTableCell>
+                <StyledTableCell align="left">{row.khoa}</StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
       <PhanMemSuDung
         subjectId={monHoc.id}
         open={openCapNhatMonHoc}

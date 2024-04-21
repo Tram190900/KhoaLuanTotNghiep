@@ -7,7 +7,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import Tooltip from "@mui/material/Tooltip";
@@ -23,8 +22,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import TaoPhongMay from "../../../components/Modal/TaoPhongMay";
 import { useLocation, useNavigate } from "react-router-dom";
-import PrimarySearchAppBar from "../../../components/AppBar/PrimarySearchAppBar";
-import style from "./danhSachPhongMay.module.scss"
+import style from "./danhSachPhongMay.module.scss";
 
 export default function DanhSachPhongMay(props) {
   const navigate = useNavigate();
@@ -114,8 +112,6 @@ export default function DanhSachPhongMay(props) {
   };
 
   return (
-    <div>
-      <PrimarySearchAppBar/>
     <div className={clsx(Style.wrap)}>
       <div className={clsx(Style.header)}>
         <div className={clsx(Style.h4)}>
@@ -191,110 +187,111 @@ export default function DanhSachPhongMay(props) {
         {dsPhongMay.map((phongMay) => (
           <Grid xs={3}>
             <Tooltip title="Double Click để xem chi tiết">
-            <Card variant="outlined">
-              <CardContent sx={{ cursor: "pointer" }}
-              onDoubleClick={() => {
-                navigate("/danhsachmaytinh", {
-                  state: {
-                    phongMay_id: phongMay.id,
-                    soPhong: phongMay.soPhong,
-                    toaNha: phongMay.toaNha.tenToaNha,
-                    toaNha_id: phongMay.toaNha.id,
-                  },
-                });
-              }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: 14,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  <Typography sx={{ mb: 1.5 }} variant="h5" component="div">
-                    Phòng: {phongMay.soPhong}
-                  </Typography>
-                  <Tooltip title="Cài đặt phòng">
-                    <IconButton
-                      onClick={(e) => {
-                        handleClick(e);
-                        setPhongMay_id(phongMay.id);
-                        setTenPhongMay(phongMay.soPhong);
-                      }}
-                      size="small"
-                      sx={{ ml: 2 }}
-                      aria-controls={open ? "account-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                    >
-                      <MoreVertIcon sx={{ width: 32, height: 32 }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Menu
-                    anchorEl={anchorEl}
-                    id="account-menu"
-                    open={open}
-                    onClose={handleClose}
-                    onClick={handleClose}
-                    PaperProps={{
-                      elevation: 0,
-                      sx: {
-                        overflow: "visible",
-                        filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.32))",
-                        mt: 1.5,
-                        "& .MuiAvatar-root": {
-                          width: 32,
-                          height: 32,
-                          ml: -0.5,
-                          mr: 1,
-                        },
-                        "&::before": {
-                          content: '""',
-                          display: "block",
-                          position: "absolute",
-                          top: 0,
-                          right: 14,
-                          width: 10,
-                          height: 10,
-                          bgcolor: "background.paper",
-                          transform: "translateY(-50%) rotate(45deg)",
-                          zIndex: 0,
-                        },
+              <Card variant="outlined">
+                <CardContent
+                  sx={{ cursor: "pointer" }}
+                  onDoubleClick={() => {
+                    navigate("/danhsachmaytinh", {
+                      state: {
+                        phongMay_id: phongMay.id,
+                        soPhong: phongMay.soPhong,
+                        toaNha: phongMay.toaNha.tenToaNha,
+                        toaNha_id: phongMay.toaNha.id,
                       },
+                    });
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
-                    transformOrigin={{ horizontal: "right", vertical: "top" }}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    color="text.secondary"
+                    gutterBottom
                   >
-                    <MenuItem
-                      onClick={() => {
-                        setOpenTaoPhongMay(true);
-                        setTieuDe("Cập nhập phòng máy");
+                    <Typography sx={{ mb: 1.5 }} variant="h5" component="div">
+                      Phòng: {phongMay.soPhong}
+                    </Typography>
+                    <Tooltip title="Cài đặt phòng">
+                      <IconButton
+                        onClick={(e) => {
+                          handleClick(e);
+                          setPhongMay_id(phongMay.id);
+                          setTenPhongMay(phongMay.soPhong);
+                        }}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                      >
+                        <MoreVertIcon sx={{ width: 32, height: 32 }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={open}
+                      onClose={handleClose}
+                      onClick={handleClose}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
                       }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                     >
-                      <ListItemIcon>
-                        <EditIcon fontSize="small" />
-                      </ListItemIcon>
-                      Cập nhập
-                    </MenuItem>
-                    <MenuItem onClick={() => xoaPhongMay(phongMay_id)}>
-                      <ListItemIcon>
-                        <DeleteIcon fontSize="small" />
-                      </ListItemIcon>
-                      Xóa
-                    </MenuItem>
-                  </Menu>
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  Quy mô phòng: {phongMay.loaiPhong.tenLoaiPhong}
-                </Typography>
-                <Typography variant="body2">
-                  Số lượng máy: {phongMay.loaiPhong.soLuongMay}
-                </Typography>
-              </CardContent>
-            </Card>
+                      <MenuItem
+                        onClick={() => {
+                          setOpenTaoPhongMay(true);
+                          setTieuDe("Cập nhập phòng máy");
+                        }}
+                      >
+                        <ListItemIcon>
+                          <EditIcon fontSize="small" />
+                        </ListItemIcon>
+                        Cập nhập
+                      </MenuItem>
+                      <MenuItem onClick={() => xoaPhongMay(phongMay_id)}>
+                        <ListItemIcon>
+                          <DeleteIcon fontSize="small" />
+                        </ListItemIcon>
+                        Xóa
+                      </MenuItem>
+                    </Menu>
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    Quy mô phòng: {phongMay.loaiPhong.tenLoaiPhong}
+                  </Typography>
+                  <Typography variant="body2">
+                    Số lượng máy: {phongMay.loaiPhong.soLuongMay}
+                  </Typography>
+                </CardContent>
+              </Card>
             </Tooltip>
           </Grid>
         ))}
@@ -317,20 +314,5 @@ export default function DanhSachPhongMay(props) {
         tenPhongMay={tenPhongMay}
       />
     </div>
-    </div>
   );
-}
-{
-  /* <Button
-onDoubleClick={() => {
-  navigate("/danhsachmaytinh", {
-    state: {
-      phongMay_id: phongMay.id,
-      soPhong: phongMay.soPhong,
-      toaNha: phongMay.toaNha.tenToaNha,
-      toaNha_id: phongMay.toaNha.id,
-    },
-  });
-}}
-> */
 }
