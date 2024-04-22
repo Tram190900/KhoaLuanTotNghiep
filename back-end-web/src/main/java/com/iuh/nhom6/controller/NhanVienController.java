@@ -44,7 +44,7 @@ public class NhanVienController {
             @RequestParam("file") MultipartFile image) {
         try {
             NhanVien nhanVien = new NhanVien();
-            Path staticPath = Paths.get("back-end-web","static");
+            Path staticPath = Paths.get("static");
             Path imagePath = Paths.get("images");
             if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
                 Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
@@ -97,7 +97,7 @@ public class NhanVienController {
                         nhanVien.setGioiTinh(newNhanVien.getGioiTinh());
                         nhanVien.setTrangThai(newNhanVien.getTrangThai());
                         nhanVien.setImage(
-                            imagePath.resolve(image.getOriginalFilename()).toString());
+                                imagePath.resolve(image.getOriginalFilename()).toString());
                         return nhanVienRepository.save(nhanVien);
                     }).orElseThrow();
         } catch (Exception e) {

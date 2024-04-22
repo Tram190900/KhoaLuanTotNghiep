@@ -191,6 +191,9 @@ legend {
       }
     }
   }
+  .content__left.isPhone{
+    display: none !important;
+  }
 
   .content_right {
     display: flex;
@@ -286,4 +289,16 @@ legend {
       }
     }
   }
+}
+.loadingWrap{
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(38, 38, 38,0.3);
+  z-index: 1000;
 }

@@ -13,7 +13,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-export default function Menu() {
+export default function Menu(props) {
   const menu = useContext(MenuContext);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const navigate = useNavigate();
@@ -23,6 +23,9 @@ export default function Menu() {
         onClick={() => {
           menu.setMenuActive("phong-may");
           navigate("/");
+          if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+            props?.handleMobileMenuClose()
+          }
         }}
         className={clsx(
           style.menuItem,
@@ -36,6 +39,9 @@ export default function Menu() {
         onClick={() => {
           menu.setMenuActive("may-tinh");
           navigate("may-tinh");
+          if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+            props?.handleMobileMenuClose()
+          }
         }}
         className={clsx(
           style.menuItem,
@@ -51,6 +57,9 @@ export default function Menu() {
             onClick={() => {
               menu.setMenuActive("thiet-bi");
               navigate("thiet-bi");
+              if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                props?.handleMobileMenuClose()
+              }
             }}
             className={clsx(
               style.menuItem,
@@ -64,6 +73,9 @@ export default function Menu() {
             onClick={() => {
               menu.setMenuActive("phan-mem");
               navigate("phan-mem");
+              if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                props?.handleMobileMenuClose()
+              }
             }}
             className={clsx(
               style.menuItem,
@@ -77,6 +89,9 @@ export default function Menu() {
             onClick={() => {
               menu.setMenuActive("mon-hoc");
               navigate("mon-hoc");
+              if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                props?.handleMobileMenuClose()
+              }
             }}
             className={clsx(
               style.menuItem,
@@ -92,6 +107,9 @@ export default function Menu() {
                 onClick={() => {
                   menu.setMenuActive("nhan-vien");
                   navigate("nhan-vien");
+                  if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                    props?.handleMobileMenuClose()
+                  }
                 }}
                 className={clsx(
                   style.menuItem,
@@ -120,6 +138,9 @@ export default function Menu() {
               onClick={() => {
                 menu.setMenuActive("lich-truc");
                 navigate("lich-truc");
+                if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                  props?.handleMobileMenuClose()
+                }
               }}
               className={clsx(
                 style.menuItem,
@@ -135,6 +156,9 @@ export default function Menu() {
             onClick={() => {
               menu.setMenuActive("lich-su-sua-chua");
               navigate("lich-su-sua-chua");
+              if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                props?.handleMobileMenuClose()
+              }
             }}
             className={clsx(
               style.menuItem,
@@ -148,6 +172,9 @@ export default function Menu() {
             onClick={() => {
               menu.setMenuActive("thong-ke");
               navigate("thong-ke");
+              if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                props?.handleMobileMenuClose()
+              }
             }}
             className={clsx(
               style.menuItem,

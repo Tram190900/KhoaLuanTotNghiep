@@ -2,6 +2,7 @@ import axios from "axios";
 
 var api = axios.create({
   baseURL: "http://103.130.215.37:8080",
+  // baseURL: "http://localhost:8080"
 });
 
 export const getAPI = (url) => {

@@ -460,7 +460,7 @@ export default function LichSuSuaChua() {
           </div>
         </div>
       </div>
-      <div className={clsx(style.searchWrap)}>
+      <div className={clsx(style.searchWrap, menu.isPhone ? style.isPhone : "")}>
         <Button
           variant="contained"
           sx={{ textTransform: "capitalize" }}

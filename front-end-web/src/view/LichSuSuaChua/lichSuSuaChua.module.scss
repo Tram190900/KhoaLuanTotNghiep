@@ -82,8 +82,11 @@
       margin-right: 5%;
     }
   }
+  .searchWrap.isPhone{
+    width: 100%;
+  }
   .tableLSL{
-    height: 40%;
+    max-height: 60%;
     overflow: auto;
   }
   .tableLSL.isPhone{

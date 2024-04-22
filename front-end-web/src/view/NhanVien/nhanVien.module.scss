@@ -19,13 +19,20 @@
         height: 70%;
         width: 30%;
         margin-top: 3%;
+        @media (max-width: 922px) {
+          width: 100%;
+        }
       }
       .left_infor {
         width: 65%;
+        @media (max-width: 922px) {
+          width: 100%;
+        }
       }
     }
     .left.isPhone{
       width: 100%;
+      flex-direction: column;
     }
     .right {
       width: 40%;
