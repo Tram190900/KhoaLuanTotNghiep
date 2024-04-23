@@ -154,6 +154,7 @@ export default function NhanVien() {
           role: "nhanvien",
           matKhau: "1111",
           nhanVien: result.data,
+          giangVien:null
         };
         const result2 = await postAPI("/taikhoan/dangKy", tk);
         if (result2.status === 200) {
@@ -234,7 +235,7 @@ export default function NhanVien() {
   }, [startDate, endDate]);
   return (
     <div className={clsx(style.nhanVien)}>
-      <h1>Quản lý nhân viên - Giảng viên</h1>
+      <h1>Quản lý nhân viên</h1>
       <div className={clsx(style.infoWrap, menu.isPhone ? style.isPhone : "")}>
         <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className={clsx(style.left_image_wrap)}>

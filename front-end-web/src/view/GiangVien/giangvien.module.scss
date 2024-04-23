@@ -1,0 +1,70 @@
+.nhanVien {
+    padding: 1.5% 1.5%;
+    height: 100%;
+    overflow-y: scroll;
+    .infoWrap {
+      display: flex;
+      overflow: auto;
+      .left {
+        width: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        .left_image_wrap {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 70%;
+          width: 30%;
+          margin-top: 3%;
+          @media (max-width: 922px) {
+            width: 100%;
+          }
+        }
+        .left_infor {
+          width: 65%;
+          display: flex;
+          flex-direction: row;
+          @media (max-width: 922px) {
+            width: 100%;
+            flex-direction: column;
+          }
+          .left_infor_left{
+            width: 40%;
+            margin-right: 5%;
+            @media (max-width: 922px) {
+              width: 100%;
+            }
+          }
+          .left_infor_right{
+            width: 40%;
+            @media (max-width: 922px) {
+              width: 100%;
+            }
+          }
+        }
+      }
+      .left.isPhone{
+        width: 100%;
+        flex-direction: column;
+      }
+    }
+    .infoWrap.isPhone{
+      flex-direction: column;
+    }
+    .buttonWrap {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      * {
+        margin-right: 2%;
+      }
+    }
+    .tableWrap {
+      overflow: auto;
+      height: 40%;
+    }
+  }
+  

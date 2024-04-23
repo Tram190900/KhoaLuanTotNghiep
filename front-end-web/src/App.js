@@ -17,6 +17,7 @@ import ThongKe from "./view/ThongKe";
 import ThongTinMayTinh from "./view/PhongMay/ThongTinMayTinh/ThongTinMayTinh";
 import LichTruc from "./view/LichTruc";
 import ProtectedRouter from "./layout/ProtectedRouter";
+import GiangVien from "./view/GiangVien";
 
 export const MenuContext = createContext(null);
 
@@ -67,6 +68,7 @@ function App() {
               <Route path="phan-mem" element={<PhanMem />} />
               <Route path="mon-hoc" element={<MonHoc />} />
               <Route path="nhan-vien" element={<NhanVien />} />
+              <Route path="giang-vien" element={<GiangVien/>}/>
               <Route path="lich-su-sua-chua" element={<LichSuSuaChua />} />
               <Route path="thong-ke" element={<ThongKe />} />
               <Route path="lich-truc" element={<LichTruc />} />

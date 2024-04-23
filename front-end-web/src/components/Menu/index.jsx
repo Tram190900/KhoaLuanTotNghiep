@@ -119,7 +119,7 @@ export default function Menu(props) {
                 <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
                 Quản lý nhân viên
               </div>
-              {/* <div
+              <div
                 onClick={() => {
                   menu.setMenuActive("giang-vien");
                   navigate("giang-vien");
@@ -131,7 +131,7 @@ export default function Menu(props) {
               >
                 <PeopleOutlineIcon sx={{ fontSize: 40, margin: "0 5%" }} />
                 Quản lý giảng viên
-              </div> */}
+              </div>
             </>
           ) : (
             <div
