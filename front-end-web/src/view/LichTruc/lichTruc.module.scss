@@ -88,7 +88,7 @@
   & .body {
     & .cell {
       position: relative;
-      min-height: 9em;
+      min-height: 7em;
       max-height: fit-content;
       border-right: 1px solid var(--border-color);
       overflow: hidden;
@@ -163,13 +163,13 @@
         background-color: rgba(132, 167, 211, 0.8);
         border-radius: 5px;
         margin: 3%;
-        padding: 3% ;
+        padding: 3%;
         font-size: 15px;
         .title {
           font-weight: bold;
         }
       }
-      .taskError{
+      .taskError {
         background-color: red;
         color: white;
         border-radius: 5px;
@@ -186,7 +186,7 @@
     }
   }
   .profile {
-    padding: 2% 2% 0% 2% ;
+    padding: 2% 2% 0% 2%;
     display: flex;
     justify-content: space-around;
     .image_wrap {
@@ -201,6 +201,9 @@
       span {
         margin: 10% 0% 10%;
       }
+      @media (max-width: 922px) {
+        width: 100%;
+      }
     }
     .left_infor {
       width: 65%;
@@ -210,13 +213,22 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      div{
+      div {
         width: 100%;
         padding: 2%;
-        .style_form{
+        .style_form {
           width: 100%;
         }
       }
+      @media (max-width: 922px) {
+        width: 100%;
+        height: fit-content;
+        flex-direction: column;
+        margin-top: 5%;
+      }
+    }
+    @media (max-width: 922px) {
+      flex-direction: column;
     }
   }
 }
