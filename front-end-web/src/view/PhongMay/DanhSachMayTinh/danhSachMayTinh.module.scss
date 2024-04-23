@@ -8,9 +8,9 @@
   background-color: red;
 }
 
-.chuThich{
+.chuThich {
   position: absolute;
-  top: calc(10% + 10px);
+  top: 10px;
   right: 30px;
   .item {
     display: inline-block;
@@ -22,42 +22,23 @@
   }
 }
 
-.wrapMayTinh {
-  position: relative;
-  .button {
-    margin: 10px;
-    padding: 10px;
-    border: none;
-    &:hover {
-      cursor: pointer;
-    }
-    &:hover + .mayTinhInfo {
-      display: block;
-      color: white;
-    }
+.button {
+  padding: 10px;
+  border: none;
+  &:hover {
+    cursor: pointer;
   }
-  .buttonHoatDong {
-    background-color: green;
-  }
-  .buttonSua {
-    background-color: yellow;
-  }
-  .buttonHong {
-    background-color: red;
-  }
-  .mayTinhInfo {
-    position: absolute;
-    padding: 0 10px;
-    // bottom: 0;
-    display: none;
-    z-index: 1;
-    background-color: black;
-    width: max-content;
-    p {
-      margin: 0;
-    }
+  &:hover + .mayTinhInfo {
+    display: block;
+    color: white;
   }
 }
-
-
-
+.buttonHoatDong {
+  background-color: green;
+}
+.buttonSua {
+  background-color: yellow;
+}
+.buttonHong {
+  background-color: red;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { styled } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -12,6 +13,19 @@ import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAPI } from "../../../api";
 import style from "./danhSachMayTinh.module.scss";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
 
 const DanhSachMayTinh = () => {
   const navigate = useNavigate();
@@ -69,7 +83,7 @@ const DanhSachMayTinh = () => {
   const dsHong = dsMayTinh.filter(checkHong);
 
   return (
-    <div className="p-3">
+    <div className="p-3" style={{ position: "relative" }}>
       <h1>Quản lý phòng máy</h1>
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
@@ -105,13 +119,31 @@ const DanhSachMayTinh = () => {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <Grid
-              container
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
             >
               {dsMayTinh.map((mayTinh) => (
-                <div className={clsx(style.wrapMayTinh)}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography color="inherit">{mayTinh.soMay}</Typography>
+                      <p style={{ margin: "0" }}>
+                        {"Trạng thái: "}
+                        {ghiTrangThai(mayTinh)}
+                      </p>
+                      <p style={{ margin: "0" }}>
+                        {"Phòng: "}
+                        {mayTinh.phongMay.soPhong}
+                      </p>
+                      <i>{"Double click để xem chi tiết"}</i>
+                    </React.Fragment>
+                  }
+                >
                   <button
                     onDoubleClick={() => {
                       navigate("/thongtinmaytinh", {
@@ -129,24 +161,36 @@ const DanhSachMayTinh = () => {
                   >
                     {mayTinh.soMay}
                   </button>
-                  <div className={clsx(style.mayTinhInfo)}>
-                    <p>Tên máy: {mayTinh.soMay}</p>
-                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    <p className="pt-1">Double click để xem chi tiết</p>
-                  </div>
-                </div>
+                </HtmlTooltip>
               ))}
-            </Grid>
+            </div>
           </TabPanel>
           <TabPanel value="2">
-            <Grid
-              container
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
             >
               {dsHoatDong.map((mayTinh) => (
-                <div className={clsx(style.wrapMayTinh)}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography color="inherit">{mayTinh.soMay}</Typography>
+                      <p style={{ margin: "0" }}>
+                        {"Trạng thái: "}
+                        {ghiTrangThai(mayTinh)}
+                      </p>
+                      <p style={{ margin: "0" }}>
+                        {"Phòng: "}
+                        {mayTinh.phongMay.soPhong}
+                      </p>
+                      <i>{"Double click để xem chi tiết"}</i>
+                    </React.Fragment>
+                  }
+                >
                   <button
                     onDoubleClick={() => {
                       navigate("/thongtinmaytinh", {
@@ -159,24 +203,36 @@ const DanhSachMayTinh = () => {
                   >
                     {mayTinh.soMay}
                   </button>
-                  <div className={clsx(style.mayTinhInfo)}>
-                    <p>Tên máy: {mayTinh.soMay}</p>
-                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    <p className="pt-1">Double click để xem chi tiết</p>
-                  </div>
-                </div>
+                </HtmlTooltip>
               ))}
-            </Grid>
+            </div>
           </TabPanel>
           <TabPanel value="3">
-            <Grid
-              container
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
             >
               {dsSua.map((mayTinh) => (
-                <div className={clsx(style.wrapMayTinh, style.buttonSua)}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography color="inherit">{mayTinh.soMay}</Typography>
+                      <p style={{ margin: "0" }}>
+                        {"Trạng thái: "}
+                        {ghiTrangThai(mayTinh)}
+                      </p>
+                      <p style={{ margin: "0" }}>
+                        {"Phòng: "}
+                        {mayTinh.phongMay.soPhong}
+                      </p>
+                      <i>{"Double click để xem chi tiết"}</i>
+                    </React.Fragment>
+                  }
+                >
                   <button
                     onDoubleClick={() => {
                       navigate("/thongtinmaytinh", {
@@ -189,24 +245,36 @@ const DanhSachMayTinh = () => {
                   >
                     {mayTinh.soMay}
                   </button>
-                  <div className={clsx(style.mayTinhInfo)}>
-                    <p>Tên máy: {mayTinh.soMay}</p>
-                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    <p className="pt-1">Double click để xem chi tiết</p>
-                  </div>
-                </div>
+                </HtmlTooltip>
               ))}
-            </Grid>
+            </div>
           </TabPanel>
           <TabPanel value="4">
-            <Grid
-              container
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
             >
               {dsHong.map((mayTinh) => (
-                <div className={clsx(style.wrapMayTinh)}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography color="inherit">{mayTinh.soMay}</Typography>
+                      <p style={{ margin: "0" }}>
+                        {"Trạng thái: "}
+                        {ghiTrangThai(mayTinh)}
+                      </p>
+                      <p style={{ margin: "0" }}>
+                        {"Phòng: "}
+                        {mayTinh.phongMay.soPhong}
+                      </p>
+                      <i>{"Double click để xem chi tiết"}</i>
+                    </React.Fragment>
+                  }
+                >
                   <button
                     onDoubleClick={() => {
                       navigate("/thongtinmaytinh", {
@@ -219,15 +287,9 @@ const DanhSachMayTinh = () => {
                   >
                     {mayTinh.soMay}
                   </button>
-                  <div className={clsx(style.mayTinhInfo)}>
-                    <p>Tên máy: {mayTinh.soMay}</p>
-                    <p>Trạng thái: {ghiTrangThai(mayTinh)}</p>
-                    <p>Phòng: {mayTinh.phongMay.soPhong}</p>
-                    <p className="pt-1">Double click để xem chi tiết</p>
-                  </div>
-                </div>
+                </HtmlTooltip>
               ))}
-            </Grid>
+            </div>
           </TabPanel>
         </TabContext>
         <Box
