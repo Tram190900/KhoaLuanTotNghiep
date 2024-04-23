@@ -42,44 +42,41 @@ export default function PhongMay(props) {
         </Link>
         <Typography color="text.primary">Tòa nhà</Typography>
       </Breadcrumbs>
-      <Grid
-        mt={3}
-        container
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-      >
-        {dsToaNha.map((toaNha) => (
-          <Grid xs={6}>
-            <Tooltip title="Double Click để xem chi tiết">
-              <Button
-                className={clsx(style.button)}
-                onDoubleClick={() => {
-                  navigate("/danhsachphongmay", {
-                    state: {
-                      toaNha_id: toaNha.id,
-                      tenToaNha: toaNha.tenToaNha,
-                    },
-                  });
-                }}
-              >
-                <Card sx={{ minWidth: 275 }}>
-                  <CardContent>
-                    <BusinessIcon sx={{ fontSize: 400 }} />
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      {toaNha.tenToaNha}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Button>
-            </Tooltip>
-          </Grid>
-        ))}
-      </Grid>
+      {dsToaNha.map((toaNha) => (
+        <Tooltip title="Double Click để xem chi tiết">
+          <Button
+            className={clsx(style.button)}
+            onDoubleClick={() => {
+              navigate("/danhsachphongmay", {
+                state: {
+                  toaNha_id: toaNha.id,
+                  tenToaNha: toaNha.tenToaNha,
+                },
+              });
+            }}
+          >
+            <Card sx={{ width: "100%" }}>
+              <CardContent>
+                {/* <BusinessIcon className={clsx(style.businessIcon)}/> */}
+                <div>
+                  <img 
+                    src={require("../../assets/icon/building-icon.jpg")}
+                    alt=""
+                    className={clsx(style.buildingIcon)}
+                  />
+                </div>
+                <Typography
+                  sx={{ fontSize: 14, textTransform:"capitalize"}}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  <b>{toaNha.tenToaNha}</b>
+                </Typography>
+              </CardContent>
+            </Card>
+          </Button>
+        </Tooltip>
+      ))}
     </div>
   );
 }
-

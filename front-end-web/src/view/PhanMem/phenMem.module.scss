@@ -1,16 +1,32 @@
-.phanMem{
-    height: 92%;
-    .info{
-        width: 50%;
+.phanMem {
+  height: 92%;
+  .info {
+    width: 50%;
+    @media (max-width: 767px) {
+      width: 100%;
     }
-    .searchWrap{
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        align-items: flex-end;
+  }
+  .searchWrap {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: flex-end;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
     }
-    .tablePhanMem{
-        overflow: auto;
-        height: 55%;
+    .searchGroup {
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
+    .buttonGroup {
+      display: flex;
+      gap: 10px;
+    }
+  }
+  .tablePhanMem {
+    overflow: auto;
+    height: 55%;
+  }
 }

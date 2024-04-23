@@ -220,11 +220,14 @@ export default function PhanMem() {
         </FormControl>
       </div>
       <div className={clsx(style.searchWrap, "py-3")}>
-        <FormControl>
+        <div className={clsx(style.searchGroup)}>
+        <FormControl sx={{display: "inline-block", marginRight: "15px"}}>
           <FormLabel>Tìm kiếm</FormLabel>
           <Input placeholder="Từ khóa" />
         </FormControl>
         <Checkbox label="Môn học" defaultChecked />
+        </div>
+        <div className={clsx(style.buttonGroup)}>
         <Button variant="contained" sx={{ textTransform: "capitalize" }}>
           Tìm kiếm
         </Button>
@@ -251,6 +254,7 @@ export default function PhanMem() {
         >
           Xóa
         </Button>
+        </div>
       </div>
       <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
         <Table aria-label="customized table">
@@ -269,9 +273,7 @@ export default function PhanMem() {
                 <StyledTableCell component="th" scope="row">
                   {row.id}
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.tenPhamMem}
-                </StyledTableCell>
+                <StyledTableCell align="left">{row.tenPhamMem}</StyledTableCell>
                 <StyledTableCell align="left">{row.phienBan}</StyledTableCell>
                 <StyledTableCell align="left">{row.theLoai}</StyledTableCell>
                 <StyledTableCell align="left">

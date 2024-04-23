@@ -148,8 +148,7 @@ export default function DanhSachPhongMay(props) {
           sx={{
             p: "2px 4px",
             display: "flex",
-            alignItems: "center",
-            width: 400,
+            alignItems: "center"
           }}
         >
           <InputBase
@@ -185,7 +184,7 @@ export default function DanhSachPhongMay(props) {
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
       >
         {dsPhongMay.map((phongMay) => (
-          <Grid xs={3}>
+          <Grid item xs={6} sm={3}>
             <Tooltip title="Double Click để xem chi tiết">
               <Card variant="outlined">
                 <CardContent

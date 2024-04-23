@@ -17,6 +17,9 @@
     height: 14px;
     width: 70px;
   }
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .wrapMayTinh {

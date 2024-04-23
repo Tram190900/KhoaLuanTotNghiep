@@ -9,21 +9,34 @@
     display: flex;
     justify-content: space-between;
     height: 80%;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+    }
     .tablePhanMem {
       height: 100%;
       overflow: auto;
       width: 48%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
     .tableThietBi {
       height: 100%;
       overflow: auto;
       width: 48%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
   }
   .mayTinhInfo {
     margin: 15px 0;
     font-size: 18px;
     font-style: normal;
+    @media (max-width: 767px) {
+      display: none;
+    }
   }
   .hoatDong {
     color: green

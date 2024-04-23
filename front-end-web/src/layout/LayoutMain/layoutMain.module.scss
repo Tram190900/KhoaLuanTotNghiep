@@ -2,7 +2,10 @@
   width: 100%;
   height: 100%;
   .bar {
-    height: 8%;
+    height: 69px;
+    @media (max-width: 767px) {
+      height: 64px;
+    }
   }
   .tab {
     height: 4%;
@@ -15,11 +18,12 @@
   }
   .wrap {
     width: 100%;
-    height: 92%;
+    height: calc(100% - 69px);
     display: flex;
     .menuContainer {
       width: 15%;
       height: 100%;
+      overflow-y: scroll;
       color: white !important;
     }
     .menuContainer.none{

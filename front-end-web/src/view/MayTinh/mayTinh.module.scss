@@ -19,6 +19,9 @@
       .leftWrap {
         width: 35%;
         overflow: auto;
+        @media (max-width: 767px) {
+          width: 100%;
+        }
         .leftWrap_button {
           margin-top: 3%;
           margin-right: 5%;
@@ -30,13 +33,23 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      gap: 10px;
+    }
     .tablePhanMem {
       overflow: auto;
       width: 48%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
     .tableThietBi {
       overflow: auto;
       width: 48%;
+      @media (max-width: 767px) {
+        width: 100%;
+      }
     }
   }
 }
