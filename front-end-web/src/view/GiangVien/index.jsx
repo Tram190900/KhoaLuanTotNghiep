@@ -9,31 +9,19 @@ import {
 } from "./../../api/index";
 import {
   Avatar,
-  DialogContent,
-  DialogTitle,
   FormControl,
   FormLabel,
   Input,
-  Modal,
-  ModalClose,
-  ModalDialog,
   Option,
   Select,
-  Sheet,
 } from "@mui/joy";
-import CapNhatLichTruc from "../../components/Modal/CapNhatLichTruc";
 import Swal from "sweetalert2";
-import moment from "moment";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
@@ -62,11 +50,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function GiangVien() {
   const menu = useContext(MenuContext);
   const user = JSON.parse(localStorage.getItem("user"));
-  const [openLichTruc, setOpenLichTruc] = useState(false);
-  const [xemCaTruc, setXemCaTruc] = useState(false);
 
   const [allNhanVien, setAllNhanVien] = useState([]);
-  const [caTruc, setCaTruc] = useState([]);
 
   const [hoTen, setHoTen] = useState("");
   const [email, setEmail] = useState("");

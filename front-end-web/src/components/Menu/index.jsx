@@ -123,6 +123,9 @@ export default function Menu(props) {
                 onClick={() => {
                   menu.setMenuActive("giang-vien");
                   navigate("giang-vien");
+                  if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
+                    props?.handleMobileMenuClose()
+                  }
                 }}
                 className={clsx(
                   style.menuItem,

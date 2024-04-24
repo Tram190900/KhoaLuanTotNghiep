@@ -11,7 +11,6 @@ import Button from "@mui/material/Button";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { putAPI } from "../../api";
 import Swal from "sweetalert2";
-import { isFirstDayOfMonth } from "date-fns";
 
 export default function DoiMatKhau(props) {
   const nhanVien = JSON.parse(localStorage.getItem("user"));
@@ -47,6 +46,11 @@ export default function DoiMatKhau(props) {
       }
     }else{
         setErrXN("Mật khẩu mới và xác nhận không khớp !!!")
+    }
+  };
+  onkeyup = (e) => {
+    if (e.key === "Enter") {
+      hanldeDoiMatKhau()
     }
   };
   return (
