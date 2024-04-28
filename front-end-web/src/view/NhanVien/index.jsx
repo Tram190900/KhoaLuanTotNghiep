@@ -133,63 +133,71 @@ export default function NhanVien() {
 
   const handleSaveNhanVien = async () => {
     const check = checkData();
-    if (check) {
-      const data = new FormData();
-      data.append("hoTenNhanVien", hoTen);
-      data.append("email", email);
-      data.append("sdt", sdt);
-      data.append("gioiTinh", gioiTinh);
-      data.append("diaChi", diaChi);
-      data.append("trangThai", trangThai);
-      data.append("file", fileImage);
-      const result = await postAPIWithImg("/saveNhanVien", data);
-      if (result.status === 200) {
-        const tk = {
-          tenTaiKhoan: result.data.hoTenNhanVien
-            .toLowerCase()
-            .trim()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/\W/g, ""),
-          role: "nhanvien",
-          matKhau: "1111",
-          nhanVien: result.data,
-          giangVien:null
-        };
-        const result2 = await postAPI("/taikhoan/dangKy", tk);
-        if (result2.status === 200) {
-          Swal.fire({
-            text: "Thêm nhân viên mới thành công",
-            icon: "success",
-          });
+    try {
+      if (check) {
+        const data = new FormData();
+        data.append("hoTenNhanVien", hoTen);
+        data.append("email", email);
+        data.append("sdt", sdt);
+        data.append("gioiTinh", gioiTinh);
+        data.append("diaChi", diaChi);
+        data.append("trangThai", trangThai);
+        data.append("file", fileImage);
+        const result = await postAPIWithImg("/saveNhanVien", data);
+        if (result.status === 200) {
+          const tk = {
+            tenTaiKhoan: result.data.hoTenNhanVien
+              .toLowerCase()
+              .trim()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/\W/g, ""),
+            role: "nhanvien",
+            matKhau: "1111",
+            nhanVien: result.data,
+            giangVien: null,
+          };
+          const result2 = await postAPI("/taikhoan/dangKy", tk);
+          if (result2.status === 200) {
+            Swal.fire({
+              text: "Thêm nhân viên mới thành công",
+              icon: "success",
+            });
+          }
+          handleGetAllNhanvien();
         }
-        handleGetAllNhanvien();
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const handleCapNhatNhanVien = async () => {
     const check = checkData();
-    if (check) {
-      const data = new FormData();
-      data.append("hoTenNhanVien", hoTen);
-      data.append("email", email);
-      data.append("sdt", sdt);
-      data.append("gioiTinh", gioiTinh);
-      data.append("diaChi", diaChi);
-      data.append("trangThai", trangThai);
-      data.append("file", fileImage);
-      const result = await putApiWithImage(
-        `updateNhanVien/${nhanVienId}`,
-        data
-      );
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Cập nhật thông tin nhân viên thành công",
-          icon: "success",
-        });
-        handleGetAllNhanvien();
+    try {
+      if (check) {
+        const data = new FormData();
+        data.append("hoTenNhanVien", hoTen);
+        data.append("email", email);
+        data.append("sdt", sdt);
+        data.append("gioiTinh", gioiTinh);
+        data.append("diaChi", diaChi);
+        data.append("trangThai", trangThai);
+        data.append("file", fileImage);
+        const result = await putApiWithImage(
+          `updateNhanVien/${nhanVienId}`,
+          data
+        );
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Cập nhật thông tin nhân viên thành công",
+            icon: "success",
+          });
+          handleGetAllNhanvien();
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -240,11 +248,7 @@ export default function NhanVien() {
         <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className={clsx(style.left_image_wrap)}>
             <Avatar
-              src={
-                imageURL ||
-                `http://103.130.215.37:8080/${imageURL}` ||
-                "logo192.png"
-              }
+              src={imageURL ? imageURL : "logo192.png"}
               alt="avatar"
               sx={{
                 width: "10rem",
@@ -262,7 +266,7 @@ export default function NhanVien() {
                 inputFileReference.current.click();
               }}
               onChange={() => uploadImage()}
-              disabled={hoTen.trim().length>0?"":"disabled"}
+              disabled={hoTen.trim().length > 0 ? "" : "disabled"}
             >
               Thay ảnh đại diện
               <input
@@ -426,7 +430,7 @@ export default function NhanVien() {
           sx={{ textTransform: "capitalize" }}
           color="warning"
           onClick={() => handleCapNhatNhanVien()}
-          disabled={hoTen.trim().length>0?"":"disabled"}
+          disabled={hoTen.trim().length > 0 ? "" : "disabled"}
         >
           Cập nhật
         </Button>
@@ -437,7 +441,7 @@ export default function NhanVien() {
               sx={{ textTransform: "capitalize" }}
               color="warning"
               onClick={() => setXemCaTruc(true)}
-              disabled={hoTen.trim().length>0?"":"disabled"}
+              disabled={hoTen.trim().length > 0 ? "" : "disabled"}
             >
               Xem ca trực
             </Button>
@@ -492,8 +496,8 @@ export default function NhanVien() {
                       sx={{ textTransform: "capitalize" }}
                       color="warning"
                       onClick={() => {
-                        setOpenLichTruc(!openLichTruc)
-                        setXemCaTruc(false)
+                        setOpenLichTruc(!openLichTruc);
+                        setXemCaTruc(false);
                       }}
                     >
                       Cập nhật lịch trực

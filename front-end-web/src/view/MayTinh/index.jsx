@@ -5,10 +5,9 @@ import style from "./mayTinh.module.scss";
 import { FormControl, FormLabel, Option, Select } from "@mui/joy";
 import { Button } from "@mui/material";
 import LichSuaChua from "../../components/Modal/LichSuaChua";
-import { getAPI } from "../../api";
+import { getAPI, postAPI } from "../../api";
 import moment from "moment";
 import CapNhatCauHinh from "../../components/Modal/CapNhatCuaHinh";
-import PrimarySearchAppBar from "../../components/AppBar/PrimarySearchAppBar";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -16,6 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Swal from "sweetalert2";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,6 +54,7 @@ export default function MayTinh() {
   const [selectMayTinh, setSelectMayTinh] = useState(null);
 
   const [trangThai, setTrangThai] = useState(true);
+  const [loiGapPhai, setLoiGapPhai] = useState(null);
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
@@ -146,9 +147,57 @@ export default function MayTinh() {
     }
   };
 
+  const handleCapNhapSuaChua = async () => {
+    const chiTietLichSuSuaChua = {
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
+      lichSuSuaChua: loiGapPhai,
+    };
+    try {
+      const result = await postAPI(
+        "/chiTietLichSuSuaChua",
+        chiTietLichSuSuaChua
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm lịch sửa máy tính thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        handleMayTinh(result.data.lichSuSuaChua.mayTinh)
+        setTrangThai(result.data.lichSuSuaChua.mayTinh.trangThai)
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   const handleChange = (event, newValue) => {
     setTrangThai(newValue);
   };
+
+  const handleGetLoiMacPhai = async (id) => {
+    try {
+      const result = await getAPI(
+        `/lichSuSuaChua/getLoiChuaSuaTheoMayTinhGanNhat/${id}`
+      );
+      if (result.status === 200) {
+        setLoiGapPhai(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectMayTinh?.trangThai === 2) {
+      handleGetLoiMacPhai(selectMayTinh.id);
+    }
+  }, [selectMayTinh?.trangThai]);
 
   return (
     <div className={clsx(style.maytinh, "p-3")}>
@@ -204,28 +253,39 @@ export default function MayTinh() {
               <FormLabel>Trạng thái</FormLabel>
               <Select
                 placeholder="Trạng thái ..."
-                value={trangThai}
+                value={selectMayTinh?.trangThai}
                 onChange={handleChange}
               >
-                <Option value={true}>Bình thường</Option>
-                <Option value={false}>Bảo trì</Option>
+                <Option value={1}>Hoạt động</Option>
+                <Option value={2}>Bảo trì</Option>
+                <Option value={3}>Hỏng</Option>
               </Select>
             </FormControl>
           </div>
         </div>
       </div>
       <div className={clsx(style.button, "py-3")}>
-        <Button
-          color="error"
-          disabled={
-            mayTinh.trangThai === 2 || mayTinh.trangThai === 3 ? "disabled" : ""
-          }
-          onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-          variant="contained"
-          sx={{ textTransform: "capitalize" }}
-        >
-          Báo lỗi
-        </Button>
+        {selectMayTinh?.trangThai === 1 ? (
+          <Button
+            color="error"
+            disabled={mayTinh.trangThai === 2 || mayTinh.trangThai === 3}
+            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+          >
+            Báo lỗi
+          </Button>
+        ) : selectMayTinh?.trangThai === 2 ? (
+          <Button
+            color="error"
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+            onClick={() => handleCapNhapSuaChua()}
+          >
+            Cập nhật sửa chữa
+          </Button>
+        ) : null}
+
         {user.role === "giangvien" ? null : (
           <>
             <Button

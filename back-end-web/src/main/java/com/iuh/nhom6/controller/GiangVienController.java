@@ -1,12 +1,9 @@
 package com.iuh.nhom6.controller;
 
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.iuh.nhom6.model.GiangVien;
 import com.iuh.nhom6.repository.GiangVienRepository;
+import com.iuh.nhom6.util.AWSCloudUtil;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,11 +23,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 @CrossOrigin
 @RequestMapping("/giangVien")
 public class GiangVienController {
-    private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
+    @Value("${aws.accesskey}")
+    private String AWS_ACCESS_KEY;
+
+    @Value("${aws.s3.bucket}")
+    private String AWS_BUCKET;
+
+    @Value("${aws.secretkey}")
+    private String AWS_SECRET_KEY;
     @Autowired
     private GiangVienRepository giangVienRepository;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public GiangVien getGiangVienById(@PathVariable Long id) {
         try {
             return giangVienRepository.findById(id).get();
@@ -57,18 +63,11 @@ public class GiangVienController {
             @RequestParam("trangThai") Boolean trangThai,
             @RequestParam("file") MultipartFile image) {
         try {
+            AWSCloudUtil util = new AWSCloudUtil();
             GiangVien giangVien = new GiangVien();
-            Path staticPath = Paths.get("static");
-            Path imagePath = Paths.get("images");
-            if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
-                Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
-            }
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath).resolve(image.getOriginalFilename());
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
-            }
-            giangVien.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
+            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
+                    AWS_BUCKET);
+            giangVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
             giangVien.setTenGiangVien(hoTenNhanVien);
             giangVien.setEmail(email);
             giangVien.setDiaChi(diaChi);
@@ -93,16 +92,9 @@ public class GiangVienController {
         // TODO: process PUT request
 
         try {
-            Path staticPath = Paths.get("static");
-            Path imagePath = Paths.get("images");
-            if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
-                Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
-            }
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath).resolve(image.getOriginalFilename());
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
-            }
+            AWSCloudUtil util = new AWSCloudUtil();
+            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
+                    AWS_BUCKET);
             GiangVien newGiangVien = new GiangVien(id, hoTenNhanVien, email, sdt, gioiTinh, diaChi, trangThai, diaChi);
             return giangVienRepository.findById(id).map(
                     giangVien -> {
@@ -113,7 +105,7 @@ public class GiangVienController {
                         giangVien.setGioiTinh(newGiangVien.getGioiTinh());
                         giangVien.setTrangThai(newGiangVien.getTrangThai());
                         giangVien.setImage(
-                                imagePath.resolve(image.getOriginalFilename()).toString());
+                                "https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
                         return giangVienRepository.save(giangVien);
                     }).orElseThrow();
         } catch (Exception e) {

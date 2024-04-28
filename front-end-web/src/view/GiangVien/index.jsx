@@ -138,7 +138,7 @@ export default function GiangVien() {
             role: "giangvien",
             matKhau: "1111",
             nhanVien: null,
-            giangVien: result.data
+            giangVien: result.data,
           };
           const result2 = await postAPI("/taikhoan/dangKy", tk);
           if (result2.status === 200) {
@@ -157,26 +157,30 @@ export default function GiangVien() {
 
   const handleCapNhatNhanVien = async () => {
     const check = checkData();
-    if (check) {
-      const data = new FormData();
-      data.append("tenGiangVien", hoTen);
-      data.append("email", email);
-      data.append("sdt", sdt);
-      data.append("gioiTinh", gioiTinh);
-      data.append("diaChi", diaChi);
-      data.append("trangThai", trangThai);
-      data.append("file", fileImage);
-      const result = await putApiWithImage(
-        `/giangVien/updateGiangVien/${nhanVienId}`,
-        data
-      );
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Cập nhật thông tin giảng viên thành công",
-          icon: "success",
-        });
-        handleGetAllNhanvien();
+    try {
+      if (check) {
+        const data = new FormData();
+        data.append("tenGiangVien", hoTen);
+        data.append("email", email);
+        data.append("sdt", sdt);
+        data.append("gioiTinh", gioiTinh);
+        data.append("diaChi", diaChi);
+        data.append("trangThai", trangThai);
+        data.append("file", fileImage);
+        const result = await putApiWithImage(
+          `/giangVien/updateGiangVien/${nhanVienId}`,
+          data
+        );
+        if (result.status === 200) {
+          Swal.fire({
+            text: "Cập nhật thông tin giảng viên thành công",
+            icon: "success",
+          });
+          handleGetAllNhanvien();
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -194,11 +198,7 @@ export default function GiangVien() {
         <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className={clsx(style.left_image_wrap)}>
             <Avatar
-              src={
-                imageURL ||
-                `http://103.130.215.37:8080/${imageURL}` ||
-                "logo192.png"
-              }
+              src={imageURL ? imageURL : "logo192.png"}
               alt="avatar"
               sx={{
                 width: "10rem",

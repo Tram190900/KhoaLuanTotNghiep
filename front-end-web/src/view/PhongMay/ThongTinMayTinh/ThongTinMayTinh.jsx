@@ -4,7 +4,7 @@ import style from "./thongTinMayTinh.module.scss";
 import { useLocation, useNavigate } from "react-router";
 import { Breadcrumbs, Button, Typography } from "@mui/material";
 import moment from "moment";
-import { getAPI } from "../../../api";
+import { getAPI, postAPI } from "../../../api";
 import { Link } from "react-router-dom";
 import LichSuaChua from "../../../components/Modal/LichSuaChua";
 import CapNhatCauHinh from "../../../components/Modal/CapNhatCuaHinh";
@@ -16,6 +16,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Swal from "sweetalert2";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,7 +53,7 @@ const rows = [
 const ThongTinMayTinh = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const mayTinh = location.state.mayTinh;
+  const [mayTinh, setMayTinh] = useState(location.state.mayTinh);
   const [phanMemCaiDat, setPhanMemCaiDat] = useState([]);
   const [thietBiLapDat, setThietBiLapDat] = useState([]);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -109,6 +110,35 @@ const ThongTinMayTinh = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleCapNhapSuaChua = async () => {
+    const chiTietLichSuSuaChua = {
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
+      lichSuSuaChua: loiGapPhai,
+    };
+    try {
+      const result = await postAPI("/chiTietLichSuSuaChua", chiTietLichSuSuaChua);
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Thêm lịch sửa máy tính thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        const result1 = await getAPI(`/getMayTinhById/${result.data.lichSuSuaChua.mayTinh.id}`)
+        if(result1.status===200){
+          setMayTinh(result1.data)
+          setLoiGapPhai(null)
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -194,19 +224,29 @@ const ThongTinMayTinh = () => {
         {loiGapPhai ? `(${loiGapPhai.loiGapPhai})` : ""}
       </Paper>
       <div className={clsx(style.button)}>
-        <Button
-          color="error"
-          disabled={
-            mayTinh.trangThai === 2 || mayTinh.trangThai === 3 ? "disabled" : ""
-          }
-          onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-          variant="contained"
-          sx={{ textTransform: "capitalize" }}
-        >
-          Báo lỗi
-        </Button>
+        {mayTinh.trangThai === 1 ? (
+          <Button
+            color="error"
+            disabled={mayTinh.trangThai === 3 ? "disabled" : ""}
+            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+          >
+            Báo lỗi
+          </Button>
+        ) : null}
         {user.role === "giangvien" ? null : (
           <>
+            {mayTinh.trangThai === 2 ? (
+              <Button
+                color="error"
+                variant="contained"
+                sx={{ textTransform: "capitalize" }}
+                onClick={() => handleCapNhapSuaChua()}
+              >
+                Cập nhật sửa chữa
+              </Button>
+            ) : null}
             <Button
               onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
               variant="contained"
