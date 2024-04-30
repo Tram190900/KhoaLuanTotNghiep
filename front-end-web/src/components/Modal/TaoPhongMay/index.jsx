@@ -32,15 +32,15 @@ const TaoPhongMay = (props) => {
   const [dsPhanMemChon, setDsPhanMemChon] = useState([]);
   const [dsThietBiChon, setDsThietBiChon] = useState([]);
   const [toaNha, setToaNha] = useState([]);
-  const [dsNhanVien, setdsNhanVien] = useState([])
+  const [dsNhanVien, setdsNhanVien] = useState([]);
   // const [dsMayTinhCapNhap, setDanhSachMayTinhCapNhap] = useState([]);
   const [duLieuVao, setDuLieuVao] = useState({
     soPhong: "",
     tenLoaiPhong: "",
     soLuongMay: "",
-    nhanVien: {}
+    nhanVien: {},
   });
-console.log(duLieuVao);
+  console.log(duLieuVao);
   const layThongTinToaNha = async () => {
     const result = await getAPI(`/toanha/${props.toaNha_id}`);
     if (result.status === 200) {
@@ -62,12 +62,12 @@ console.log(duLieuVao);
     }
   };
 
-  const xemDanhSachNhanVien = async () =>{
-    const result = await getAPI('getAllNhanVien')
-    if(result.status===200){
-      setdsNhanVien(result.data)
+  const xemDanhSachNhanVien = async () => {
+    const result = await getAPI("getAllNhanVien");
+    if (result.status === 200) {
+      setdsNhanVien(result.data);
     }
-  }
+  };
 
   useEffect(() => {
     xemDanhSachPhanMem();
@@ -108,20 +108,40 @@ console.log(duLieuVao);
       duLieuVao.soLuongMay.trim().length > 0 &&
       duLieuVao.tenLoaiPhong.trim().length > 0
     ) {
-      return true;
+      if (dsPhanMemChon.length > 0 && dsThietBiChon.length > 0) {
+        return true;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Chọn thiết bị và phần mềm muốn cài đặt",
+          customClass: {
+            container: "custom-swal-container", // Thêm một class tùy chỉnh cho container của Swal.fire
+          },
+          didOpen: () => {
+            const swalContainer = document.querySelector(
+              ".custom-swal-container"
+            );
+            if (swalContainer) {
+              swalContainer.style.zIndex = "10000"; // Đặt z-index của container lên giá trị cao hơn (ví dụ: 10000)
+            }
+          },
+        });
+      }
     } else {
       Swal.fire({
         icon: "error",
         title: "Điền đầy đủ thông tin phòng máy",
         customClass: {
-          container: 'custom-swal-container' // Thêm một class tùy chỉnh cho container của Swal.fire
+          container: "custom-swal-container", // Thêm một class tùy chỉnh cho container của Swal.fire
         },
         didOpen: () => {
-          const swalContainer = document.querySelector('.custom-swal-container');
+          const swalContainer = document.querySelector(
+            ".custom-swal-container"
+          );
           if (swalContainer) {
-            swalContainer.style.zIndex = '10000'; // Đặt z-index của container lên giá trị cao hơn (ví dụ: 10000)
+            swalContainer.style.zIndex = "10000"; // Đặt z-index của container lên giá trị cao hơn (ví dụ: 10000)
           }
-        }
+        },
       });
     }
   };
@@ -136,51 +156,74 @@ console.log(duLieuVao);
           tenLoaiPhong: duLieuVao.tenLoaiPhong,
           soLuongMay: duLieuVao.soLuongMay,
         },
-        nhanVien: duLieuVao.nhanVien
+        nhanVien: duLieuVao.nhanVien,
       };
-      await postAPI("/savePhongMay", phongMay);
-      await luuMayTinh().then((comment) => {
-        setLoading(false);
-      });
-      setDsPhanMemChon([]);
-      setDsThietBiChon([]);
-      props.xemDanhSachPhongMay();
-      props.setOpen(false);
-      setLoading(true);
+      const checkPhong = await getAPI(`/phongMayBySoPhong/${phongMay.soPhong}`);
+      if (checkPhong.status === 200 && checkPhong.data) {
+        Swal.fire({
+          icon: "warning",
+          title: `Phòng ${phongMay.soPhong} đã tồn tại. Vui lòng nhập số phòng khác`,
+          customClass: {
+            container: "custom-swal-container", // Thêm một class tùy chỉnh cho container của Swal.fire
+          },
+          didOpen: () => {
+            const swalContainer = document.querySelector(
+              ".custom-swal-container"
+            );
+            if (swalContainer) {
+              swalContainer.style.zIndex = "10000"; // Đặt z-index của container lên giá trị cao hơn (ví dụ: 10000)
+            }
+          },
+        });
+      } else {
+        await postAPI("/savePhongMay", phongMay);
+        await luuMayTinh().then((comment) => {
+          setLoading(false);
+        });
+        setDsPhanMemChon([]);
+        setDsThietBiChon([]);
+        props.xemDanhSachPhongMay();
+        props.setOpen(false);
+        setLoading(true);
+      }
     }
   };
 
   const luuMayTinh = async () => {
-    for (let i = 0; i < duLieuVao.soLuongMay; i++) {
-      const mayTinh = {
-        soMay:
-          i > 8
-            ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
-            : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1),
-        trangThai: 1,
-        phongMay: {
-          soPhong: duLieuVao.soPhong,
-        },
-      };
-      await postAPI("/saveMayTinh", mayTinh);
-      dsPhanMemChon.map(async (phanMem) => {
-        const chiTietCaiDat = {
-          mayTinh: mayTinh,
-          phanMem: phanMem,
-          ngayCaiDat: new Date(),
+    try {
+      for (let i = 0; i < duLieuVao.soLuongMay; i++) {
+        const mayTinh = {
+          soMay:
+            i > 8
+              ? duLieuVao.soPhong.replace(".", "") + "M" + (i + 1)
+              : duLieuVao.soPhong.replace(".", "") + "M0" + (i + 1),
+          trangThai: 1,
+          phongMay: {
+            soPhong: duLieuVao.soPhong,
+          },
         };
-        await postAPI("/saveChiTietCaiDat", chiTietCaiDat);
-      });
-      dsThietBiChon.map(async (thietBi) => {
-        const chiTietLapDat = {
-          mayTinh: mayTinh,
-          thietBi: thietBi,
-          ngayLapDat: new Date(),
-        };
-        await postAPI("/saveChiTietLapDat", chiTietLapDat);
-      });
+        await postAPI("/saveMayTinh", mayTinh);
+        dsPhanMemChon.map(async (phanMem) => {
+          const chiTietCaiDat = {
+            mayTinh: mayTinh,
+            phanMem: phanMem,
+            ngayCaiDat: new Date(),
+          };
+          await postAPI("/saveChiTietCaiDat", chiTietCaiDat);
+        });
+        dsThietBiChon.map(async (thietBi) => {
+          const chiTietLapDat = {
+            mayTinh: mayTinh,
+            thietBi: thietBi,
+            ngayLapDat: new Date(),
+          };
+          await postAPI("/saveChiTietLapDat", chiTietLapDat);
+        });
+      }
+      props.setOpen(false);
+    } catch (error) {
+      console.log(error);
     }
-    props.setOpen(false);
   };
 
   const luuPhongMay1 = async () => {
@@ -230,7 +273,7 @@ console.log(duLieuVao);
         tenLoaiPhong: duLieuVao.tenLoaiPhong,
         soLuongMay: duLieuVao.soLuongMay,
       },
-      nhanVien: duLieuVao.nhanVien
+      nhanVien: duLieuVao.nhanVien,
     };
     try {
       const result = await putAPI(
@@ -302,7 +345,6 @@ console.log(duLieuVao);
     props.setOpen(false);
   };
 
-
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
       <ModalDialog sx={{ padding: "20px" }}>
@@ -354,7 +396,7 @@ console.log(duLieuVao);
               </FormControl>
             </Grid>
             <Grid xs={12}>
-            <FormControl fullWidth>
+              <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Nhân viên phụ trách
                 </InputLabel>
@@ -363,15 +405,18 @@ console.log(duLieuVao);
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="NhanVien"
-                  onChange={(e,v)=>{
-                    setDuLieuVao({...duLieuVao, nhanVien:{id: v.props.value}})
+                  onChange={(e, v) => {
+                    setDuLieuVao({
+                      ...duLieuVao,
+                      nhanVien: { id: v.props.value },
+                    });
                   }}
                 >
-                  {
-                    dsNhanVien?.map((item,index)=>(
-                      <MenuItem value={item.id} key={index}>{item.hoTenNhanVien}</MenuItem>
-                    ))
-                  }
+                  {dsNhanVien?.map((item, index) => (
+                    <MenuItem value={item.id} key={index}>
+                      {item.hoTenNhanVien}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -420,7 +465,7 @@ console.log(duLieuVao);
             {loading ? <LinearProgress /> : null}
           </Box>
           <Button
-          className={clsx(style.button)}
+            className={clsx(style.button)}
             onClick={() => {
               if (props.tieuDe === "Tạo phòng máy") {
                 showProgress();

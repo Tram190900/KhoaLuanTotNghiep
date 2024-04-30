@@ -247,14 +247,14 @@ const ThongTinMayTinh = () => {
                 Cập nhật sửa chữa
               </Button>
             ) : null}
-            <Button
+            {/* <Button
               onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
               variant="contained"
               sx={{ textTransform: "capitalize" }}
               color="warning"
             >
               Cập nhật cấu hình
-            </Button>
+            </Button> */}
           </>
         )}
       </div>

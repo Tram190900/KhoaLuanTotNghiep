@@ -22,6 +22,8 @@ import com.iuh.nhom6.repository.LoaiPhongRepository;
 import com.iuh.nhom6.repository.NhanVienRepository;
 import com.iuh.nhom6.repository.PhongMayRepository;
 import com.iuh.nhom6.repository.ToaNhaRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @CrossOrigin
@@ -116,4 +118,9 @@ public class PhongMayController {
     return phongMayRepository.findPhongMayByToaNha(toaNha, PageRequest.of(offset, pageSize));
   }
 
+  @GetMapping("/phongMayBySoPhong/{soPhong}")
+  public PhongMay getPhongMayBySoPhongMay(@PathVariable String soPhong) {
+      return phongMayRepository.findPhongMayBySoPhong(soPhong);
+  }
+  
 }

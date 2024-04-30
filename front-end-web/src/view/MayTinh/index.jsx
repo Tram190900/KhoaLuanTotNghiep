@@ -286,7 +286,7 @@ export default function MayTinh() {
           </Button>
         ) : null}
 
-        {user.role === "giangvien" ? null : (
+        {/* {user.role === "giangvien" ? null : (
           <>
             <Button
               onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}
@@ -297,7 +297,7 @@ export default function MayTinh() {
               Cập nhật cấu hình
             </Button>
           </>
-        )}
+        )} */}
       </div>
       <div className={clsx(style.rightWrap)}>
         <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
