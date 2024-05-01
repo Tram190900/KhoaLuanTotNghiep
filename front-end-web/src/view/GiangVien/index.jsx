@@ -166,6 +166,7 @@ export default function GiangVien() {
         data.append("gioiTinh", gioiTinh);
         data.append("diaChi", diaChi);
         data.append("trangThai", trangThai);
+        data.append("image", imageURL);
         data.append("file", fileImage);
         const result = await putApiWithImage(
           `/giangVien/updateGiangVien/${nhanVienId}`,

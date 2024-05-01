@@ -63,7 +63,7 @@ export default function LichSuaChua(props) {
     const result = await postAPI("/lichSuSuaChua", loi);
     if (result.status === 200) {
       Swal.fire({
-        text: "Thêm mới phần mềm thành công",
+        text: "Báo lỗi thành công",
         icon: "success",
         confirmButtonText: "OK",
       });

@@ -159,12 +159,14 @@ export default function MayTinh() {
       );
       if (result.status === 200) {
         Swal.fire({
-          text: "Thêm lịch sửa máy tính thành công",
+          text: "Thêm lịch sử sửa chữa thành công",
           icon: "success",
           confirmButtonText: "OK",
         });
-        handleMayTinh(result.data.lichSuSuaChua.mayTinh)
-        setTrangThai(result.data.lichSuSuaChua.mayTinh.trangThai)
+        handleToaNha(selectToaNha)
+        handlePhongMay(selectPhongMay)
+        handleMayTinh(result.data.lichSuSuaChua.mayTinh);
+        setTrangThai(result.data.lichSuSuaChua.mayTinh.trangThai);
       }
     } catch (error) {
       console.log(error);
@@ -190,6 +192,37 @@ export default function MayTinh() {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const luuChiTietLichSuSuaChuaHong = async () => {
+    const chiTietLichSuSuaChua = {
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
+      lichSuSuaChua: loiGapPhai,
+    };
+    try {
+      const result = await postAPI(
+        "/chiTietLichSuSuaChua/hong",
+        chiTietLichSuSuaChua
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Báo hỏng thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        handleToaNha(selectToaNha)
+        handlePhongMay(selectPhongMay)
+        handleMayTinh(result.data.lichSuSuaChua.mayTinh);
+        setTrangThai(result.data.lichSuSuaChua.mayTinh.trangThai);
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -253,7 +286,7 @@ export default function MayTinh() {
               <FormLabel>Trạng thái</FormLabel>
               <Select
                 placeholder="Trạng thái ..."
-                value={selectMayTinh?.trangThai}
+                value={trangThai}
                 onChange={handleChange}
               >
                 <Option value={1}>Hoạt động</Option>
@@ -276,14 +309,25 @@ export default function MayTinh() {
             Báo lỗi
           </Button>
         ) : selectMayTinh?.trangThai === 2 ? (
-          <Button
-            color="error"
-            variant="contained"
-            sx={{ textTransform: "capitalize" }}
-            onClick={() => handleCapNhapSuaChua()}
-          >
-            Cập nhật sửa chữa
-          </Button>
+          <>
+            <Button
+              color="error"
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              onClick={() => handleCapNhapSuaChua()}
+            >
+              Cập nhật sửa chữa
+            </Button>
+            <Button
+              color="warning"
+              disabled={mayTinh.trangThai === 3 ? "disabled" : ""}
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+              onClick={() => luuChiTietLichSuSuaChuaHong()}
+            >
+              Báo hỏng
+            </Button>
+          </>
         ) : null}
 
         {/* {user.role === "giangvien" ? null : (

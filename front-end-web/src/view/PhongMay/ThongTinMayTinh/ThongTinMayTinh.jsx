@@ -119,17 +119,56 @@ const ThongTinMayTinh = () => {
       lichSuSuaChua: loiGapPhai,
     };
     try {
-      const result = await postAPI("/chiTietLichSuSuaChua", chiTietLichSuSuaChua);
+      const result = await postAPI(
+        "/chiTietLichSuSuaChua",
+        chiTietLichSuSuaChua
+      );
       if (result.status === 200) {
         Swal.fire({
-          text: "Thêm lịch sửa máy tính thành công",
+          text: "Thêm lịch sử sửa chữa thành công",
           icon: "success",
           confirmButtonText: "OK",
         });
-        const result1 = await getAPI(`/getMayTinhById/${result.data.lichSuSuaChua.mayTinh.id}`)
-        if(result1.status===200){
-          setMayTinh(result1.data)
-          setLoiGapPhai(null)
+        const result1 = await getAPI(
+          `/getMayTinhById/${result.data.lichSuSuaChua.mayTinh.id}`
+        );
+        if (result1.status === 200) {
+          setMayTinh(result1.data);
+          setLoiGapPhai(null);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const luuChiTietLichSuSuaChuaHong = async () => {
+    const chiTietLichSuSuaChua = {
+      ngaySuaLoi: moment().format("YYYY-MM-DD"),
+      lichSuSuaChua: loiGapPhai,
+    };
+    try {
+      const result = await postAPI(
+        "/chiTietLichSuSuaChua/hong",
+        chiTietLichSuSuaChua
+      );
+      if (result.status === 200) {
+        Swal.fire({
+          text: "Báo hỏng thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        const result1 = await getAPI(
+          `/getMayTinhById/${result.data.lichSuSuaChua.mayTinh.id}`
+        );
+        if (result1.status === 200) {
+          setMayTinh(result1.data);
+          setLoiGapPhai(null);
         }
       }
     } catch (error) {
@@ -225,27 +264,40 @@ const ThongTinMayTinh = () => {
       </Paper>
       <div className={clsx(style.button)}>
         {mayTinh.trangThai === 1 ? (
-          <Button
-            color="error"
-            disabled={mayTinh.trangThai === 3 ? "disabled" : ""}
-            onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
-            variant="contained"
-            sx={{ textTransform: "capitalize" }}
-          >
-            Báo lỗi
-          </Button>
+          <>
+            <Button
+              color="error"
+              disabled={mayTinh.trangThai === 3 ? "disabled" : ""}
+              onClick={() => setOpenLichSuaChua(!openLichSuaChua)}
+              variant="contained"
+              sx={{ textTransform: "capitalize" }}
+            >
+              Báo lỗi
+            </Button>
+          </>
         ) : null}
         {user.role === "giangvien" ? null : (
           <>
             {mayTinh.trangThai === 2 ? (
-              <Button
-                color="error"
-                variant="contained"
-                sx={{ textTransform: "capitalize" }}
-                onClick={() => handleCapNhapSuaChua()}
-              >
-                Cập nhật sửa chữa
-              </Button>
+              <>
+                <Button
+                  color="error"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize" }}
+                  onClick={() => handleCapNhapSuaChua()}
+                >
+                  Cập nhật sửa chữa
+                </Button>
+                <Button
+                  color="warning"
+                  disabled={mayTinh.trangThai === 3 ? "disabled" : ""}
+                  variant="contained"
+                  sx={{ textTransform: "capitalize" }}
+                  onClick={()=>luuChiTietLichSuSuaChuaHong()}
+                >
+                  Báo hỏng
+                </Button>
+              </>
             ) : null}
             {/* <Button
               onClick={() => setOpenCapNhatCauHinh(!openCapNhatCauHinh)}

@@ -40,7 +40,7 @@ const TaoPhongMay = (props) => {
     soLuongMay: "",
     nhanVien: {},
   });
-  console.log(duLieuVao);
+  console.log(props?.tenPhongMay);
   const layThongTinToaNha = async () => {
     const result = await getAPI(`/toanha/${props.toaNha_id}`);
     if (result.status === 200) {
@@ -75,6 +75,28 @@ const TaoPhongMay = (props) => {
     xemDanhSachNhanVien();
     layThongTinToaNha();
   }, []);
+
+  useEffect(() => {
+    if (props.tieuDe === "Cập nhập phòng máy") {
+      handleGetTheoSoPhong();
+    }
+  }, [props.tieuDe === "Cập nhập phòng máy" && props.tenPhongMay]);
+
+  const handleGetTheoSoPhong = async () => {
+    try {
+      const result = await getAPI(`/phongMayBySoPhong/${props?.tenPhongMay}`);
+      if (result.status === 200) {
+        setDuLieuVao({
+          soPhong: result.data.soPhong,
+          soLuongMay: result.data.loaiPhong.soLuongMay,
+          tenLoaiPhong: result.data.loaiPhong.tenLoaiPhong,
+          nhanVien: result.data.nhanVien,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDsPhanMemChon = (item) => {
     if (dsPhanMemChon.includes(item)) {
@@ -225,46 +247,6 @@ const TaoPhongMay = (props) => {
       console.log(error);
     }
   };
-
-  const luuPhongMay1 = async () => {
-    /* const mayTinh = {
-      phongMay: {
-        soPhong: duLieuVao.soPhong,
-        toaNha: duLieuVao.toaNha,
-        loaiPhong: {
-          tenLoaiPhong: duLieuVao.tenLoaiPhong,
-          soLuongMay: duLieuVao.soLuongMay
-        }
-      },
-      phanMems: dsPhanMemChon,
-      thietBis: dsThietBiChon
-    };
-    try {
-      const result = await postAPI(
-        "/savePhongMay",
-        mayTinh
-      );
-      if (result.status === 200) {
-        Swal.fire({
-          text: "Thêm phòng máy thành công",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        props.setOpen(false);
-        props.xemDanhSachPhongMay();
-        setDsPhanMemChon([]);
-        setDsThietBiChon([]);
-      }
-    } catch (error) {
-      props.setOpen(false);
-      Swal.fire({
-        text: error.response.data,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } */
-  };
-
   const capNhapPhongMay = async () => {
     const phongMay = {
       soPhong: duLieuVao.soPhong,
@@ -304,12 +286,6 @@ const TaoPhongMay = (props) => {
     }
   };
 
-  /* const xemDanhSachMayTinhCapNhap = async (tenPhongMay) => {
-  const result = await getAPI(`/getMayTinhByPhong/${tenPhongMay}`);
-  console.log("ten PHong May");
-  console.log(tenPhongMay);
-    setDanhSachMayTinhCapNhap(result.data);
-} */
   const capNhapMayTinh = async () => {
     const result = await getAPI(`/getMayTinhByIdPhong/${props.phongMay_id}`);
     const dsMayTinhCapNhap = result.data;
@@ -346,7 +322,18 @@ const TaoPhongMay = (props) => {
   };
 
   return (
-    <Modal open={props.open} onClose={() => props.setOpen(false)}>
+    <Modal
+      open={props.open}
+      onClose={() => {
+        props.setOpen(false);
+        setDuLieuVao({
+          soPhong: "",
+          tenLoaiPhong: "",
+          soLuongMay: "",
+          nhanVien: {},
+        });
+      }}
+    >
       <ModalDialog sx={{ padding: "20px" }}>
         <ModalClose />
         <DialogTitle>
@@ -362,6 +349,7 @@ const TaoPhongMay = (props) => {
                   onChange={(e) => onInputChange(e)}
                   id="outlined-required"
                   label="Số Phòng"
+                  value={duLieuVao.soPhong}
                 />
               </FormControl>
             </Grid>
@@ -375,9 +363,28 @@ const TaoPhongMay = (props) => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="LoaiPhong"
-                  onChange={(e, v) =>
-                    setDuLieuVao({ ...duLieuVao, tenLoaiPhong: v.props.value })
-                  }
+                  onChange={(e, v) => {
+                    if (v.props.value === "Nhỏ") {
+                      setDuLieuVao({
+                        ...duLieuVao,
+                        soLuongMay: "30",
+                        tenLoaiPhong: v.props.value,
+                      });
+                    } else if (v.props.value === "Lớn") {
+                      setDuLieuVao({
+                        ...duLieuVao,
+                        soLuongMay: "60",
+                        tenLoaiPhong: v.props.value,
+                      });
+                    } else if (v.props.value === "Vừa") {
+                      setDuLieuVao({
+                        ...duLieuVao,
+                        soLuongMay: "50",
+                        tenLoaiPhong: v.props.value,
+                      });
+                    }
+                  }}
+                  value={duLieuVao.tenLoaiPhong}
                 >
                   <MenuItem value="Nhỏ">Nhỏ</MenuItem>
                   <MenuItem value="Vừa">Vừa</MenuItem>
@@ -392,6 +399,7 @@ const TaoPhongMay = (props) => {
                   onChange={(e) => onInputChange(e)}
                   id="outlined-required"
                   label="Số lượng máy"
+                  value={duLieuVao.soLuongMay}
                 />
               </FormControl>
             </Grid>
@@ -401,7 +409,7 @@ const TaoPhongMay = (props) => {
                   Nhân viên phụ trách
                 </InputLabel>
                 <Select
-                  defaultValue=""
+                  defaultValue={duLieuVao.nhanVien.id}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="NhanVien"

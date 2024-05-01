@@ -6,8 +6,11 @@ import com.iuh.nhom6.util.AWSCloudUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -43,13 +46,18 @@ public class NhanVienController {
             @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("diaChi") String diaChi,
             @RequestParam("trangThai") Boolean trangThai,
-            @RequestParam("file") MultipartFile image) {
+            @RequestParam(value = "file", required = false) MultipartFile image) {
         try {
-            AWSCloudUtil util = new AWSCloudUtil();
             NhanVien nhanVien = new NhanVien();
-            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
-                    AWS_BUCKET);
-            nhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+            if (image != null && !image.isEmpty()) {
+                AWSCloudUtil util = new AWSCloudUtil();
+                util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
+                        AWS_BUCKET);
+                nhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+
+            } else {
+                nhanVien.setImage(null);
+            }
             nhanVien.setHoTenNhanVien(hoTenNhanVien);
             nhanVien.setEmail(email);
             nhanVien.setDiaChi(diaChi);
@@ -70,22 +78,37 @@ public class NhanVienController {
             @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("diaChi") String diaChi,
             @RequestParam("trangThai") Boolean trangThai,
-            @RequestParam("file") MultipartFile image, @PathVariable Long id) {
+            @RequestParam("image") String img,
+            @RequestParam(value = "file", required = false) MultipartFile image, @PathVariable Long id) {
         try {
-            AWSCloudUtil util = new AWSCloudUtil();
-            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
-                    AWS_BUCKET);
-            NhanVien newNhanVien = new NhanVien(id, hoTenNhanVien, email, sdt, gioiTinh, diaChi, trangThai, diaChi);
+            NhanVien nhanVien = new NhanVien(id, hoTenNhanVien, email, sdt, gioiTinh, diaChi, trangThai, img);
             return nhanVienRepository.findById(id).map(
-                    nhanVien -> {
-                        nhanVien.setHoTenNhanVien(newNhanVien.getHoTenNhanVien());
-                        nhanVien.setSdt(newNhanVien.getSdt());
-                        nhanVien.setEmail(newNhanVien.getEmail());
-                        nhanVien.setDiaChi(newNhanVien.getDiaChi());
-                        nhanVien.setGioiTinh(newNhanVien.getGioiTinh());
-                        nhanVien.setTrangThai(newNhanVien.getTrangThai());
-                        nhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
-                        return nhanVienRepository.save(nhanVien);
+                    newNhanVien -> {
+                        newNhanVien.setHoTenNhanVien(nhanVien.getHoTenNhanVien());
+                        newNhanVien.setSdt(nhanVien.getSdt());
+                        newNhanVien.setEmail(nhanVien.getEmail());
+                        newNhanVien.setDiaChi(nhanVien.getDiaChi());
+                        newNhanVien.setGioiTinh(nhanVien.getGioiTinh());
+                        newNhanVien.setTrangThai(nhanVien.getTrangThai());
+                        try {
+
+                            if (image != null && !image.isEmpty()) {
+                                AWSCloudUtil util = new AWSCloudUtil();
+                                util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY,
+                                        AWS_SECRET_KEY,
+                                        AWS_BUCKET);
+                                newNhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/"
+                                        + image.getOriginalFilename());
+
+                            } else {
+                                newNhanVien.setImage(nhanVien.getImage());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            newNhanVien.setImage(nhanVien.getImage());
+                            // TODO: handle exception
+                        }
+                        return nhanVienRepository.save(newNhanVien);
                     }).orElseThrow();
         } catch (Exception e) {
             e.printStackTrace();

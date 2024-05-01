@@ -61,13 +61,17 @@ public class GiangVienController {
             @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("diaChi") String diaChi,
             @RequestParam("trangThai") Boolean trangThai,
-            @RequestParam("file") MultipartFile image) {
+            @RequestParam(value = "file", required = false) MultipartFile image) {
         try {
-            AWSCloudUtil util = new AWSCloudUtil();
             GiangVien giangVien = new GiangVien();
-            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
-                    AWS_BUCKET);
-            giangVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+            if (image != null && !image.isEmpty()) {
+                AWSCloudUtil util = new AWSCloudUtil();
+                util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
+                        AWS_BUCKET);
+                giangVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+            }else{
+                giangVien.setImage(null);
+            }
             giangVien.setTenGiangVien(hoTenNhanVien);
             giangVien.setEmail(email);
             giangVien.setDiaChi(diaChi);
@@ -88,14 +92,12 @@ public class GiangVienController {
             @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("diaChi") String diaChi,
             @RequestParam("trangThai") Boolean trangThai,
-            @RequestParam("file") MultipartFile image) {
+            @RequestParam("image") String img,
+            @RequestParam(value = "file", required = false) MultipartFile image) {
         // TODO: process PUT request
 
         try {
-            AWSCloudUtil util = new AWSCloudUtil();
-            util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY, AWS_SECRET_KEY,
-                    AWS_BUCKET);
-            GiangVien newGiangVien = new GiangVien(id, hoTenNhanVien, email, sdt, gioiTinh, diaChi, trangThai, diaChi);
+            GiangVien newGiangVien = new GiangVien(id, hoTenNhanVien, email, sdt, gioiTinh, diaChi, trangThai, img);
             return giangVienRepository.findById(id).map(
                     giangVien -> {
                         giangVien.setTenGiangVien(newGiangVien.getTenGiangVien());
@@ -104,8 +106,22 @@ public class GiangVienController {
                         giangVien.setDiaChi(newGiangVien.getDiaChi());
                         giangVien.setGioiTinh(newGiangVien.getGioiTinh());
                         giangVien.setTrangThai(newGiangVien.getTrangThai());
-                        giangVien.setImage(
-                                "https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
+                        try {
+                            if (image != null && !image.isEmpty()) {
+                                AWSCloudUtil util = new AWSCloudUtil();
+                                util.uploadFileToS3(image.getOriginalFilename(), image.getBytes(), AWS_ACCESS_KEY,
+                                        AWS_SECRET_KEY,
+                                        AWS_BUCKET);
+                                giangVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/"
+                                        + image.getOriginalFilename());
+
+                            } else {
+                                giangVien.setImage(newGiangVien.getImage());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            giangVien.setImage(newGiangVien.getImage());
+                        }
                         return giangVienRepository.save(giangVien);
                     }).orElseThrow();
         } catch (Exception e) {
