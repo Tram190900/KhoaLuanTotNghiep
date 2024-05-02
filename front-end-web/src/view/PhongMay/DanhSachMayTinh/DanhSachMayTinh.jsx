@@ -94,7 +94,7 @@ const DanhSachMayTinh = () => {
         </Link>
         <Link
           onClick={() => {
-            navigate("/danhsachphongmay", {
+            navigate("/cong-nghe-thong-tin/danh-sach-phong-may", {
               state: {
                 toaNha_id: location.state.toaNha_id,
                 tenToaNha: location.state.toaNha,
@@ -146,7 +146,7 @@ const DanhSachMayTinh = () => {
                 >
                   <button
                     onDoubleClick={() => {
-                      navigate("/thongtinmaytinh", {
+                      navigate("/cong-nghe-thong-tin/thong-tin-may-tinh", {
                         state: {
                           mayTinh: mayTinh,
                         },
@@ -193,7 +193,7 @@ const DanhSachMayTinh = () => {
                 >
                   <button
                     onDoubleClick={() => {
-                      navigate("/thongtinmaytinh", {
+                      navigate("/cong-nghe-thong-tin/thong-tin-may-tinh", {
                         state: {
                           mayTinh: mayTinh,
                         },
@@ -235,7 +235,7 @@ const DanhSachMayTinh = () => {
                 >
                   <button
                     onDoubleClick={() => {
-                      navigate("/thongtinmaytinh", {
+                      navigate("/cong-nghe-thong-tin/thong-tin-may-tinh", {
                         state: {
                           mayTinh: mayTinh,
                         },
@@ -277,7 +277,7 @@ const DanhSachMayTinh = () => {
                 >
                   <button
                     onDoubleClick={() => {
-                      navigate("/thongtinmaytinh", {
+                      navigate("/cong-nghe-thong-tin/thong-tin-may-tinh", {
                         state: {
                           mayTinh: mayTinh,
                         },

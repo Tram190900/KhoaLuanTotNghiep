@@ -14,9 +14,9 @@ export default function LayoutMain() {
         <PrimarySearchAppBar/>
       </div>
       <div className={clsx(style.wrap)}>
-        <div className={clsx(style.menuContainer, menu.isPhone ? style.none : "" )}>
+        {/* <div className={clsx(style.menuContainer, menu.isPhone ? style.none : "" )}>
           <Menu />
-        </div>
+        </div> */}
         <div className={clsx(style.screenContainer , menu.isPhone ? style.none : "" )}>
           <Outlet></Outlet>
         </div>

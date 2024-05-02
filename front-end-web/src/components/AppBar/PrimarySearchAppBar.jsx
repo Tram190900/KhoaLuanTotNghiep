@@ -19,7 +19,7 @@ import { MenuContext } from "../../App";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuCompose from "../../components/Menu";
 import DoiMatKhau from "../DoiMatKhau";
-
+import { Option, Select } from "@mui/joy";
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,7 +38,6 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
-
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -78,6 +77,11 @@ export default function PrimarySearchAppBar() {
   React.useEffect(() => {
     handleGetThongBaoLoi();
   }, []);
+
+  const handleSelectKhoa=(e, newValue)=>{
+    navigate(newValue)
+    menu.setMenuActive(newValue)
+  }
 
   return (
     <>
@@ -129,6 +133,18 @@ export default function PrimarySearchAppBar() {
                 src={require("../../assets/logo/logoIUH.svg").default}
                 alt=""
               />
+            </div>
+            <div
+              className={clsx(
+                style.select_khoa,
+                menu.isPhone ? style.none : ""
+              )}
+            >
+              <Select placeholder="Chọn khoa..." onChange={handleSelectKhoa}>
+                <Option value={"cong-nghe-thong-tin"}>Công nghệ thông tin</Option>
+                <Option value={""}>Cơ khí</Option>
+                <Option value={""}>Điện</Option>
+              </Select>
             </div>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { md: "flex" } }}>
@@ -199,7 +215,12 @@ export default function PrimarySearchAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={() => {setDoiMK(true); setAnchorElUser(!anchorElUser)}}>
+                <MenuItem
+                  onClick={() => {
+                    setDoiMK(true);
+                    setAnchorElUser(!anchorElUser);
+                  }}
+                >
                   <Typography>Đổi mất khẩu</Typography>
                 </MenuItem>
                 <DoiMatKhau open={doiMK} setDoiMK={setDoiMK} />

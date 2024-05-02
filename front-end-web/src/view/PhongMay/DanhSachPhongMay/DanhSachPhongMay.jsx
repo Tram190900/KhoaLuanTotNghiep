@@ -190,7 +190,7 @@ export default function DanhSachPhongMay(props) {
                 <CardContent
                   sx={{ cursor: "pointer" }}
                   onDoubleClick={() => {
-                    navigate("/danhsachmaytinh", {
+                    navigate("/cong-nghe-thong-tin/danh-sach-may-tinh", {
                       state: {
                         phongMay_id: phongMay.id,
                         soPhong: phongMay.soPhong,

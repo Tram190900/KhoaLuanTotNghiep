@@ -204,7 +204,7 @@ const ThongTinMayTinh = () => {
         </Link>
         <Button
           onClick={() => {
-            navigate("/danhsachphongmay", {
+            navigate("/cong-nghe-thong-tin/danh-sach-phong-may", {
               state: {
                 toaNha_id: mayTinh.phongMay.toaNha.id,
                 tenToaNha: mayTinh.phongMay.toaNha.tenToaNha,
@@ -216,7 +216,7 @@ const ThongTinMayTinh = () => {
         </Button>
         <Button
           onClick={() => {
-            navigate("/danhsachmaytinh", {
+            navigate("/cong-nghe-thong-tin/danh-sach-may-tinh", {
               state: {
                 phongMay_id: mayTinh.phongMay.id,
                 soPhong: mayTinh.phongMay.soPhong,

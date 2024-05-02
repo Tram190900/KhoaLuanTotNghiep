@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { getAPI } from "../../api";
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Unstable_Grid2";
 import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { MenuContext } from "../../App";
 import { Link, useNavigate } from "react-router-dom";
-import BusinessIcon from "@mui/icons-material/Business";
 import Tooltip from "@mui/material/Tooltip";
 import CardContent from "@mui/material/CardContent";
 import clsx from "clsx";
@@ -47,7 +45,7 @@ export default function PhongMay(props) {
           <Button
             className={clsx(style.button)}
             onDoubleClick={() => {
-              navigate("/danhsachphongmay", {
+              navigate("/cong-nghe-thong-tin/danh-sach-phong-may", {
                 state: {
                   toaNha_id: toaNha.id,
                   tenToaNha: toaNha.tenToaNha,

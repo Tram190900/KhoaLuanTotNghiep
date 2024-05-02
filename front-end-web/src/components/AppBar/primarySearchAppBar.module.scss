@@ -5,5 +5,15 @@
   position: absolute;
 }
 .logo__image.none{
-  margin-left: 50px;
+  margin-left: 40px;
+}
+.select_khoa{
+  position: absolute;
+  align-items: center;
+  margin-left: 120px;
+  width: 20%;
+}
+.select_khoa.none{
+  margin-left: 150px;
+  width: 26%;
 }

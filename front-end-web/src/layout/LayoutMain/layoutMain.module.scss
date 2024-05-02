@@ -20,18 +20,18 @@
     width: 100%;
     height: calc(100% - 69px);
     display: flex;
-    .menuContainer {
-      width: 15%;
-      height: 100%;
-      overflow-y: scroll;
-      color: white !important;
-    }
-    .menuContainer.none{
-      width: 0;
-      display: none;
-    }
+    // .menuContainer {
+    //   width: 15%;
+    //   height: 100%;
+    //   overflow-y: scroll;
+    //   color: white !important;
+    // }
+    // .menuContainer.none{
+    //   width: 0;
+    //   display: none;
+    // }
     .screenContainer {
-      width: 85%;
+      width: 100%;
       height: 100%;
       overflow-y: scroll;
       background: white;

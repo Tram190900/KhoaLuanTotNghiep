@@ -18,20 +18,21 @@ import ThongTinMayTinh from "./view/PhongMay/ThongTinMayTinh/ThongTinMayTinh";
 import LichTruc from "./view/LichTruc";
 import ProtectedRouter from "./layout/ProtectedRouter";
 import GiangVien from "./view/GiangVien";
+import LayoutKhoa from "./layout/LayoutKhoa";
 
 export const MenuContext = createContext(null);
 
 function App() {
   const [menuActive, setMenuActive] = useState("phong-may");
   const [thongBao, setThongBao] = useState();
-  const [isPhone, setIsPhone] = useState(false)
+  const [isPhone, setIsPhone] = useState(false);
   const valueContext = {
     menuActive,
     setMenuActive,
     thongBao,
     setThongBao,
     isPhone,
-    setIsPhone
+    setIsPhone,
   };
   useEffect(() => {
     const handleResize = () => {
@@ -59,19 +60,21 @@ function App() {
                 </ProtectedRouter>
               }
             >
-              <Route index element={<PhongMay />}></Route>
-              <Route path="danhsachphongmay" element={<DanhSachPhongMay />} />
-              <Route path="danhsachmaytinh" element={<DanhSachMayTinh />} />
-              <Route path="thongtinmaytinh" element={<ThongTinMayTinh />} />
-              <Route path="may-tinh" element={<MayTinh />} />
-              <Route path="thiet-bi" element={<ThietBi />} />
-              <Route path="phan-mem" element={<PhanMem />} />
-              <Route path="mon-hoc" element={<MonHoc />} />
-              <Route path="nhan-vien" element={<NhanVien />} />
-              <Route path="giang-vien" element={<GiangVien/>}/>
-              <Route path="lich-su-sua-chua" element={<LichSuSuaChua />} />
-              <Route path="thong-ke" element={<ThongKe />} />
-              <Route path="lich-truc" element={<LichTruc />} />
+              <Route path="cong-nghe-thong-tin" element={<LayoutKhoa />}>
+                <Route index element={<PhongMay />}></Route>
+                <Route path="danh-sach-phong-may" element={<DanhSachPhongMay />} />
+                <Route path="danh-sach-may-tinh" element={<DanhSachMayTinh />} />
+                <Route path="thong-tin-may-tinh" element={<ThongTinMayTinh />} />
+                <Route path="may-tinh" element={<MayTinh />} />
+                <Route path="thiet-bi" element={<ThietBi />} />
+                <Route path="phan-mem" element={<PhanMem />} />
+                <Route path="mon-hoc" element={<MonHoc />} />
+                <Route path="nhan-vien" element={<NhanVien />} />
+                <Route path="giang-vien" element={<GiangVien />} />
+                <Route path="lich-su-sua-chua" element={<LichSuSuaChua />} />
+                <Route path="thong-ke" element={<ThongKe />} />
+                <Route path="lich-truc" element={<LichTruc />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

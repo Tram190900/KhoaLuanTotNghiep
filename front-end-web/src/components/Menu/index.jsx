@@ -22,7 +22,7 @@ export default function Menu(props) {
       <div
         onClick={() => {
           menu.setMenuActive("phong-may");
-          navigate("/");
+          navigate("/cong-nghe-thong-tin");
           if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
             props?.handleMobileMenuClose()
           }
@@ -38,7 +38,7 @@ export default function Menu(props) {
       <div
         onClick={() => {
           menu.setMenuActive("may-tinh");
-          navigate("may-tinh");
+          navigate("/cong-nghe-thong-tin/may-tinh");
           if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
             props?.handleMobileMenuClose()
           }
@@ -56,7 +56,7 @@ export default function Menu(props) {
           <div
             onClick={() => {
               menu.setMenuActive("thiet-bi");
-              navigate("thiet-bi");
+              navigate("/cong-nghe-thong-tin/thiet-bi");
               if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                 props?.handleMobileMenuClose()
               }
@@ -72,7 +72,7 @@ export default function Menu(props) {
           <div
             onClick={() => {
               menu.setMenuActive("phan-mem");
-              navigate("phan-mem");
+              navigate("/cong-nghe-thong-tin/phan-mem");
               if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                 props?.handleMobileMenuClose()
               }
@@ -88,7 +88,7 @@ export default function Menu(props) {
           <div
             onClick={() => {
               menu.setMenuActive("mon-hoc");
-              navigate("mon-hoc");
+              navigate("/cong-nghe-thong-tin/mon-hoc");
               if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                 props?.handleMobileMenuClose()
               }
@@ -106,7 +106,7 @@ export default function Menu(props) {
               <div
                 onClick={() => {
                   menu.setMenuActive("nhan-vien");
-                  navigate("nhan-vien");
+                  navigate("/cong-nghe-thong-tin/nhan-vien");
                   if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                     props?.handleMobileMenuClose()
                   }
@@ -122,7 +122,7 @@ export default function Menu(props) {
               <div
                 onClick={() => {
                   menu.setMenuActive("giang-vien");
-                  navigate("giang-vien");
+                  navigate("/cong-nghe-thong-tin/giang-vien");
                   if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                     props?.handleMobileMenuClose()
                   }
@@ -140,7 +140,7 @@ export default function Menu(props) {
             <div
               onClick={() => {
                 menu.setMenuActive("lich-truc");
-                navigate("lich-truc");
+                navigate("/cong-nghe-thong-tin/lich-truc");
                 if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                   props?.handleMobileMenuClose()
                 }
@@ -158,7 +158,7 @@ export default function Menu(props) {
           <div
             onClick={() => {
               menu.setMenuActive("lich-su-sua-chua");
-              navigate("lich-su-sua-chua");
+              navigate("/cong-nghe-thong-tin/lich-su-sua-chua");
               if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                 props?.handleMobileMenuClose()
               }
@@ -174,7 +174,7 @@ export default function Menu(props) {
           <div
             onClick={() => {
               menu.setMenuActive("thong-ke");
-              navigate("thong-ke");
+              navigate("/cong-nghe-thong-tin/thong-ke");
               if(props.handleMobileMenuClose && typeof(props.handleMobileMenuClose)==='function'){
                 props?.handleMobileMenuClose()
               }
