@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,6 +28,8 @@ import { postAPI } from "../../../api";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
 import ModalNhanVien from "./ModalNhanVien";
+import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
+import ReactToPrint from "react-to-print";
 
 ChartJS.register(
   CategoryScale,
@@ -48,6 +50,8 @@ export default function Top5PhongBiLoiNhieu(props) {
 
   const [detailData, setDetailData] = useState();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const tableContent = useRef(null);
 
   const chartData = {
     labels: props.data?.map((item) => item.so_phong),
@@ -113,19 +117,40 @@ export default function Top5PhongBiLoiNhieu(props) {
             Danh sách lỗi cần phải sửa của phòng {selectedPhong}
           </DialogTitle>
           <DialogContent>
-            <span className="d-flex align-items-center">
-              <div
-                style={{
-                  width: "35px",
-                  height: "15px",
-                  background: "red",
-                  marginRight: "10px",
-                }}
-              ></div>
-              Lỗi phải sửa trong ngày
-            </span>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span className="d-flex align-items-center">
+                <div
+                  style={{
+                    width: "35px",
+                    height: "15px",
+                    background: "red",
+                    marginRight: "10px",
+                  }}
+                ></div>
+                Lỗi phải sửa trong ngày
+              </span>
+              <ReactToPrint
+                content={() => tableContent.current}
+                trigger={() => (
+                  <LocalPrintshopIcon
+                    style={{ fontSize: "30px", cursor: "pointer" }}
+                  />
+                )}
+              />
+            </div>
             <Sheet id={"scroll-style-01"}>
-              <Table tickyHeader hoverRow aria-label="striped table">
+              <Table
+                tickyHeader
+                hoverRow
+                aria-label="striped table"
+                ref={tableContent}
+              >
                 <thead>
                   <tr>
                     <th>Máy tính</th>

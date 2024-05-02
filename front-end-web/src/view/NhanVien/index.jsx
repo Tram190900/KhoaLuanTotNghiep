@@ -38,6 +38,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import { MenuContext } from "../../App";
+import logo from "../../assets/logo/logo192.png"
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -183,7 +184,7 @@ export default function NhanVien() {
         data.append("gioiTinh", gioiTinh);
         data.append("diaChi", diaChi);
         data.append("trangThai", trangThai);
-        data.append("image", imageURL)
+        data.append("image", imageURL);
         data.append("file", fileImage);
         const result = await putApiWithImage(
           `updateNhanVien/${nhanVienId}`,
@@ -248,8 +249,8 @@ export default function NhanVien() {
       <div className={clsx(style.infoWrap, menu.isPhone ? style.isPhone : "")}>
         <div className={clsx(style.left, menu.isPhone ? style.isPhone : "")}>
           <div className={clsx(style.left_image_wrap)}>
-            <Avatar
-              src={imageURL ? imageURL : "logo192.png"}
+              <Avatar
+                src={(!imageURL) ? logo : imageURL}
               alt="avatar"
               sx={{
                 width: "10rem",
@@ -510,8 +511,8 @@ export default function NhanVien() {
           </>
         ) : null}
       </div>
-      <TableContainer component={Paper}>
-        <Table aria-label="customized table">
+      <TableContainer component={Paper} className={style.tableWrap}>
+        <Table stickyHeader aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Id</StyledTableCell>

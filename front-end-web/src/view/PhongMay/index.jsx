@@ -35,7 +35,7 @@ export default function PhongMay(props) {
         aria-label="breadcrumb"
         onClick={() => menu.setMenuActive("phong-may")}
       >
-        <Link underline="hover" color="inherit" href="/">
+        <Link underline="hover" color="inherit" href="/cong-nghe-thong-tin">
           Quản lý phòng máy
         </Link>
         <Typography color="text.primary">Tòa nhà</Typography>

@@ -164,8 +164,8 @@ export default function ThietBi() {
           Cập nhật
         </Button>
       </div>
-      <TableContainer component={Paper} className={clsx(style.tablePhanMem)}>
-        <Table aria-label="customized table">
+      <TableContainer component={Paper} className={clsx(style.tableWrap)}>
+        <Table stickyHeader aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Id</StyledTableCell>

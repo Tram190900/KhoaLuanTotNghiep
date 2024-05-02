@@ -117,10 +117,10 @@ export default function DanhSachPhongMay(props) {
         <div className={clsx(Style.h4)}>
           <h1>Quản lý phòng máy</h1>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/">
+            <Link underline="hover" color="inherit" href="/cong-nghe-thong-tin">
               Quản lý phòng máy
             </Link>
-            <Link underline="hover" color="inherit" href="/">
+            <Link underline="hover" color="inherit" href="/cong-nghe-thong-tin">
               Tòa nhà
             </Link>
             <Typography color="text.primary">

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import style from "./lichSuSuaChua.module.scss";
 import {
@@ -25,6 +25,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import { MenuContext } from "../../App";
+import ReactToPrint from "react-to-print";
+import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -66,6 +68,7 @@ export default function LichSuSuaChua() {
   const [giangVien, setGiangVien] = useState({});
 
   const [nhanVien, setNhanVien] = useState({});
+  const tableContent = useRef(null)
 
   const [duLieuVao, setDuLieuVao] = useState({
     mayTinhId: "",
@@ -487,9 +490,17 @@ export default function LichSuSuaChua() {
         >
           Báo hỏng
         </Button>
+        <ReactToPrint
+                content={() => tableContent.current}
+                trigger={() => (
+                  <LocalPrintshopIcon
+                    style={{ fontSize: "30px", cursor: "pointer" }}
+                  />
+                )}
+              />
       </div>
       <TableContainer component={Paper} className={clsx(style.tableLSL, menu.isPhone ? style.isPhone : '')}>
-        <Table stickyHeader aria-label="customized table">
+        <Table stickyHeader aria-label="customized table" ref={tableContent}>
           <TableHead>
             <StyledTableRow>
               <StyledTableCell>Máy tính</StyledTableCell>
