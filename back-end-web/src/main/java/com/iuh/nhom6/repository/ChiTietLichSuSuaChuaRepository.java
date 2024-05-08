@@ -48,4 +48,16 @@ public interface ChiTietLichSuSuaChuaRepository extends JpaRepository<ChiTietLic
                         "        OR DATE(lich_su_sua_chua.ngay_du_kien_sua) between ?2 and ?3) " +
                         "    AND lich_su_sua_chua.trang_thai = ?4", nativeQuery = true)
         List<Map<String, Object>> filterLichSuLoi(Long phongMayId, Date ngayGapLoi, Date ngayDuKien, Boolean trangThai);
+
+        @Query(value = "SELECT chi_tiet_lich_su_sua_chua.*, lich_su_sua_chua.ngay_du_kien_sua " +
+                                "FROM computerlab.chi_tiet_lich_su_sua_chua " + 
+                                "JOIN computerlab.lich_su_sua_chua " +
+                                "ON lich_su_sua_chua.id = chi_tiet_lich_su_sua_chua.lich_su_sua_chua_id " +
+                                "JOIN computerlab.nhan_vien " +
+                                "ON nhan_vien.nhan_vien_id = lich_su_sua_chua.nhan_vien_id " + 
+                                "WHERE computerlab.lich_su_sua_chua.trang_thai = true " +
+                                "AND nhan_vien.nhan_vien_id = ?1 " +
+                                "AND lich_su_sua_chua.ngay_du_kien_sua >= DATE_FORMAT(NOW(),'%Y-%m-01') " +
+                                "AND lich_su_sua_chua.ngay_du_kien_sua <= LAST_DAY(NOW())", nativeQuery = true)
+        List<Map<String, Object>> findChiTietSuaTheoLoiQuaHanSuaCuaNhanVien(Long nhanVienId);
 }

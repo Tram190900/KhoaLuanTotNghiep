@@ -12,7 +12,6 @@ import clsx from "clsx";
 import style from "./phongMay.module.scss";
 
 export default function PhongMay(props) {
-  const id = 2;
   const [dsToaNha, setDsToaNha] = useState([]);
   const menu = useContext(MenuContext);
 

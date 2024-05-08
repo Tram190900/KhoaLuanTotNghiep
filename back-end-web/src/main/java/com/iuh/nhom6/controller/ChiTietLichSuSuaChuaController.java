@@ -158,4 +158,9 @@ public class ChiTietLichSuSuaChuaController {
     }
   }
 
+  @GetMapping("/getLoiQuaHanTheoNhanVien/{id}")
+  public List<Map<String, Object>> findChiTietSuaTheoLoiQuaHanSuaCuaNhanVien(@PathVariable Long id) {
+      return chiTietLichSuSuaChuaRepository.findChiTietSuaTheoLoiQuaHanSuaCuaNhanVien(id);
+  }
+  
 }

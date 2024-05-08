@@ -22,7 +22,6 @@ import com.iuh.nhom6.repository.LoaiPhongRepository;
 import com.iuh.nhom6.repository.NhanVienRepository;
 import com.iuh.nhom6.repository.PhongMayRepository;
 import com.iuh.nhom6.repository.ToaNhaRepository;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

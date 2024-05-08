@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.LichSuSuaChua;
-import com.iuh.nhom6.model.MayTinh;
 import com.iuh.nhom6.model.NhanVien;
 import com.iuh.nhom6.repository.LichSuSuaChuaRepository;
 import com.iuh.nhom6.repository.MayTinhRepository;

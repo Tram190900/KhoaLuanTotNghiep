@@ -22,7 +22,6 @@ import DoiMatKhau from "../DoiMatKhau";
 import { Option, Select } from "@mui/joy";
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [notification, setNotification] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -30,6 +29,8 @@ export default function PrimarySearchAppBar() {
   const [thongBaoLoi, setThongBaoLoi] = React.useState([]);
   const [numOfNoti, setNumOfNoti] = React.useState(0);
   const [doiMK, setDoiMK] = React.useState(false);
+  const [soLoiSuaQuanHan, setSoLoiSuaQuaHan] = React.useState(null);
+  const [truLuong, setTruLuong] = React.useState(null);
 
   const menu = React.useContext(MenuContext);
 
@@ -74,14 +75,36 @@ export default function PrimarySearchAppBar() {
     }
   };
 
+  const handleGetLoiQuaHan = async () => {
+    try {
+      const result = await getAPI(
+        `/chiTietLichSuSuaChua/getLoiQuaHanTheoNhanVien/${nhanVien?.nhanVien?.id}`
+      );
+      if (result.status === 200) {
+        const soLoi = result.data.length;
+        setSoLoiSuaQuaHan(soLoi);
+        if (soLoi >= 3) {
+          setTruLuong("-5%");
+        } else if (soLoi >= 10) {
+          setTruLuong("-15%");
+        } else if (soLoi >= 15) {
+          setTruLuong("-20%");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
     handleGetThongBaoLoi();
+    handleGetLoiQuaHan();
   }, []);
 
-  const handleSelectKhoa=(e, newValue)=>{
-    navigate(newValue)
-    menu.setMenuActive(newValue)
-  }
+  const handleSelectKhoa = (e, newValue) => {
+    navigate(newValue);
+    menu.setMenuActive(newValue);
+  };
 
   return (
     <>
@@ -141,7 +164,9 @@ export default function PrimarySearchAppBar() {
               )}
             >
               <Select placeholder="Chọn khoa..." onChange={handleSelectKhoa}>
-                <Option value={"cong-nghe-thong-tin"}>Công nghệ thông tin</Option>
+                <Option value={"cong-nghe-thong-tin"}>
+                  Công nghệ thông tin
+                </Option>
                 <Option value={""}>Cơ khí</Option>
                 <Option value={""}>Điện</Option>
               </Select>
@@ -190,6 +215,17 @@ export default function PrimarySearchAppBar() {
                       </span>
                     </MenuItem>
                   ))}
+                  {soLoiSuaQuanHan ? (
+                    <MenuItem>
+                      <span>
+                        <strong>Cảnh báo:</strong>
+                        <br></br>
+                        <span>
+                          {soLoiSuaQuanHan} lỗi sửa quá hạn trong tháng <strong>({truLuong} lương)</strong>
+                        </span>
+                      </span>
+                    </MenuItem>
+                  ) : null}
                 </Menu>
               </IconButton>
             </Box>
