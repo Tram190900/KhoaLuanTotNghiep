@@ -83,9 +83,9 @@ export default function PrimarySearchAppBar() {
       if (result.status === 200) {
         const soLoi = result.data.length;
         setSoLoiSuaQuaHan(soLoi);
-        if (soLoi >= 3) {
+        if (soLoi >= 3 && soLoi < 10) {
           setTruLuong("-5%");
-        } else if (soLoi >= 10) {
+        } else if (soLoi >= 10 && soLoi < 15) {
           setTruLuong("-15%");
         } else if (soLoi >= 15) {
           setTruLuong("-20%");
@@ -221,7 +221,8 @@ export default function PrimarySearchAppBar() {
                         <strong>Cảnh báo:</strong>
                         <br></br>
                         <span>
-                          {soLoiSuaQuanHan} lỗi sửa quá hạn trong tháng <strong>({truLuong} lương)</strong>
+                          {soLoiSuaQuanHan} lỗi sửa quá hạn trong tháng{" "}
+                          <strong>({truLuong} lương)</strong>
                         </span>
                       </span>
                     </MenuItem>

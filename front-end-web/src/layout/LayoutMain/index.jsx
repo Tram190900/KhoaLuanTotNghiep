@@ -55,6 +55,13 @@ export default function LayoutMain() {
                 alt=""
                 src={require("../../assets/illustrations/illustration_dashboard.png")}
               />
+              <div style={{ position: "absolute", bottom: "20px" }}>
+                <strong>
+                  © Nhóm tác giả ThS.Nguyễn Văn Thắng và SV.Đoàn Công 
+                  Tuấn Tú, SV.Mã Vũ Tố Trâm
+                </strong><br></br>
+                <i>Mọi hành động sử dụng nội dung đăng tải trên Website thietbiiuh.edu.vn phải có sự đồng ý của nhóm tác giả</i>
+              </div>
             </div>
           ) : (
             <Outlet />
