@@ -54,7 +54,7 @@ public class NhanVienController {
                 nhanVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
 
             } else {
-                nhanVien.setImage(null);
+                nhanVien.setImage("");
             }
             nhanVien.setHoTenNhanVien(hoTenNhanVien);
             nhanVien.setEmail(email);

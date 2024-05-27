@@ -19,4 +19,5 @@ public interface PhongMayRepository extends JpaRepository<PhongMay, Long> {
   List<PhongMay> findPhongMaysByToaNha(ToaNha toaNha);
 
   Page<PhongMay> findPhongMayByToaNha(ToaNha toaNha, PageRequest pageRequest);
+
 }

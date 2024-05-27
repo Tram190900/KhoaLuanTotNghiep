@@ -308,7 +308,7 @@ export default function MayTinh() {
           >
             Báo lỗi
           </Button>
-        ) : selectMayTinh?.trangThai === 2 ? (
+        ) : selectMayTinh?.trangThai === 2 && user.role!=='giangvien' ? (
           <>
             <Button
               color="error"

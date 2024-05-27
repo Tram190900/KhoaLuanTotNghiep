@@ -70,7 +70,7 @@ public class GiangVienController {
                         AWS_BUCKET);
                 giangVien.setImage("https://tramcmn.s3.ap-southeast-1.amazonaws.com/" + image.getOriginalFilename());
             }else{
-                giangVien.setImage(null);
+                giangVien.setImage("");
             }
             giangVien.setTenGiangVien(hoTenNhanVien);
             giangVien.setEmail(email);

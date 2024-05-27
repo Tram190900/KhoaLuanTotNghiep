@@ -40,7 +40,6 @@ const TaoPhongMay = (props) => {
     soLuongMay: "",
     nhanVien: {},
   });
-  console.log(props?.tenPhongMay);
   const layThongTinToaNha = async () => {
     const result = await getAPI(`/toanha/${props.toaNha_id}`);
     if (result.status === 200) {
@@ -92,6 +91,18 @@ const TaoPhongMay = (props) => {
           tenLoaiPhong: result.data.loaiPhong.tenLoaiPhong,
           nhanVien: result.data.nhanVien,
         });
+        const result1 = await getAPI(
+          `/getPhanMemTheoPhong/${props.phongMay_id}`
+        );
+        if (result1.status === 200) {
+          setDsPhanMemChon(result1.data);
+        }
+        const result2 = await getAPI(
+          `/getThietBiTheoPhong/${props.phongMay_id}`
+        );
+        if (result2.status === 200) {
+          setDsThietBiChon(result2.data);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -326,6 +337,8 @@ const TaoPhongMay = (props) => {
       open={props.open}
       onClose={() => {
         props.setOpen(false);
+        setDsPhanMemChon([])
+        setDsThietBiChon([])
         setDuLieuVao({
           soPhong: "",
           tenLoaiPhong: "",
@@ -435,10 +448,10 @@ const TaoPhongMay = (props) => {
                 </FormLabel>
                 <FormGroup className={clsx(style.phanMem)}>
                   {dsPhanMem.map((phanMem, index) => (
-                    <FormControlLabel
+                    <FormControlLabel key={index}
                       control={
                         <Checkbox
-                          onChange={() => handleDsPhanMemChon(phanMem)}
+                          onChange={() =>{ handleDsPhanMemChon(phanMem)}}
                         />
                       }
                       checked={dsPhanMemChon.some((i) => i.id === phanMem.id)}
@@ -455,7 +468,7 @@ const TaoPhongMay = (props) => {
                 </FormLabel>
                 <FormGroup className={clsx(style.phanMem)}>
                   {dsThietBi.map((thietBi, index) => (
-                    <FormControlLabel
+                    <FormControlLabel key={index}
                       control={
                         <Checkbox
                           onChange={() => handleDsThietBiChon(thietBi)}

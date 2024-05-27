@@ -1,6 +1,7 @@
 package com.iuh.nhom6.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.nhom6.model.PhanMem;
 import com.iuh.nhom6.repository.PhanMemRepository;
+
 
 @RestController
 @CrossOrigin
@@ -53,4 +55,10 @@ public class PhanMemController {
     phanMemRepository.deleteById(id);
     return "Phan mem with id " + id + " has been deleted success.";
   }
+
+  @GetMapping("/getPhanMemTheoPhong/{id}")
+  public List<PhanMem> getPhanMemTheoPhong(@PathVariable Long id) {
+      return phanMemRepository.findPhanMemTheoPhong(id);
+  }
+  
 }

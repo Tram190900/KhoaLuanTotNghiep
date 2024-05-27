@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @CrossOrigin
@@ -33,4 +36,10 @@ public class ThietBiController {
                 }
         ).orElseThrow();
     }
+
+    @GetMapping("/getThietBiTheoPhong/{id}")
+    public List<ThietBi> getThietBiTheoPhong(@PathVariable Long id) {
+        return thietBiRepository.findThietBiTheoPhong(id);
+    }
+    
 }
